@@ -10,11 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.82.2",
+    "eslint-config-prettier": "^9.1.0",
     "firebase": "^11.0.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.2",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@tanstack/router-devtools": "^1.82.2",
+    "@tanstack/router-plugin": "^1.81.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
@@ -24,10 +30,17 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
+    "prettier": "^3.3.3",
+    "sass-embedded": "^1.81.0",
+    "stylelint": "^16.10.0",
+    "stylelint-config-recommended": "^14.0.1",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-prettier": "^5.0.2",
     "typescript": "^5.7.2",
-    "vite": "^4.4.11"
+    "vite": "^5.4.11"
   }
 }

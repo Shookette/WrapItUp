@@ -1,0 +1,165 @@
+@use './variables' as *;
+
+:root {
+    --color-bg: #{$color-black};
+    --color-title: #{$color-white};
+    --color-text: #{$color-grey};
+    --color-stroke: #{$color-white};
+    --color-active: #{$color-orange};
+    --color-text-button: #{$color-white};
+    --color-primary: #{$color-orange};
+    --color-secondary: #{$color-carnation};
+    --color-tertiary: #{$color-pink};
+    --color-bg-section: #{$color-charcoal};
+    --color-bg-input: #{$color-white};
+    --color-text-input: #{$color-black};
+    --color-transparent: #{$color-black-transparent};
+    --color-semi-transparent: #{$color-black-semi-transparent};
+    --color-error: #{$color-red};
+    --color-library-bg: #{$color-white};
+    --color-library-side-bg: #{$color-grey};
+    --color-library-back-bg: #{$color-grey-dark};
+    --color-box-bg: #{$color-white};
+    --color-paper-bg: #{$color-peach-yellow};
+    --texture-library: url('https://www.transparenttextures.com/patterns/diamond-upholstery.png');
+    --font-family: #{$font-family};
+    --font-light: #{$font-light};
+    --font-regular: #{$font-regular};
+    --font-bold: #{$font-bold};
+    --font-size-base: #{$font-size-base};
+    --border-radius: #{$border-radius};
+    --border-radius-big: #{$border-radius--big};
+    --border-radius-bigger: #{$border-radius--bigger};
+    --box-square-size-small: 150px;
+    --box-square-size: 200px;
+    --box-square-translatez: 100px;
+    --box-square-inverted-translatez: -100px;
+    --box-square-inverted-translatez-small: -75px;
+    --box-square-translatez-small: 75px;
+    --item-max-height: 180px;
+    --item-max-height-small: 150px;
+    --book-cover-bg-texture: url('https://www.transparenttextures.com/patterns/french-stucco.png');
+    --book-paper-bg-texture: url('https://www.transparenttextures.com/patterns/crisp-paper-ruffles.png');
+    --shadow-color: #{$color-brown-dark};
+    --preview-box-bg-color: #{$color-brown-dark};
+    --preview-box-x: 75px;
+    --preview-box-x-small: 50px;
+    --preview-box-y: 300px;
+    --preview-box-y-small: 200px;
+    --preview-box-z: 200px;
+    --preview-box-z-small: 150px;
+}
+
+[data-theme='light'] {
+    --color-bg: #{$color-white};
+    --color-title: #{$color-black};
+    --color-text: #{$color-grey};
+    --color-stroke: #{$color-black};
+    --color-active: #{$color-orange};
+    --color-text-button: #{$color-black};
+    --color-primary: #{$color-orange};
+    --color-secondary: #{$color-carnation};
+    --color-tertiary: #{$color-pink};
+    --color-bg-section: #{$color-charcoal};
+    --color-bg-input: #{$color-black};
+    --color-text-input: #{$color-white};
+    --color-transparent: #{$color-white-transparent};
+    --color-semi-transparent: #{$color-white-semi-transparent};
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.2;
+}
+
+html,
+body,
+#root,
+#root>div:not(.Toastify) {
+    height: 100%;
+}
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    
+    &_wrapper {
+        flex: 1 1 auto;
+    }
+}
+
+button,
+input,
+select {
+    background-color: var(--color-bg-fields);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--color-title);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    &_label {
+        margin: 15px 0 5px;
+    }
+
+    &_submit {
+        background-color: var(--color-primary);
+        border-radius: var(--border-radius);
+        color: var(--color-text-button);
+        cursor: pointer;
+        margin-top: 50px;
+        min-height: 30px;
+        padding: 0 10px;
+    }
+
+    &_input,
+    &_textarea {
+        background-color: var(--color-bg-input);
+        border-radius: var(--border-radius);
+        color: var(--color-text-input);
+        min-height: 30px;
+        padding: 0 10px;
+
+        &--error {
+            color: var(--color-error);
+        }
+    }
+
+    &_textarea {
+        min-height: 100px;
+        padding: 10px;
+        resize: none;
+    }
+
+    &_inline {
+        margin: 15px 0 5px;
+    }
+
+    &_checkbox {
+        appearance: auto;
+        margin-left: 15px;
+    }
+}

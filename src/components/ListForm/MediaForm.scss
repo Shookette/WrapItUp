@@ -1,0 +1,20 @@
+@use '../../styles/variables' as *;
+
+.media-form {
+    display: flex;
+    flex-direction: column-reverse;
+
+    @include medium {
+        flex-direction: row;
+    }
+
+    &_object {
+        margin: auto;
+        margin-top: 20px;
+
+        @include medium {
+            flex-direction: row;
+            margin-top: auto;
+        }
+    }
+}
