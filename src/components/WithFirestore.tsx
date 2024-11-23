@@ -1,5 +1,5 @@
-import React, {ReactNode, FC} from 'react';
 import initFirebase from '../firebaseLoader';
+import {FC, ReactNode} from "react";
 
 interface Props {
     children: ReactNode;
