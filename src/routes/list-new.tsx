@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { List } from "../interfaces/List.ts";
 import { v4 as uuidv4 } from "uuid";
@@ -7,6 +7,7 @@ import { useUserContext } from "../hooks/UserContext.tsx";
 import dayjs from "dayjs";
 import { useCallback } from "react";
 import { setPresent } from "../repository/PresentRepository.ts";
+import { isAuthenticated } from "../utils/routeUtils.ts";
 
 const ListNew = () => {
   const { navigate } = useRouter();
@@ -118,14 +119,7 @@ const ListNew = () => {
 
 export const Route = createFileRoute("/list-new")({
   component: ListNew,
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth?.isAuthenticated) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
+  beforeLoad: ({ context }) => {
+    isAuthenticated(context);
   },
 });

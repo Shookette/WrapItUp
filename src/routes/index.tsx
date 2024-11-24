@@ -1,9 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getLists } from "../repository/ListRepository.ts";
+import { isAuthenticated } from "../utils/routeUtils.ts";
 
 export const Route = createFileRoute("/")({
   component: Index,
-  loader: () => getLists("1234"),
+  loader: () => getLists(),
+  beforeLoad: ({ context }) => {
+    isAuthenticated(context);
+  },
 });
 
 function Index() {

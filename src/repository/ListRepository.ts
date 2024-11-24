@@ -18,13 +18,12 @@ import {
 } from "./utils";
 import { List } from "../interfaces/List";
 import { getById } from "./ProfilRepository.ts";
+import { getPresents } from "./PresentRepository.ts";
 
 const COLLECTION_REF = "lists";
 
-const getLists = async (userUID: string): Promise<List[]> => {
-  const result: QuerySnapshot = await getDocs(
-    query(getCollectionRef(COLLECTION_REF), where("userUID", "!=", userUID)),
-  );
+const getLists = async (): Promise<List[]> => {
+  const result: QuerySnapshot = await getDocs(getCollectionRef(COLLECTION_REF));
 
   const resultArray = transformCollectionToArray<List>(result);
   sortList(resultArray, "title");
@@ -50,7 +49,13 @@ const getMyLists = async (userUID: string): Promise<List[]> => {
 
 const getListByID = async (id: string): Promise<List | null> => {
   const result: DocumentSnapshot = await getDoc(getDocRef(COLLECTION_REF, id));
-  return result.exists() ? (result.data() as List) : null;
+  const list = result.exists() ? (result.data() as List) : null;
+
+  if (list) {
+    list.presents = await getPresents(list.userUID);
+  }
+
+  return list;
 };
 
 const setList = async (list: List): Promise<void> => {

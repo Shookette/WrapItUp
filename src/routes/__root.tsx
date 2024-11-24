@@ -12,7 +12,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <nav className="p-2 flex gap-2">
         <Link to="/" className="[&.active]:font-bold">
           Listes de cadeaux
-        </Link>{" "}
+        </Link>
         <Link to="/list-new" className="[&.active]:font-bold">
           Ajouter une liste
         </Link>
