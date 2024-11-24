@@ -9,14 +9,16 @@ export const Route = createFileRoute("/")({
 function Index() {
   const lists = Route.useLoaderData();
 
-  console.log(lists);
+  console.log("Lists", lists);
 
   return (
     <div className="p-2">
       <h2>Liste de cadeaux des utilisateurs</h2>
       <ul>
         {lists.map((list) => (
-          <li>{list.title}</li>
+          <li>
+            {list.title} - {list.username} - {list.createdAt}
+          </li>
         ))}
       </ul>
     </div>

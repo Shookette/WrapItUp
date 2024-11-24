@@ -1,49 +1,45 @@
 import {
-  getFirestore,
   doc,
   getDoc,
   setDoc,
   getDocs,
-  collection,
-  DocumentReference,
-  CollectionReference,
   QuerySnapshot,
   DocumentSnapshot,
-  Firestore,
   DocumentData,
   deleteDoc,
   query,
   where,
 } from "firebase/firestore";
-import { sortList, transformCollectionToArray } from "./utils";
+import {
+  getCollectionRef,
+  getDocRef,
+  sortList,
+  transformCollectionToArray,
+} from "./utils";
 import { List } from "../interfaces/List";
+import { getById } from "./ProfilRepository.ts";
 
-const getDocRef = (collectionName: string, id: string): DocumentReference => {
-  const db = getFirestore();
-  return doc(db, collectionName, id);
-};
-
-const getCollectionRef = (
-  collectionName: string,
-): CollectionReference<DocumentData> => {
-  const db: Firestore = getFirestore();
-  return collection(db, collectionName);
-};
+const COLLECTION_REF = "lists";
 
 const getLists = async (userUID: string): Promise<List[]> => {
   const result: QuerySnapshot = await getDocs(
-    query(getCollectionRef("lists"), where("userUID", "!=", userUID)),
+    query(getCollectionRef(COLLECTION_REF), where("userUID", "!=", userUID)),
   );
 
   const resultArray = transformCollectionToArray<List>(result);
   sortList(resultArray, "title");
+
+  for (const list of resultArray) {
+    const profil = await getById(list.userUID);
+    list.username = profil?.username;
+  }
 
   return resultArray;
 };
 
 const getMyLists = async (userUID: string): Promise<List[]> => {
   const result: QuerySnapshot = await getDocs(
-    query(getCollectionRef("lists"), where("userUID", "==", userUID)),
+    query(getCollectionRef(COLLECTION_REF), where("userUID", "==", userUID)),
   );
 
   const resultArray = transformCollectionToArray<List>(result);
@@ -53,18 +49,18 @@ const getMyLists = async (userUID: string): Promise<List[]> => {
 };
 
 const getListByID = async (id: string): Promise<List | null> => {
-  const result: DocumentSnapshot = await getDoc(getDocRef("lists", id));
+  const result: DocumentSnapshot = await getDoc(getDocRef(COLLECTION_REF, id));
   return result.exists() ? (result.data() as List) : null;
 };
 
 const setList = async (list: List): Promise<void> => {
-  const listCollection = getCollectionRef("lists");
+  const listCollection = getCollectionRef(COLLECTION_REF);
   const listDocument = doc(listCollection, list.id);
   await setDoc<DocumentData, DocumentData>(listDocument, list);
 };
 
 const deleteList = async (id: string): Promise<void> => {
-  return await deleteDoc(getDocRef("lists", id));
+  return await deleteDoc(getDocRef(COLLECTION_REF, id));
 };
 
 export { getLists, getMyLists, getListByID, setList, deleteList };

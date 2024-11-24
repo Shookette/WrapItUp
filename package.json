@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.82.2",
+    "dayjs": "^1.11.13",
     "eslint-config-prettier": "^9.1.0",
     "firebase": "^11.0.2",
     "react": "^18.3.1",

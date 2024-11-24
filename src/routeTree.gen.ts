@@ -8,24 +8,40 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ResetPasswordImport } from './routes/reset-password'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
+import { Route as ListNewImport } from './routes/list-new'
 import { Route as IndexImport } from './routes/index'
-
-// Create Virtual Routes
-
-const ListNewLazyImport = createFileRoute('/list-new')()
 
 // Create/Update Routes
 
-const ListNewLazyRoute = ListNewLazyImport.update({
+const ResetPasswordRoute = ResetPasswordImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RegisterRoute = RegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ListNewRoute = ListNewImport.update({
   id: '/list-new',
   path: '/list-new',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/list-new.lazy').then((d) => d.Route))
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -48,7 +64,28 @@ declare module '@tanstack/react-router' {
       id: '/list-new'
       path: '/list-new'
       fullPath: '/list-new'
-      preLoaderRoute: typeof ListNewLazyImport
+      preLoaderRoute: typeof ListNewImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordImport
       parentRoute: typeof rootRoute
     }
   }
@@ -58,37 +95,58 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/list-new': typeof ListNewLazyRoute
+  '/list-new': typeof ListNewRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/list-new': typeof ListNewLazyRoute
+  '/list-new': typeof ListNewRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/list-new': typeof ListNewLazyRoute
+  '/list-new': typeof ListNewRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/list-new'
+  fullPaths: '/' | '/list-new' | '/login' | '/register' | '/reset-password'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/list-new'
-  id: '__root__' | '/' | '/list-new'
+  to: '/' | '/list-new' | '/login' | '/register' | '/reset-password'
+  id:
+    | '__root__'
+    | '/'
+    | '/list-new'
+    | '/login'
+    | '/register'
+    | '/reset-password'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ListNewLazyRoute: typeof ListNewLazyRoute
+  ListNewRoute: typeof ListNewRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ListNewLazyRoute: ListNewLazyRoute,
+  ListNewRoute: ListNewRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 
 export const routeTree = rootRoute
@@ -102,14 +160,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/list-new"
+        "/list-new",
+        "/login",
+        "/register",
+        "/reset-password"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
     "/list-new": {
-      "filePath": "list-new.lazy.tsx"
+      "filePath": "list-new.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/register": {
+      "filePath": "register.tsx"
+    },
+    "/reset-password": {
+      "filePath": "reset-password.tsx"
     }
   }
 }
