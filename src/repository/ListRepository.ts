@@ -18,7 +18,6 @@ import {
 } from "./utils";
 import { List } from "../interfaces/List";
 import { getById } from "./ProfilRepository.ts";
-import { getPresents } from "./PresentRepository.ts";
 
 const COLLECTION_REF = "lists";
 
@@ -52,7 +51,8 @@ const getListByID = async (id: string): Promise<List | null> => {
   const list = result.exists() ? (result.data() as List) : null;
 
   if (list) {
-    list.presents = await getPresents(list.userUID);
+    const profil = await getById(list.userUID);
+    list.username = profil?.username;
   }
 
   return list;

@@ -20,7 +20,7 @@ const COLLECTION_REF = "presents";
 
 const getPresents = async (listUID: string): Promise<Present[]> => {
   const result: QuerySnapshot = await getDocs(
-    query(getCollectionRef(COLLECTION_REF), where("listUID", "!=", listUID)),
+    query(getCollectionRef(COLLECTION_REF), where("listUID", "==", listUID)),
   );
 
   const resultArray = transformCollectionToArray<Present>(result);

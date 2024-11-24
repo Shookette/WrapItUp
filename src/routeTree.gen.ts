@@ -16,6 +16,7 @@ import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as ListNewImport } from './routes/list-new'
 import { Route as IndexImport } from './routes/index'
+import { Route as ListListIdImport } from './routes/list.$listId'
 
 // Create/Update Routes
 
@@ -46,6 +47,12 @@ const ListNewRoute = ListNewImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ListListIdRoute = ListListIdImport.update({
+  id: '/list/$listId',
+  path: '/list/$listId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordImport
       parentRoute: typeof rootRoute
     }
+    '/list/$listId': {
+      id: '/list/$listId'
+      path: '/list/$listId'
+      fullPath: '/list/$listId'
+      preLoaderRoute: typeof ListListIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -99,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -107,6 +122,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesById {
@@ -116,13 +132,26 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/list-new' | '/login' | '/register' | '/reset-password'
+  fullPaths:
+    | '/'
+    | '/list-new'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/list/$listId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/list-new' | '/login' | '/register' | '/reset-password'
+  to:
+    | '/'
+    | '/list-new'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/list/$listId'
   id:
     | '__root__'
     | '/'
@@ -130,6 +159,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/reset-password'
+    | '/list/$listId'
   fileRoutesById: FileRoutesById
 }
 
@@ -139,6 +169,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ListListIdRoute: typeof ListListIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -147,6 +178,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ListListIdRoute: ListListIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -163,7 +195,8 @@ export const routeTree = rootRoute
         "/list-new",
         "/login",
         "/register",
-        "/reset-password"
+        "/reset-password",
+        "/list/$listId"
       ]
     },
     "/": {
@@ -180,6 +213,9 @@ export const routeTree = rootRoute
     },
     "/reset-password": {
       "filePath": "reset-password.tsx"
+    },
+    "/list/$listId": {
+      "filePath": "list.$listId.tsx"
     }
   }
 }
