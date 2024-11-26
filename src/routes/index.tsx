@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback, useMemo } from "react";
-import { Container, Table, Title } from "@mantine/core";
+import { Container, Paper, Table, Title } from "@mantine/core";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -36,17 +36,19 @@ function Index() {
 
   return (
     <Container>
-      <Title order={2}>Liste de cadeaux des utilisateurs</Title>
-      <Table stickyHeader stickyHeaderOffset={60} highlightOnHover striped>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Nom de la liste</Table.Th>
-            <Table.Th>Créateur de la liste</Table.Th>
-            <Table.Th>Date de création de la liste</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Title order={2}>Liste de cadeaux des utilisateurs</Title>
+        <Table stickyHeader highlightOnHover striped>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Nom de la liste</Table.Th>
+              <Table.Th>Créateur de la liste</Table.Th>
+              <Table.Th>Date de création de la liste</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </Paper>
     </Container>
   );
 }

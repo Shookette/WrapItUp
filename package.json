@@ -23,6 +23,7 @@
     "@mantine/nprogress": "^7.14.2",
     "@mantine/spotlight": "^7.14.2",
     "@mantine/tiptap": "^7.14.2",
+    "@tabler/icons-react": "^3.22.0",
     "@tanstack/react-router": "^1.82.2",
     "@tiptap/extension-link": "^2.10.3",
     "@tiptap/pm": "^2.10.3",

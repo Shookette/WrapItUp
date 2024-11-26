@@ -9,6 +9,7 @@ import {
   Card,
   Container,
   Group,
+  Paper,
   SimpleGrid,
   Text,
   Title,
@@ -86,8 +87,10 @@ function RouteComponent() {
 
   return (
     <Container>
-      <Title order={2}>{list.title}</Title>
-      <SimpleGrid cols={3}>{cards}</SimpleGrid>
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Title order={2}>{list.title}</Title>
+        <SimpleGrid cols={3}>{cards}</SimpleGrid>
+      </Paper>
     </Container>
   );
 }

@@ -74,8 +74,6 @@ function RegisterComponent() {
                   />
                 )}
               />
-            </Stack>
-            <Stack>
               <Controller
                 name="username"
                 control={control}
@@ -94,7 +92,6 @@ function RegisterComponent() {
                   />
                 )}
               />
-
               <Controller
                 name="password"
                 control={control}
@@ -110,13 +107,9 @@ function RegisterComponent() {
                   />
                 )}
               />
-              <SimpleGrid>
-                <Button type="submit">Inscription</Button>
-              </SimpleGrid>
             </Stack>
           </form>
           <Space h="md" />
-
           <SimpleGrid cols={2}>
             <Button
               type="button"
