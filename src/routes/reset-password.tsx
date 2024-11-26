@@ -1,7 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Button from "../components/Button/Button.tsx";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useUserContext } from "../hooks/UserContext.tsx";
+import {
+  Button,
+  Center,
+  Container,
+  Paper,
+  SimpleGrid,
+  Space,
+  Stack,
+  TextInput,
+  Title,
+} from "@mantine/core";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
@@ -21,46 +31,60 @@ function ResetPasswordComponent() {
   };
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormResetPassword>();
+  } = useForm<FormResetPassword>({ defaultValues: { email: "" } });
 
   return (
-    <article className="reset-password">
-      <div className="reset-password_content">
-        <h1 className="reset_password_title">Réinitialiser le mot de passe</h1>
-        <form className="form" onSubmit={handleSubmit(handleOnSubmit)}>
-          <label className="form_label" htmlFor="email">
-            Adresse e-mail
-          </label>
-          <input
-            className="form_input"
-            id="email"
-            {...register("email", { required: true })}
-          />
-          <span role="alert" className="form_input--error">
-            {errors.email && `L'adresse mail est obligatoire`}
-          </span>
-          <input className="form_submit" type="submit" value="Réinitialiser" />
-        </form>
-        <div className="reset-password_actions">
-          <Button
-            type="button"
-            displayType="secondary"
-            handleOnClick={() => navigate({ to: "/login" })}
-          >
-            <span>Connexion</span>
-          </Button>
-          <Button
-            type="button"
-            displayType="tertiary"
-            handleOnClick={() => navigate({ to: "/register" })}
-          >
-            <span>Inscription</span>
-          </Button>
-        </div>
-      </div>
-    </article>
+    <Container>
+      <Center>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <Title order={1}>Réinitialiser le mot de passe</Title>
+          <Space h="md" />
+          <form className="form" onSubmit={handleSubmit(handleOnSubmit)}>
+            <Stack>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field: { onChange, value, name } }) => (
+                  <TextInput
+                    id="email"
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    label="Email"
+                    type="email"
+                    withAsterisk
+                    required
+                    error={errors.email && "L'adresse mail est obligatoire"}
+                  />
+                )}
+              />
+              <SimpleGrid>
+                <Button type="submit">Réinitialiser le mot de passe</Button>
+              </SimpleGrid>
+            </Stack>
+          </form>
+          <Space h="md" />
+          <SimpleGrid cols={2}>
+            <Button
+              type="button"
+              color="green"
+              onClick={() => navigate({ to: "/login" })}
+            >
+              <span>Connexion</span>
+            </Button>
+            <Button
+              type="button"
+              color="red"
+              onClick={() => navigate({ to: "/register" })}
+            >
+              <span>Inscription</span>
+            </Button>
+          </SimpleGrid>
+        </Paper>
+      </Center>
+    </Container>
   );
 }
