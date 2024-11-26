@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo } from "react";
 import ReactDOM from "react-dom/client";
-import "./main.scss";
+import "@mantine/core/styles.css";
+
 import WithFirestore from "./components/WithFirestore.tsx";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import UserProvider, { useUserContext } from "./hooks/UserContext.tsx";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
+import { MantineProvider } from "@mantine/core";
 // Create a new router instance
 const router = createRouter({
   routeTree,
@@ -43,10 +45,12 @@ const InnerApp = () => {
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <WithFirestore>
-      <UserProvider>
-        <InnerApp />
-      </UserProvider>
-    </WithFirestore>
+    <MantineProvider>
+      <WithFirestore>
+        <UserProvider>
+          <InnerApp />
+        </UserProvider>
+      </WithFirestore>
+    </MantineProvider>
   </React.StrictMode>,
 );
