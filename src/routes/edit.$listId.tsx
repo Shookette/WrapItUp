@@ -48,12 +48,7 @@ function EditComponent() {
     return navigate({ to: "/" });
   }
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<List>({
+  const { control, handleSubmit, watch } = useForm<List>({
     defaultValues: list,
   });
 
@@ -101,7 +96,6 @@ function EditComponent() {
                   autoFocus
                   withAsterisk
                   required
-                  error={errors.title && "Le nom de la liste est obligatoire"}
                 />
               )}
             />
@@ -131,10 +125,6 @@ function EditComponent() {
                               autoFocus
                               withAsterisk
                               required
-                              error={
-                                errors.title &&
-                                "Le nom du cadeau est obligatoire"
-                              }
                             />
                           )}
                         />
@@ -149,7 +139,6 @@ function EditComponent() {
                               name={name}
                               value={value}
                               onChange={onChange}
-                              autoFocus
                             />
                           )}
                         />
@@ -164,7 +153,6 @@ function EditComponent() {
                               name={name}
                               value={value}
                               onChange={onChange}
-                              autoFocus
                             />
                           )}
                         />
@@ -197,6 +185,8 @@ function EditComponent() {
                   title: "",
                   status: "available",
                   listUID: watchListId,
+                  description: "",
+                  url: "",
                 })
               }
             >

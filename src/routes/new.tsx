@@ -38,12 +38,7 @@ function NewComponent() {
   const { navigate } = useRouter();
   const { user } = useUserContext();
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<List>({
+  const { control, handleSubmit, watch } = useForm<List>({
     defaultValues: {
       id: uuidv4(),
       userUID: user!.uid,
@@ -85,7 +80,6 @@ function NewComponent() {
                   autoFocus
                   withAsterisk
                   required
-                  error={errors.title && "Le nom de la liste est obligatoire"}
                 />
               )}
             />
@@ -115,10 +109,6 @@ function NewComponent() {
                               autoFocus
                               withAsterisk
                               required
-                              error={
-                                errors.title &&
-                                "Le nom du cadeau est obligatoire"
-                              }
                             />
                           )}
                         />
@@ -133,7 +123,6 @@ function NewComponent() {
                               name={name}
                               value={value}
                               onChange={onChange}
-                              autoFocus
                             />
                           )}
                         />
@@ -148,7 +137,6 @@ function NewComponent() {
                               name={name}
                               value={value}
                               onChange={onChange}
-                              autoFocus
                             />
                           )}
                         />
@@ -182,6 +170,8 @@ function NewComponent() {
                   title: "",
                   status: "available",
                   listUID: watchListId,
+                  url: "",
+                  description: "",
                 })
               }
             >

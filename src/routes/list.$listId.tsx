@@ -31,8 +31,6 @@ function ViewComponent() {
   const { user } = useUserContext();
   const [currentList, setCurrentList] = useState<List | null>(list);
 
-  console.log("view");
-
   if (!currentList) {
     return navigate({ to: "/" });
   }
