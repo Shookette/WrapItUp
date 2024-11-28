@@ -107,6 +107,9 @@ function RegisterComponent() {
                   />
                 )}
               />
+              <SimpleGrid>
+                <Button type="submit">Inscription</Button>
+              </SimpleGrid>
             </Stack>
           </form>
           <Space h="md" />
