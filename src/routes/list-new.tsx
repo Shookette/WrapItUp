@@ -18,11 +18,10 @@ import {
   Button,
   Center,
   Container,
-  Grid,
-  Group,
   Paper,
   SimpleGrid,
   Space,
+  Table,
   Textarea,
   TextInput,
   Title,
@@ -89,81 +88,89 @@ const ListNew = () => {
                 />
               )}
             />
-
-            {fields.map((_, index) => {
-              return (
-                <Group>
-                  <Grid align="center" justify="space-between" key={index}>
-                    <Grid.Col span={3}>
-                      <Controller
-                        name={`presents.${index}.title`}
-                        control={control}
-                        render={({ field: { onChange, value, name } }) => (
-                          <TextInput
-                            id="title"
-                            name={name}
-                            value={value}
-                            onChange={onChange}
-                            label="Nom du cadeau"
-                            autoFocus
-                            withAsterisk
-                            required
-                            error={
-                              errors.title && "Le nom du cadeau est obligatoire"
-                            }
-                          />
-                        )}
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={5}>
-                      <Controller
-                        name={`presents.${index}.description`}
-                        control={control}
-                        render={({ field: { onChange, value, name } }) => (
-                          <Textarea
-                            id="description"
-                            name={name}
-                            value={value}
-                            onChange={onChange}
-                            label="Description du cadeau"
-                            autoFocus
-                          />
-                        )}
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={3}>
-                      <Controller
-                        name={`presents.${index}.url`}
-                        control={control}
-                        render={({ field: { onChange, value, name } }) => (
-                          <TextInput
-                            id="url"
-                            name={name}
-                            value={value}
-                            onChange={onChange}
-                            label="Lien du cadeau"
-                            autoFocus
-                          />
-                        )}
-                      />
-                    </Grid.Col>
-                    <Grid.Col span={1}>
-                      <ActionIcon
-                        variant="filled"
-                        aria-label="Supprimer"
-                        color="red"
-                        onClick={() => remove(index)}
-                      >
-                        <IconTrash
-                          style={{ width: "70%", height: "70%" }}
-                          stroke={1.5}
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Nom du cadeau</Table.Th>
+                  <Table.Th>Description du cadeau</Table.Th>
+                  <Table.Th>Lien du cadeau</Table.Th>
+                  <Table.Th>Actions</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {fields.map((_, index) => {
+                  return (
+                    <Table.Tr>
+                      <Table.Td>
+                        <Controller
+                          name={`presents.${index}.title`}
+                          control={control}
+                          render={({ field: { onChange, value, name } }) => (
+                            <TextInput
+                              id="title"
+                              name={name}
+                              value={value}
+                              onChange={onChange}
+                              autoFocus
+                              withAsterisk
+                              required
+                              error={
+                                errors.title &&
+                                "Le nom du cadeau est obligatoire"
+                              }
+                            />
+                          )}
                         />
-                      </ActionIcon>
-                    </Grid.Col>
-                  </Grid>
-                </Group>
-              );
-            })}
+                      </Table.Td>
+                      <Table.Td>
+                        <Controller
+                          name={`presents.${index}.description`}
+                          control={control}
+                          render={({ field: { onChange, value, name } }) => (
+                            <Textarea
+                              id="description"
+                              name={name}
+                              value={value}
+                              onChange={onChange}
+                              autoFocus
+                            />
+                          )}
+                        />
+                      </Table.Td>
+                      <Table.Td>
+                        <Controller
+                          name={`presents.${index}.url`}
+                          control={control}
+                          render={({ field: { onChange, value, name } }) => (
+                            <TextInput
+                              id="url"
+                              name={name}
+                              value={value}
+                              onChange={onChange}
+                              autoFocus
+                            />
+                          )}
+                        />
+                      </Table.Td>
+                      <Table.Td>
+                        <ActionIcon
+                          variant="filled"
+                          aria-label="Supprimer"
+                          color="red"
+                          onClick={() => remove(index)}
+                        >
+                          <IconTrash
+                            style={{ width: "70%", height: "70%" }}
+                            stroke={1.5}
+                          />
+                        </ActionIcon>
+                      </Table.Td>
+                    </Table.Tr>
+                  );
+                })}
+              </Table.Tbody>
+            </Table>
+
             <Space h="md" />
             <Button
               type="button"
