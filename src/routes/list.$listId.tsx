@@ -18,25 +18,26 @@ import { useUserContext } from "../hooks/UserContext.tsx";
 import { List } from "../interfaces/List.ts";
 
 export const Route = createFileRoute("/list/$listId")({
-  component: RouteComponent,
+  component: ViewComponent,
   loader: ({ params: { listId } }) => getListByID(listId),
   beforeLoad: ({ context }) => {
     isAuthenticated(context);
   },
 });
 
-function RouteComponent() {
+function ViewComponent() {
   const list = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const { user } = useUserContext();
   const [currentList, setCurrentList] = useState<List | null>(list);
 
+  console.log("view");
+
   if (!currentList) {
     return navigate({ to: "/" });
   }
 
-  // const isCurrentUser = list.userUID === user?.uid;
-  const isCurrentUser = false;
+  const isCurrentUser = currentList.userUID === user?.uid;
 
   const bookGift = useCallback(async (presentId: string) => {
     const present = currentList.presents.find(

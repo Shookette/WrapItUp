@@ -3,29 +3,40 @@ import { getLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback, useMemo } from "react";
 import { Container, Paper, Table, Title } from "@mantine/core";
+import { List } from "../interfaces/List.ts";
+import { useUserContext } from "../hooks/UserContext.tsx";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: IndexComponent,
   loader: () => getLists(),
   beforeLoad: ({ context }) => {
     isAuthenticated(context);
   },
 });
 
-function Index() {
+function IndexComponent() {
   const lists = Route.useLoaderData();
   const navigate = Route.useNavigate();
+  const { user } = useUserContext();
 
   const redirectTo = useCallback(
-    (listUID: string) =>
-      navigate({ to: "/list/$listId", params: { listId: listUID } }),
+    (list: List) => {
+      if (list.userUID === user?.uid) {
+        return navigate({
+          to: "/edit/$listId",
+          params: { listId: list.id },
+        });
+      }
+
+      return navigate({ to: "/list/$listId", params: { listId: list.id } });
+    },
     [navigate],
   );
 
   const rows = useMemo(
     () =>
       lists.map((list) => (
-        <Table.Tr onClick={() => redirectTo(list.id)} key={list.id}>
+        <Table.Tr onClick={() => redirectTo(list)} key={list.id}>
           <Table.Td>{list.title}</Table.Td>
           <Table.Td>{list.username}</Table.Td>
           <Table.Td>{list.createdAt}</Table.Td>

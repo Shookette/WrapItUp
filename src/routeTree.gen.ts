@@ -13,10 +13,11 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as ResetPasswordImport } from './routes/reset-password'
 import { Route as RegisterImport } from './routes/register'
+import { Route as NewImport } from './routes/new'
 import { Route as LoginImport } from './routes/login'
-import { Route as ListNewImport } from './routes/list-new'
 import { Route as IndexImport } from './routes/index'
 import { Route as ListListIdImport } from './routes/list.$listId'
+import { Route as EditListIdImport } from './routes/edit.$listId'
 
 // Create/Update Routes
 
@@ -32,15 +33,15 @@ const RegisterRoute = RegisterImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
+const NewRoute = NewImport.update({
+  id: '/new',
+  path: '/new',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ListNewRoute = ListNewImport.update({
-  id: '/list-new',
-  path: '/list-new',
+const LoginRoute = LoginImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -56,6 +57,12 @@ const ListListIdRoute = ListListIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const EditListIdRoute = EditListIdImport.update({
+  id: '/edit/$listId',
+  path: '/edit/$listId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -67,18 +74,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/list-new': {
-      id: '/list-new'
-      path: '/list-new'
-      fullPath: '/list-new'
-      preLoaderRoute: typeof ListNewImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/new': {
+      id: '/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof NewImport
       parentRoute: typeof rootRoute
     }
     '/register': {
@@ -95,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordImport
       parentRoute: typeof rootRoute
     }
+    '/edit/$listId': {
+      id: '/edit/$listId'
+      path: '/edit/$listId'
+      fullPath: '/edit/$listId'
+      preLoaderRoute: typeof EditListIdImport
+      parentRoute: typeof rootRoute
+    }
     '/list/$listId': {
       id: '/list/$listId'
       path: '/list/$listId'
@@ -109,29 +123,32 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/list-new': typeof ListNewRoute
   '/login': typeof LoginRoute
+  '/new': typeof NewRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/edit/$listId': typeof EditListIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/list-new': typeof ListNewRoute
   '/login': typeof LoginRoute
+  '/new': typeof NewRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/edit/$listId': typeof EditListIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/list-new': typeof ListNewRoute
   '/login': typeof LoginRoute
+  '/new': typeof NewRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/edit/$listId': typeof EditListIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
 
@@ -139,45 +156,50 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/list-new'
     | '/login'
+    | '/new'
     | '/register'
     | '/reset-password'
+    | '/edit/$listId'
     | '/list/$listId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/list-new'
     | '/login'
+    | '/new'
     | '/register'
     | '/reset-password'
+    | '/edit/$listId'
     | '/list/$listId'
   id:
     | '__root__'
     | '/'
-    | '/list-new'
     | '/login'
+    | '/new'
     | '/register'
     | '/reset-password'
+    | '/edit/$listId'
     | '/list/$listId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ListNewRoute: typeof ListNewRoute
   LoginRoute: typeof LoginRoute
+  NewRoute: typeof NewRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  EditListIdRoute: typeof EditListIdRoute
   ListListIdRoute: typeof ListListIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ListNewRoute: ListNewRoute,
   LoginRoute: LoginRoute,
+  NewRoute: NewRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  EditListIdRoute: EditListIdRoute,
   ListListIdRoute: ListListIdRoute,
 }
 
@@ -192,27 +214,31 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/list-new",
         "/login",
+        "/new",
         "/register",
         "/reset-password",
+        "/edit/$listId",
         "/list/$listId"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/list-new": {
-      "filePath": "list-new.tsx"
-    },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/new": {
+      "filePath": "new.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
     },
     "/reset-password": {
       "filePath": "reset-password.tsx"
+    },
+    "/edit/$listId": {
+      "filePath": "edit.$listId.tsx"
     },
     "/list/$listId": {
       "filePath": "list.$listId.tsx"

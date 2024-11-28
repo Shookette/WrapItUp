@@ -3,7 +3,6 @@ import {
   Link,
   Outlet,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { RouterContext } from "../main.tsx";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useMemo } from "react";
@@ -27,7 +26,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
                 Listes de cadeaux
               </Text>
             </Link>
-            <Link to="/list-new" style={{ textDecoration: "none" }}>
+            <Link to="/new" style={{ textDecoration: "none" }}>
               <Text td="underline" size="lg" c="green.7" fw="bold">
                 Ajouter une liste
               </Text>
@@ -48,7 +47,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         </Box>
         {isAuthenticated && isLoggedIn}
         <Outlet />
-        <TanStackRouterDevtools />
       </>
     );
   },
