@@ -109,7 +109,7 @@ function ViewComponent() {
     <Container>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <Title order={2}>{currentList.title}</Title>
-        <SimpleGrid cols={3}>{cards}</SimpleGrid>
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>{cards}</SimpleGrid>
       </Paper>
     </Container>
   );

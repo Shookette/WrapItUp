@@ -69,7 +69,7 @@ function EditComponent() {
   const handleDeleteList = useCallback(async () => {
     await deleteList(list.id);
     return navigate({ to: "/" });
-  }, []);
+  }, [list]);
 
   return (
     <Container>
@@ -77,7 +77,7 @@ function EditComponent() {
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <Flex justify="space-between">
             <Title order={2}>Ajouter une nouvelle Liste de cadeau</Title>
-            <Button color="red" onClick={() => handleDeleteList}>
+            <Button color="red" onClick={() => handleDeleteList()}>
               Supprimer la liste
             </Button>
           </Flex>
