@@ -47,16 +47,34 @@ type hookUserContext = () => UserProvider;
 
 const UserContext = createContext<UserProvider | null>(null);
 
+const key = "wrapitup.user";
+
+function getStoredUser() {
+  const storedUser = localStorage.getItem(key);
+  if (!storedUser) {
+    return null;
+  }
+  return JSON.parse(storedUser) as User;
+}
+
+function setStoredUser(user: User | null) {
+  if (user) {
+    localStorage.setItem(key, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(key);
+  }
+}
+
 const UserProvider: FC<UserProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(getStoredUser());
   const auth = getAuth();
   const isAuthenticated = !!user;
 
   useEffect(() => {
-    // @TODO add session storage ? handle better reconnect for user
     onAuthStateChanged(auth, (user) => {
       if (user && user.emailVerified) {
         setUser(user);
+        setStoredUser(user);
       }
     });
   }, []);
@@ -70,6 +88,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
       );
       const user = userCredential.user;
       setUser(user);
+      setStoredUser(user);
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
         console.error(`erreur lors de la connexion: ${error.message}`);
@@ -121,6 +140,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     await signOut(auth);
+    setStoredUser(null);
     return setUser(null);
   }, []);
 
