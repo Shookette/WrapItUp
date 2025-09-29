@@ -23,6 +23,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
               activeProps={{ className: "underline" }}
             >
               <Text td="underline" size="lg" c="green.7" fw="bold">
+                Mes listes
+              </Text></Link>
+            <Link
+              to="/lists"
+              style={{ textDecoration: "none" }}
+              activeProps={{ className: "underline" }}
+            >
+              <Text td="underline" size="lg" c="green.7" fw="bold">
                 Listes de cadeaux
               </Text>
             </Link>
