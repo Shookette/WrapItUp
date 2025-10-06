@@ -38,7 +38,7 @@ function ListsComponent() {
     <Container>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <Title order={2}>Listes de cadeaux</Title>
-        <ListTableComponent lists={lists} onRedirect={redirectTo} />
+        <ListTableComponent lists={lists} showAuthor onRedirect={redirectTo} />
       </Paper>
     </Container>
   )

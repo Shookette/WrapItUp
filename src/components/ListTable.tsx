@@ -1,17 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { getMyLists } from "../repository/ListRepository.ts";
-import { isAuthenticated } from "../utils/routeUtils.ts";
-import { FC, useCallback, useMemo } from "react";
-import { Container, Paper, Table, Title } from "@mantine/core";
+import { FC, useMemo } from "react";
+import { Table } from "@mantine/core";
 import { List } from "../interfaces/List.ts";
-import { useUserContext } from "../hooks/UserContext.tsx";
 
 type Props = {
   lists: Array<List>;
+  showAuthor?: boolean;
   onRedirect: (list: List) => void
 }
 
-const ListTableComponent: FC<Props> = ({ lists, onRedirect }) => {
+const ListTableComponent: FC<Props> = ({ lists, showAuthor = false, onRedirect }) => {
 
 
   const rows = useMemo(
@@ -20,6 +17,7 @@ const ListTableComponent: FC<Props> = ({ lists, onRedirect }) => {
         <Table.Tr onClick={() => onRedirect(list)} key={list.id}>
           <Table.Td>{list.title}</Table.Td>
           <Table.Td>{list.createdAt}</Table.Td>
+          {showAuthor && <Table.Td>{list.username ?? '-'}</Table.Td>}
         </Table.Tr>
       )),
     [lists],
@@ -29,8 +27,9 @@ const ListTableComponent: FC<Props> = ({ lists, onRedirect }) => {
     <Table stickyHeader highlightOnHover striped>
       <Table.Thead>
         <Table.Tr>
-          <Table.Th>Nom de la liste</Table.Th>
-          <Table.Th>Date de création de la liste</Table.Th>
+          <Table.Th>Nom</Table.Th>
+          <Table.Th>Date de création</Table.Th>
+          {showAuthor && <Table.Th>Auteur</Table.Th>}
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>{rows}</Table.Tbody>
