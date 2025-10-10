@@ -7,4 +7,8 @@ export type List = {
   presents: Present[];
   username?: string;
   createdAt: string;
+  allowedUsers: {
+    userUID: string;
+    username?: string;
+  }[];
 };

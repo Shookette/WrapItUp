@@ -30,6 +30,11 @@ const getLists = async (): Promise<List[]> => {
   for (const list of resultArray) {
     const profil = await getById(list.userUID);
     list.username = profil?.username;
+
+    for (const user of list.allowedUsers ?? []) {
+      const profilUserAllowed = await getById(user.userUID);
+      user.username = profilUserAllowed?.username;
+    }
   }
 
   return resultArray;
