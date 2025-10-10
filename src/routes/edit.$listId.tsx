@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { List } from "../interfaces/List.ts";
 import {
   deleteList,
@@ -16,10 +16,12 @@ import {
   Divider,
   Flex,
   Paper,
+  SimpleGrid,
   Space,
   Title,
 } from "@mantine/core";
 import ListForm from "../components/ListForm.tsx";
+import ListUserForm from "../components/ListUserForm.tsx";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -51,6 +53,11 @@ function EditComponent() {
     return navigate({ to: "/" });
   }, [list]);
 
+  const { control, handleSubmit, watch } = useForm<List>({
+    defaultValues: list,
+  });
+
+
   return (
     <Container>
       <Center>
@@ -62,17 +69,22 @@ function EditComponent() {
             </Button>
           </Flex>
           <Space h="md" />
-          <Button onClick={() => setTab("presents")} mr={10}>Cadeaux</Button>
-          <Button onClick={() => setTab("users")}>Utilisateurices</Button>
+          <Button onClick={() => setTab("presents")} mr={10} size="compact-md">Cadeaux</Button>
+          <Button onClick={() => setTab("users")} size="compact-md">Utilisateurices</Button>
           <Divider mt={10} mb={20} />
-          {
+          <form onSubmit={handleSubmit(handleOnSubmit)}>
             {
-              presents: (
-                <ListForm list={list} handleSubmitFunction={handleOnSubmit} />
-              ),
-              users: <span>toto</span>,
-            }[tab]
-          }
+              {
+                presents: (
+                  <ListForm control={control} watch={watch} />
+                ),
+                users: <ListUserForm control={control} watch={watch} />,
+              }[tab]
+            }
+            <SimpleGrid>
+              <Button type="submit">Envoyer</Button>
+            </SimpleGrid>
+          </form>
         </Paper>
       </Center>
     </Container >
