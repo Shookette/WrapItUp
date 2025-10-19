@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getMyLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
-import { useCallback, useMemo } from "react";
-import { Container, Paper, Table, Title } from "@mantine/core";
+import { useCallback } from "react";
+import { Container, Paper, Title } from "@mantine/core";
 import { List } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
@@ -10,13 +10,13 @@ import ListTableComponent from "../components/ListTable.tsx";
 export const Route = createFileRoute("/")({
   component: IndexComponent,
   loader: ({ context }) => {
-    const user = context.auth?.user
+    const user = context.auth?.user;
 
     if (!user) {
-      return []
+      return [];
     }
 
-    return getMyLists(user?.uid)
+    return getMyLists(user?.uid);
   },
   beforeLoad: ({ context }) => {
     isAuthenticated(context);

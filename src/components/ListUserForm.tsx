@@ -3,12 +3,12 @@ import { List } from "../interfaces/List";
 import { FC } from "react";
 
 type ListUserFormProps = {
-    control: Control<List>;
-    watch: UseFormWatch<List>;
+  control: Control<List>;
+  watch: UseFormWatch<List>;
 };
 
-const ListUserForm: FC<ListUserFormProps> = ({ control, watch }) => {
-    return <>WIP</>;
+const ListUserForm: FC<ListUserFormProps> = ({}) => {
+  return <>WIP</>;
 };
 
 export default ListUserForm;
