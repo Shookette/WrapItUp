@@ -15,8 +15,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
     const isLoggedIn = useMemo(
       () => (
-        <Box component="nav" h={40} bg="red.4" color="green" pl="8">
-          <Flex gap="xl" align="center" h="inherit">
+        <Box component="nav" h={40} bg="red.4" color="green" pl="8" pr="8">
+          <Flex gap="xl" align="center" h="inherit" >
             <Link
               to="/"
               style={{ textDecoration: "none" }}
@@ -39,8 +39,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
                 Ajouter une liste
               </Text>
             </Link>
+
+            <Link to="/account" style={{ marginLeft: 'auto' }}>
+              <Text td="underline" size="lg" c="green.7" fw="bold">
+                Compte
+              </Text>
+            </Link>
           </Flex>
-        </Box>
+        </Box >
       ),
       [],
     );
