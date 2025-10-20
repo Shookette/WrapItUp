@@ -22,6 +22,7 @@ import {
 } from "@mantine/core";
 import ListForm from "../components/ListForm.tsx";
 import ListUserForm from "../components/ListUserForm.tsx";
+import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -30,6 +31,20 @@ export const Route = createFileRoute("/edit/$listId")({
     isAuthenticated(context);
   },
 });
+
+const tabs: Array<{ icon: React.ReactNode; key: string; label: string }> = [
+  {
+    icon: <IconGift size={20} />,
+    key: "presents",
+    label: "Cadeaux",
+  },
+  { icon: <IconUser size={20} />, key: "users", label: "Utilisateurices" },
+  {
+    icon: <IconExclamationCircle size={20} />,
+    key: "danger",
+    label: "Danger zone",
+  },
+];
 
 function EditComponent() {
   const list: List | null = Route.useLoaderData();
@@ -57,28 +72,42 @@ function EditComponent() {
     defaultValues: list,
   });
 
-
   return (
     <Container>
       <Center>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <Flex justify="space-between">
-            <Title order={2} mr={20}>Modifier votre liste de cadeau</Title>
-            <Button color="red" onClick={() => handleDeleteList()}>
-              Supprimer la liste
-            </Button>
+            <Title order={2} mr={20}>
+              Modifier votre liste de cadeau
+            </Title>
           </Flex>
           <Space h="md" />
-          <Button onClick={() => setTab("presents")} mr={10} size="compact-md">Cadeaux</Button>
-          <Button onClick={() => setTab("users")} size="compact-md">Utilisateurices</Button>
+
+          {tabs.map((tab) => (
+            <Button
+              color="gray"
+              onClick={() => setTab(tab.key)}
+              mr={10}
+              size="compact-md"
+            >
+              {tab.icon}
+              {tab.label}
+            </Button>
+          ))}
+
           <Divider mt={10} mb={20} />
           <form onSubmit={handleSubmit(handleOnSubmit)}>
             {
               {
-                presents: (
-                  <ListForm control={control} watch={watch} />
-                ),
+                presents: <ListForm control={control} watch={watch} />,
                 users: <ListUserForm control={control} watch={watch} />,
+                danger: (
+                  <div>
+                    <Button color="red" onClick={() => handleDeleteList()}>
+                      Supprimer la liste
+                    </Button>
+                  </div>
+                ),
               }[tab]
             }
             <SimpleGrid>
@@ -87,6 +116,6 @@ function EditComponent() {
           </form>
         </Paper>
       </Center>
-    </Container >
+    </Container>
   );
 }

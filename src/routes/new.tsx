@@ -53,7 +53,7 @@ function NewComponent() {
     <Container>
       <Center>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Title order={2}>Ajouter une nouvelle Liste de cadeau</Title>
+          <Title order={2}>Ajouter une nouvelle liste de cadeau</Title>
           <Space h="md" />
           <form onSubmit={handleSubmit(handleOnSubmit)}>
             <Controller
@@ -65,7 +65,8 @@ function NewComponent() {
                   name={name}
                   value={value}
                   onChange={onChange}
-                  label="Nom de la liste de cadeau"
+                  label="Nom de la liste"
+                  placeholder="Nom de la liste"
                   autoFocus
                   withAsterisk
                   required
