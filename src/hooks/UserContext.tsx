@@ -134,7 +134,10 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   const updateUser = useCallback(
-    async (user: User) => updateCurrentUser(auth, user),
+    async (user: User) => {
+      await updateProfile(user, { displayName: user.displayName });
+      await updateCurrentUser(auth, user)
+    },
     [],
   );
 

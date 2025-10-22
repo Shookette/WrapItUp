@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Navigate } from '@tanstack/react-router'
 import { Button, Center, Container, Paper, SimpleGrid, Space, TextInput, Title } from '@mantine/core'
 import { isAuthenticated } from '../utils/routeUtils';
 import { useUserContext } from '../hooks/UserContext';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { User } from 'firebase/auth';
+import { useCallback, useMemo } from 'react';
 
 export const Route = createFileRoute('/account')({
   component: AccountComponent,
@@ -14,9 +14,9 @@ export const Route = createFileRoute('/account')({
 })
 
 function AccountComponent() {
-  const { user } = useUserContext();
+  const { user, updateUser } = useUserContext();
 
-  const defaultUser = React.useMemo(() => ({
+  const defaultUser = useMemo(() => ({
     ...user
   }), [user])
 
@@ -25,12 +25,20 @@ function AccountComponent() {
     defaultValues: defaultUser,
   });
 
+  const handleOnSubmit: SubmitHandler<User> = useCallback(async (user) => {
+    await updateUser(user)
+    Navigate({
+      to: "/",
+    });
+  }, [])
+
+
   return (
     <Container>
       <Center>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <Title order={2}>Informations personnelles</Title>
-          <form>
+          <form onSubmit={handleSubmit(handleOnSubmit)}>
             <Controller
               name="displayName"
               control={control}
