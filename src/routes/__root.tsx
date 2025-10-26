@@ -11,12 +11,12 @@ import HomeImageUrl from "../assets/home.png";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => {
-    const { isAuthenticated } = useUserContext();
+    const { isAuthenticated, logout } = useUserContext();
 
     const isLoggedIn = useMemo(
       () => (
         <Box component="nav" h={40} bg="red.4" color="green" pl="8" pr="8">
-          <Flex gap="xl" align="center" h="inherit" >
+          <Flex gap="xl" align="center" h="inherit">
             <Link
               to="/"
               style={{ textDecoration: "none" }}
@@ -24,7 +24,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
             >
               <Text td="underline" size="lg" c="green.7" fw="bold">
                 Mes listes
-              </Text></Link>
+              </Text>
+            </Link>
             <Link
               to="/lists"
               style={{ textDecoration: "none" }}
@@ -40,13 +41,23 @@ export const Route = createRootRouteWithContext<RouterContext>()({
               </Text>
             </Link>
 
-            <Link to="/account" style={{ marginLeft: 'auto' }}>
+            <Link to="/account" style={{ marginLeft: "auto" }}>
               <Text td="underline" size="lg" c="green.7" fw="bold">
                 Compte
               </Text>
             </Link>
+
+            <Text
+              td="underline"
+              size="lg"
+              c="green.7"
+              fw="bold"
+              onClick={logout}
+            >
+              Déconnexion
+            </Text>
           </Flex>
-        </Box >
+        </Box>
       ),
       [],
     );
