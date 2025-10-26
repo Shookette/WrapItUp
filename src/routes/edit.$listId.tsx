@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { List } from "../interfaces/List.ts";
 import {
   deleteList,
@@ -48,8 +48,11 @@ const tabs: Array<{ icon: React.ReactNode; key: string; label: string }> = [
 function EditComponent() {
   const list: List | null = Route.useLoaderData();
   const navigate = Route.useNavigate();
+  const router = useRouter();
+
   const [tab, setTab] = useState("presents");
   const { user } = useUserContext();
+  const [loading, setLoading] = useState(false);
 
   if (!list || list.userUID !== user?.uid) {
     return navigate({ to: "/" });
@@ -61,11 +64,16 @@ function EditComponent() {
   }, [list]);
 
   const removeUser = async (userUID: string) => {
-    list.allowedUsers = list.allowedUsers.filter(
-      (user) => user.userUID !== userUID,
-    );
+    setLoading(true);
 
-    await setList(list);
+    await setList({
+      ...list,
+      allowedUsers: list.allowedUsers.filter(
+        (user) => user.userUID !== userUID,
+      ),
+    });
+    router.invalidate();
+    setLoading(false);
   };
 
   return (
@@ -95,7 +103,13 @@ function EditComponent() {
             {
               {
                 presents: <ListForm list={list} />,
-                users: <ListUserForm list={list} onRemove={removeUser} />,
+                users: (
+                  <ListUserForm
+                    list={list}
+                    handleOnRemove={removeUser}
+                    loading={loading}
+                  />
+                ),
                 danger: (
                   <div>
                     <Button color="red" onClick={() => handleDeleteList()}>

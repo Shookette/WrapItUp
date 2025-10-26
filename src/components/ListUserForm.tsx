@@ -6,10 +6,15 @@ import { notifications } from "@mantine/notifications";
 
 type ListUserFormProps = {
   list: List;
-  onRemove: (id: string) => void;
+  handleOnRemove: (id: string) => void;
+  loading: boolean;
 };
 
-const ListUserForm: FC<ListUserFormProps> = ({ list, onRemove }) => {
+const ListUserForm: FC<ListUserFormProps> = ({
+  list,
+  handleOnRemove,
+  loading,
+}) => {
   async function copyLink() {
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
     await navigator.clipboard.writeText(`${baseUrl}/invite/${list.id}`);
@@ -36,7 +41,6 @@ const ListUserForm: FC<ListUserFormProps> = ({ list, onRemove }) => {
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Utilisateurices</Table.Th>
-            <Table.Th>Statut</Table.Th>
             <Table.Th>Actions</Table.Th>
           </Table.Tr>
         </Table.Thead>
@@ -47,10 +51,11 @@ const ListUserForm: FC<ListUserFormProps> = ({ list, onRemove }) => {
               <Table.Td>wip</Table.Td>
               <Table.Td>
                 <ActionIcon
+                  loading={loading}
                   variant="filled"
                   aria-label="Supprimer"
                   color="red"
-                  onClick={() => onRemove(user.userUID)}
+                  onClick={() => handleOnRemove(user.userUID)}
                 >
                   <IconTrash
                     style={{ width: "70%", height: "70%" }}
