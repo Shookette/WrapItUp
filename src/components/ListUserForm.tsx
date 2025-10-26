@@ -11,7 +11,8 @@ type ListUserFormProps = {
 
 const ListUserForm: FC<ListUserFormProps> = ({ list, onRemove }) => {
   async function copyLink() {
-    await navigator.clipboard.writeText(``);
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
+    await navigator.clipboard.writeText(`${baseUrl}/invite/${list.id}`);
     notifications.show({
       position: "top-right",
       title: "Ajouter un•e utilisateurice",

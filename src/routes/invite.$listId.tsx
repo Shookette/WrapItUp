@@ -1,0 +1,77 @@
+import { createFileRoute } from "@tanstack/react-router";
+import PrivateLayout from "../components/PrivateLayout.tsx";
+import { Button, Container, Paper } from "@mantine/core";
+import { getListByID, setList } from "../repository/ListRepository.ts";
+import { isAuthenticated } from "../utils/routeUtils.ts";
+import { List } from "../interfaces/List.ts";
+import { useUserContext } from "../hooks/UserContext.tsx";
+import { useEffect, useState } from "react";
+
+export const Route = createFileRoute("/invite/$listId")({
+  component: InviteComponent,
+  loader: ({ params: { listId } }) => getListByID(listId),
+  beforeLoad: ({ context, location }) => {
+    isAuthenticated(context, location);
+  },
+});
+
+function InviteComponent() {
+  const list: List | null = Route.useLoaderData();
+  const { user } = useUserContext();
+  const [loading, setLoading] = useState(false);
+  const navigate = Route.useNavigate();
+
+  async function joinList() {
+    if (!user || !list) {
+      return;
+    }
+
+    setLoading(true);
+    const newUser = {
+      userUID: user.uid,
+      username: user.displayName ?? "",
+    };
+
+    await setList({
+      ...list,
+      allowedUsers: list.allowedUsers
+        ? [...list.allowedUsers, newUser]
+        : [newUser],
+    });
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    if (
+      list &&
+      list.allowedUsers.find((user) => user.userUID === user.userUID) !==
+        undefined
+    ) {
+      navigate({ to: "/list/$listId" });
+    }
+  }, [list]);
+
+  return (
+    <PrivateLayout>
+      <Container>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          {!list ? (
+            <p>Liste introuvable</p>
+          ) : (
+            [
+              <p>
+                Vous avez reçu une invitation pour rejoindre la liste{" "}
+                <strong>{list?.title}</strong> de{" "}
+                <strong>{list?.username}</strong>
+              </p>,
+
+              <Button loading={loading} onClick={joinList}>
+                Rejoindre la liste
+              </Button>,
+            ]
+          )}
+        </Paper>
+      </Container>
+    </PrivateLayout>
+  );
+}
