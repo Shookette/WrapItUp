@@ -1,8 +1,9 @@
-import { Button, Space, TextInput } from "@mantine/core";
+import { Button, SimpleGrid, Space, TextInput } from "@mantine/core";
 import {
   Control,
   Controller,
   useFieldArray,
+  UseFormHandleSubmit,
   UseFormWatch,
 } from "react-hook-form";
 import { List } from "../interfaces/List";
@@ -13,9 +14,16 @@ import ListFormPresents from "./ListFormPresents";
 type ListFormProps = {
   control: Control<List>;
   watch: UseFormWatch<List>;
+  handleSubmit: UseFormHandleSubmit<List>;
+  handleOnSubmit: (list: List) => void;
 };
 
-const ListForm: FC<ListFormProps> = ({ control, watch }) => {
+const ListForm: FC<ListFormProps> = ({
+  control,
+  watch,
+  handleSubmit,
+  handleOnSubmit,
+}) => {
   const watchListId = watch("id");
 
   const { fields, append, remove } = useFieldArray({
@@ -24,7 +32,7 @@ const ListForm: FC<ListFormProps> = ({ control, watch }) => {
   });
 
   return (
-    <>
+    <form onSubmit={handleSubmit(handleOnSubmit)}>
       <Controller
         name="title"
         control={control}
@@ -60,7 +68,10 @@ const ListForm: FC<ListFormProps> = ({ control, watch }) => {
         Ajouter un cadeau
       </Button>
       <Space h="md" />
-    </>
+      <SimpleGrid>
+        <Button type="submit">Envoyer</Button>
+      </SimpleGrid>
+    </form>
   );
 };
 

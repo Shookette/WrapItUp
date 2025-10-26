@@ -16,7 +16,6 @@ import {
   Divider,
   Flex,
   Paper,
-  SimpleGrid,
   Space,
   Title,
 } from "@mantine/core";
@@ -105,24 +104,26 @@ function EditComponent() {
             </Button>
           ))}
           <Divider mt={10} mb={20} />
-          <form onSubmit={handleSubmit(handleOnSubmit)}>
+          {
             {
-              {
-                presents: <ListForm control={control} watch={watch} />,
-                users: <ListUserForm list={list} onRemove={removeUser} />,
-                danger: (
-                  <div>
-                    <Button color="red" onClick={() => handleDeleteList()}>
-                      Supprimer la liste
-                    </Button>
-                  </div>
-                ),
-              }[tab]
-            }
-            <SimpleGrid>
-              <Button type="submit">Envoyer</Button>
-            </SimpleGrid>
-          </form>
+              presents: (
+                <ListForm
+                  control={control}
+                  watch={watch}
+                  handleSubmit={handleSubmit}
+                  handleOnSubmit={handleOnSubmit}
+                />
+              ),
+              users: <ListUserForm list={list} onRemove={removeUser} />,
+              danger: (
+                <div>
+                  <Button color="red" onClick={() => handleDeleteList()}>
+                    Supprimer la liste
+                  </Button>
+                </div>
+              ),
+            }[tab]
+          }
         </Paper>
       </Center>
     </Container>
