@@ -6,6 +6,7 @@ import { Container, Paper, Title } from "@mantine/core";
 import { List } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
+import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/lists")({
   component: ListsComponent,
@@ -35,11 +36,17 @@ function ListsComponent() {
   );
 
   return (
-    <Container>
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <Title order={2}>Listes de cadeaux</Title>
-        <ListTableComponent lists={lists} showAuthor onRedirect={redirectTo} />
-      </Paper>
-    </Container>
+    <PrivateLayout>
+      <Container>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <Title order={2}>Listes de cadeaux</Title>
+          <ListTableComponent
+            lists={lists}
+            showAuthor
+            onRedirect={redirectTo}
+          />
+        </Paper>
+      </Container>
+    </PrivateLayout>
   );
 }

@@ -17,6 +17,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/new")({
   component: NewComponent,
@@ -50,37 +51,39 @@ function NewComponent() {
   }, []);
 
   return (
-    <Container>
-      <Center>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Title order={2}>Ajouter une nouvelle liste de cadeau</Title>
-          <Space h="md" />
-          <form onSubmit={handleSubmit(handleOnSubmit)}>
-            <Controller
-              name="title"
-              control={control}
-              render={({ field: { onChange, value, name } }) => (
-                <TextInput
-                  id="title"
-                  name={name}
-                  value={value}
-                  onChange={onChange}
-                  label="Nom de la liste"
-                  placeholder="Nom de la liste"
-                  autoFocus
-                  withAsterisk
-                  required
-                />
-              )}
-            />
-
+    <PrivateLayout>
+      <Container>
+        <Center>
+          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+            <Title order={2}>Ajouter une nouvelle liste de cadeau</Title>
             <Space h="md" />
-            <SimpleGrid>
-              <Button type="submit">Envoyer</Button>
-            </SimpleGrid>
-          </form>
-        </Paper>
-      </Center>
-    </Container>
+            <form onSubmit={handleSubmit(handleOnSubmit)}>
+              <Controller
+                name="title"
+                control={control}
+                render={({ field: { onChange, value, name } }) => (
+                  <TextInput
+                    id="title"
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    label="Nom de la liste"
+                    placeholder="Nom de la liste"
+                    autoFocus
+                    withAsterisk
+                    required
+                  />
+                )}
+              />
+
+              <Space h="md" />
+              <SimpleGrid>
+                <Button type="submit">Envoyer</Button>
+              </SimpleGrid>
+            </form>
+          </Paper>
+        </Center>
+      </Container>
+    </PrivateLayout>
   );
 }

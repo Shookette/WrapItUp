@@ -7,6 +7,7 @@ import { List } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
+import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,
@@ -44,24 +45,26 @@ function IndexComponent() {
   );
 
   return (
-    <Container>
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <Title order={2}>
-          <Flex>
-            Mes listes{" "}
-            <Button
-              color="green"
-              style={{ marginLeft: "auto", display: "block" }}
-              onClick={() => navigate({ to: "/new" })}
-            >
-              <IconPlus size={24} />
-              Ajouter
-            </Button>
-          </Flex>
-        </Title>
+    <PrivateLayout>
+      <Container>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <Title order={2}>
+            <Flex>
+              Mes listes{" "}
+              <Button
+                color="green"
+                style={{ marginLeft: "auto", display: "block" }}
+                onClick={() => navigate({ to: "/new" })}
+              >
+                <IconPlus size={24} />
+                Ajouter
+              </Button>
+            </Flex>
+          </Title>
 
-        <ListTableComponent lists={lists} onRedirect={redirectTo} />
-      </Paper>
-    </Container>
+          <ListTableComponent lists={lists} onRedirect={redirectTo} />
+        </Paper>
+      </Container>
+    </PrivateLayout>
   );
 }

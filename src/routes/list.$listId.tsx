@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { List } from "../interfaces/List.ts";
+import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,
@@ -106,11 +107,13 @@ function ViewComponent() {
   );
 
   return (
-    <Container>
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <Title order={2}>{currentList.title}</Title>
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>{cards}</SimpleGrid>
-      </Paper>
-    </Container>
+    <PrivateLayout>
+      <Container>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <Title order={2}>{currentList.title}</Title>
+          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>{cards}</SimpleGrid>
+        </Paper>
+      </Container>
+    </PrivateLayout>
   );
 }

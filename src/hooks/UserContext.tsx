@@ -133,18 +133,15 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const updateUser = useCallback(
-    async (user: User) => {
-      await updateProfile(user, { displayName: user.displayName });
-      await updateCurrentUser(auth, user)
-    },
-    [],
-  );
+  const updateUser = useCallback(async (user: User) => {
+    await updateProfile(user, { displayName: user.displayName });
+    await updateCurrentUser(auth, user);
+  }, []);
 
   const logout = useCallback(async () => {
     await signOut(auth);
     setStoredUser(null);
-    return setUser(null);
+    setUser(null);
   }, []);
 
   const deleteCurrentUser = useCallback(async (user: User) => {

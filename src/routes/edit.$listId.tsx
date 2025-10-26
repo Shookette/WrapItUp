@@ -21,6 +21,7 @@ import {
 import ListForm from "../components/ListForm.tsx";
 import ListUserForm from "../components/ListUserForm.tsx";
 import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
+import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -68,43 +69,45 @@ function EditComponent() {
   };
 
   return (
-    <Container>
-      <Center>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Flex justify="space-between">
-            <Title order={2} mr={20}>
-              Modifier votre liste de cadeau
-            </Title>
-          </Flex>
-          <Space h="md" />
+    <PrivateLayout>
+      <Container>
+        <Center>
+          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+            <Flex justify="space-between">
+              <Title order={2} mr={20}>
+                Modifier votre liste de cadeau
+              </Title>
+            </Flex>
+            <Space h="md" />
 
-          {tabs.map((tab) => (
-            <Button
-              color="gray"
-              onClick={() => setTab(tab.key)}
-              mr={10}
-              size="compact-md"
-            >
-              {tab.icon}
-              {tab.label}
-            </Button>
-          ))}
-          <Divider mt={10} mb={20} />
-          {
+            {tabs.map((tab) => (
+              <Button
+                color="gray"
+                onClick={() => setTab(tab.key)}
+                mr={10}
+                size="compact-md"
+              >
+                {tab.icon}
+                {tab.label}
+              </Button>
+            ))}
+            <Divider mt={10} mb={20} />
             {
-              presents: <ListForm list={list} />,
-              users: <ListUserForm list={list} onRemove={removeUser} />,
-              danger: (
-                <div>
-                  <Button color="red" onClick={() => handleDeleteList()}>
-                    Supprimer la liste
-                  </Button>
-                </div>
-              ),
-            }[tab]
-          }
-        </Paper>
-      </Center>
-    </Container>
+              {
+                presents: <ListForm list={list} />,
+                users: <ListUserForm list={list} onRemove={removeUser} />,
+                danger: (
+                  <div>
+                    <Button color="red" onClick={() => handleDeleteList()}>
+                      Supprimer la liste
+                    </Button>
+                  </div>
+                ),
+              }[tab]
+            }
+          </Paper>
+        </Center>
+      </Container>
+    </PrivateLayout>
   );
 }
