@@ -25,8 +25,8 @@ import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
   loader: ({ params: { listId } }) => getListByID(listId),
-  beforeLoad: ({ context }) => {
-    isAuthenticated(context);
+  beforeLoad: ({ context, location }) => {
+    isAuthenticated(context, location);
   },
 });
 

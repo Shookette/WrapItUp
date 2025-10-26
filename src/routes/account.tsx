@@ -1,37 +1,47 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'
-import { Button, Center, Container, Paper, SimpleGrid, Space, TextInput, Title } from '@mantine/core'
-import { isAuthenticated } from '../utils/routeUtils';
-import { useUserContext } from '../hooks/UserContext';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { User } from 'firebase/auth';
-import { useCallback, useMemo } from 'react';
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import {
+  Button,
+  Center,
+  Container,
+  Paper,
+  SimpleGrid,
+  Space,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { isAuthenticated } from "../utils/routeUtils";
+import { useUserContext } from "../hooks/UserContext";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { User } from "firebase/auth";
+import { useCallback, useMemo } from "react";
 
-export const Route = createFileRoute('/account')({
+export const Route = createFileRoute("/account")({
   component: AccountComponent,
-  beforeLoad: ({ context }) => {
-    isAuthenticated(context);
+  beforeLoad: ({ context, location }) => {
+    isAuthenticated(context, location);
   },
-})
+});
 
 function AccountComponent() {
   const { user, updateUser } = useUserContext();
 
-  const defaultUser = useMemo(() => ({
-    ...user
-  }), [user])
-
+  const defaultUser = useMemo(
+    () => ({
+      ...user,
+    }),
+    [user],
+  );
 
   const { control, handleSubmit } = useForm<User>({
     defaultValues: defaultUser,
   });
 
   const handleOnSubmit: SubmitHandler<User> = useCallback(async (user) => {
-    await updateUser(user)
+    await updateUser(user);
     Navigate({
       to: "/",
     });
-  }, [])
-
+  }, []);
 
   return (
     <Container>
@@ -47,7 +57,7 @@ function AccountComponent() {
                   id="displayName"
                   name={name}
                   value={value ?? ""}
-                  placeholder='Nom / Prénom'
+                  placeholder="Nom / Prénom"
                   onChange={onChange}
                   label="Nom / Prénom"
                   autoFocus
@@ -65,5 +75,5 @@ function AccountComponent() {
         </Paper>
       </Center>
     </Container>
-  )
+  );
 }

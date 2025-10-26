@@ -10,8 +10,8 @@ import ListTableComponent from "../components/ListTable.tsx";
 export const Route = createFileRoute("/lists")({
   component: ListsComponent,
   loader: getLists,
-  beforeLoad: ({ context }) => {
-    isAuthenticated(context);
+  beforeLoad: ({ context, location }) => {
+    isAuthenticated(context, location);
   },
 });
 

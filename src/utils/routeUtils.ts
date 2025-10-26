@@ -1,10 +1,10 @@
 import { RouterContext } from "../main.tsx";
-import { redirect } from "@tanstack/react-router";
+import { ParsedLocation, redirect } from "@tanstack/react-router";
 
-const isAuthenticated = (context: RouterContext) => {
+const isAuthenticated = (context: RouterContext, location: ParsedLocation) => {
   if (!context.auth?.isAuthenticated) {
     throw redirect({
-      to: "/login",
+      to: `/login${location.pathname !== "/" ? `?redirect=${location.pathname}` : ""}`,
     });
   }
 };

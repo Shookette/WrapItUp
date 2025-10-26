@@ -14,9 +14,15 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { z } from "zod";
+
+const productSearchSchema = z.object({
+  redirect: z.optional(z.string()),
+});
 
 export const Route = createFileRoute("/login")({
   component: LoginComponent,
+  validateSearch: productSearchSchema,
 });
 
 export type FormLogin = {
@@ -32,10 +38,11 @@ function LoginComponent() {
   const handleOnSubmit: SubmitHandler<FormLogin> = async (data) => {
     await login(data.email, data.password);
   };
+  const { redirect } = Route.useSearch();
 
   useEffect(() => {
     if (user) {
-      navigate({ to: "/" });
+      navigate({ to: redirect ?? "/" });
     }
   }, [user]);
 

@@ -20,8 +20,8 @@ import { List } from "../interfaces/List.ts";
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,
   loader: ({ params: { listId } }) => getListByID(listId),
-  beforeLoad: ({ context }) => {
-    isAuthenticated(context);
+  beforeLoad: ({ context, location }) => {
+    isAuthenticated(context, location);
   },
 });
 

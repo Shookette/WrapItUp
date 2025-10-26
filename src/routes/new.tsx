@@ -20,8 +20,8 @@ import {
 
 export const Route = createFileRoute("/new")({
   component: NewComponent,
-  beforeLoad: ({ context }) => {
-    isAuthenticated(context);
+  beforeLoad: ({ context, location }) => {
+    isAuthenticated(context, location);
   },
 });
 
