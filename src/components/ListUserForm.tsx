@@ -10,21 +10,23 @@ type ListUserFormProps = {
 };
 
 const ListUserForm: FC<ListUserFormProps> = ({ list, onRemove }) => {
+  async function copyLink() {
+    await navigator.clipboard.writeText("Text to copy");
+    notifications.show({
+      position: "top-right",
+      title: "Ajouter un•e utilisateurice",
+      message:
+        "Le lien d'ajout d'un•e nouvel•le utilisateurice à été copié dans votre presse papiers",
+    });
+  }
+
   return (
     <div>
       <Button
         mb={30}
         style={{ display: "block", marginLeft: "auto" }}
         color="green"
-        onClick={async () => {
-          await navigator.clipboard.writeText("Text to copy");
-          notifications.show({
-            position: "top-right",
-            title: "Ajouter un•e utilisateurice",
-            message:
-              "Le lien d'ajout d'un•e nouvel•le utilisateurice à été copié dans votre presse papiers",
-          });
-        }}
+        onClick={copyLink}
       >
         <IconLink style={{ marginRight: "10px" }} />
         Copier le lien de l'invitation

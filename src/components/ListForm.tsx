@@ -1,35 +1,47 @@
 import { Button, SimpleGrid, Space, TextInput } from "@mantine/core";
 import {
-  Control,
   Controller,
+  SubmitHandler,
   useFieldArray,
-  UseFormHandleSubmit,
-  UseFormWatch,
+  useForm,
 } from "react-hook-form";
 import { List } from "../interfaces/List";
-import { FC } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ListFormPresents from "./ListFormPresents";
+import { setList } from "../repository/ListRepository.ts";
+import { notifications } from "@mantine/notifications";
 
 type ListFormProps = {
-  control: Control<List>;
-  watch: UseFormWatch<List>;
-  handleSubmit: UseFormHandleSubmit<List>;
-  handleOnSubmit: (list: List) => void;
+  list: List;
 };
 
-const ListForm: FC<ListFormProps> = ({
-  control,
-  watch,
-  handleSubmit,
-  handleOnSubmit,
-}) => {
+const ListForm: FC<ListFormProps> = ({ list }) => {
+  const [loading, setLoading] = useState(false);
+  const defaultValues = useMemo(() => list, [list]);
+
+  const { control, handleSubmit, watch } = useForm<List>({
+    defaultValues,
+  });
+
   const watchListId = watch("id");
 
   const { fields, append, remove } = useFieldArray({
     name: "presents",
     control,
   });
+
+  const handleOnSubmit: SubmitHandler<List> = useCallback(async (list) => {
+    setLoading(true);
+    await setList(list);
+    setLoading(false);
+
+    notifications.show({
+      color: "green",
+      position: "top-right",
+      message: "Liste modifiée",
+    });
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
@@ -69,7 +81,9 @@ const ListForm: FC<ListFormProps> = ({
       </Button>
       <Space h="md" />
       <SimpleGrid>
-        <Button type="submit">Envoyer</Button>
+        <Button loading={loading} type="submit">
+          Enregistrer
+        </Button>
       </SimpleGrid>
     </form>
   );

@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { List } from "../interfaces/List.ts";
 import {
   deleteList,
@@ -7,7 +6,7 @@ import {
   setList,
 } from "../repository/ListRepository.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import {
   Button,
@@ -55,23 +54,10 @@ function EditComponent() {
     return navigate({ to: "/" });
   }
 
-  const handleOnSubmit: SubmitHandler<List> = useCallback(async (list) => {
-    await setList(list);
-    navigate({
-      to: "/",
-    });
-  }, []);
-
   const handleDeleteList = useCallback(async () => {
     await deleteList(list.id);
     return navigate({ to: "/" });
   }, [list]);
-
-  const defaultValues = useMemo(() => list, [list]);
-
-  const { control, handleSubmit, watch } = useForm<List>({
-    defaultValues,
-  });
 
   const removeUser = async (userUID: string) => {
     list.allowedUsers = list.allowedUsers.filter(
@@ -106,14 +92,7 @@ function EditComponent() {
           <Divider mt={10} mb={20} />
           {
             {
-              presents: (
-                <ListForm
-                  control={control}
-                  watch={watch}
-                  handleSubmit={handleSubmit}
-                  handleOnSubmit={handleOnSubmit}
-                />
-              ),
+              presents: <ListForm list={list} />,
               users: <ListUserForm list={list} onRemove={removeUser} />,
               danger: (
                 <div>
