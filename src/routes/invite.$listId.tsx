@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import { Button, Container, Paper } from "@mantine/core";
 import { getListByID, setList } from "../repository/ListRepository.ts";
@@ -20,6 +20,7 @@ function InviteComponent() {
   const { user } = useUserContext();
   const [loading, setLoading] = useState(false);
   const navigate = Route.useNavigate();
+  const router = useRouter();
 
   async function joinList() {
     if (!user || !list) {
@@ -38,6 +39,8 @@ function InviteComponent() {
         ? [...list.allowedUsers, newUser]
         : [newUser],
     });
+    router.invalidate();
+
     setLoading(false);
   }
 

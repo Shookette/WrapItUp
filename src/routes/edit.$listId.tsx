@@ -22,6 +22,7 @@ import ListForm from "../components/ListForm.tsx";
 import ListUserForm from "../components/ListUserForm.tsx";
 import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import { notifications } from "@mantine/notifications";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -73,6 +74,11 @@ function EditComponent() {
       ),
     });
     router.invalidate();
+    notifications.show({
+      color: "green",
+      position: "top-right",
+      message: `L'utilisateurice a été supprimé•e`,
+    });
     setLoading(false);
   };
 

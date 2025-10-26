@@ -48,7 +48,6 @@ const ListUserForm: FC<ListUserFormProps> = ({
           {(list.allowedUsers ?? []).map((user) => (
             <Table.Tr key={user.userUID}>
               <Table.Td>{user.username}</Table.Td>
-              <Table.Td>wip</Table.Td>
               <Table.Td>
                 <ActionIcon
                   loading={loading}
