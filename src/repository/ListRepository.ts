@@ -21,6 +21,13 @@ import { getById } from "./ProfilRepository.ts";
 
 const COLLECTION_REF = "lists";
 
+const fetchAllowedUsersFromList = async (list: List) => {
+  for (const user of list.allowedUsers ?? []) {
+    const profilUserAllowed = await getById(user.userUID);
+    user.username = profilUserAllowed?.username;
+  }
+};
+
 const getLists = async (): Promise<List[]> => {
   const result: QuerySnapshot = await getDocs(getCollectionRef(COLLECTION_REF));
 
@@ -31,10 +38,7 @@ const getLists = async (): Promise<List[]> => {
     const profil = await getById(list.userUID);
     list.username = profil?.username;
 
-    for (const user of list.allowedUsers ?? []) {
-      const profilUserAllowed = await getById(user.userUID);
-      user.username = profilUserAllowed?.username;
-    }
+    await fetchAllowedUsersFromList(list);
   }
 
   return resultArray;
@@ -58,6 +62,8 @@ const getListByID = async (id: string): Promise<List | null> => {
   if (list) {
     const profil = await getById(list.userUID);
     list.username = profil?.username;
+
+    await fetchAllowedUsersFromList(list);
   }
 
   return list;

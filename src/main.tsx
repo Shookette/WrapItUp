@@ -9,6 +9,10 @@ import UserProvider, { useUserContext } from "./hooks/UserContext.tsx";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+
+import "@mantine/notifications/styles.css";
+
 // Create a new router instance
 const router = createRouter({
   routeTree,
@@ -46,6 +50,7 @@ const InnerApp = () => {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <MantineProvider>
+      <Notifications />
       <WithFirestore>
         <UserProvider>
           <InnerApp />

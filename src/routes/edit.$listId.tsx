@@ -7,7 +7,7 @@ import {
   setList,
 } from "../repository/ListRepository.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import {
   Button,
@@ -68,9 +68,19 @@ function EditComponent() {
     return navigate({ to: "/" });
   }, [list]);
 
+  const defaultValues = useMemo(() => list, [list]);
+
   const { control, handleSubmit, watch } = useForm<List>({
-    defaultValues: list,
+    defaultValues,
   });
+
+  const removeUser = async (userUID: string) => {
+    list.allowedUsers = list.allowedUsers.filter(
+      (user) => user.userUID !== userUID,
+    );
+
+    await setList(list);
+  };
 
   return (
     <Container>
@@ -94,13 +104,12 @@ function EditComponent() {
               {tab.label}
             </Button>
           ))}
-
           <Divider mt={10} mb={20} />
           <form onSubmit={handleSubmit(handleOnSubmit)}>
             {
               {
                 presents: <ListForm control={control} watch={watch} />,
-                users: <ListUserForm control={control} watch={watch} />,
+                users: <ListUserForm list={list} onRemove={removeUser} />,
                 danger: (
                   <div>
                     <Button color="red" onClick={() => handleDeleteList()}>
