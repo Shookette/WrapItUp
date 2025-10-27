@@ -16,35 +16,51 @@ import {
   sortList,
   transformCollectionToArray,
 } from "./utils";
-import { List } from "../interfaces/List";
+import { AllowedUser, FullList, List } from "../interfaces/List";
 import { getById } from "./ProfilRepository.ts";
 
 const COLLECTION_REF = "lists";
 
-const fetchAllowedUsersFromList = async (list: List) => {
-  for (const user of list.allowedUsers ?? []) {
-    const profilUserAllowed = await getById(user.userUID);
-    user.username = profilUserAllowed?.username;
-  }
+const fetchAllowedUsersFromList = async (list: List): Promise<FullList> => {
+  const allowedUsers = await Promise.all(
+    (list.allowedUsers ?? []).map(async (userUID) => {
+      const profilUserAllowed = await getById(userUID);
+      const allowedUser: AllowedUser = {
+        userUID,
+        username: profilUserAllowed?.username,
+      };
+      return allowedUser;
+    }),
+  );
+
+  return {
+    ...list,
+    allowedUsers,
+  };
 };
 
-const getLists = async (): Promise<List[]> => {
-  const result: QuerySnapshot = await getDocs(getCollectionRef(COLLECTION_REF));
+const getLists = async (userUID: string): Promise<FullList[]> => {
+  const result: QuerySnapshot = await getDocs(
+    query(
+      getCollectionRef(COLLECTION_REF),
+      where("allowedUsers", "array-contains", userUID),
+    ),
+  );
 
   const resultArray = transformCollectionToArray<List>(result);
   sortList(resultArray, "title");
 
-  for (const list of resultArray) {
-    const profil = await getById(list.userUID);
-    list.username = profil?.username;
+  return Promise.all(
+    resultArray.map(async (list) => {
+      const profil = await getById(list.userUID);
+      list.username = profil?.username;
 
-    await fetchAllowedUsersFromList(list);
-  }
-
-  return resultArray;
+      return fetchAllowedUsersFromList(list);
+    }),
+  );
 };
 
-const getMyLists = async (userUID: string): Promise<List[]> => {
+const getMyLists = async (userUID: string): Promise<FullList[]> => {
   const result: QuerySnapshot = await getDocs(
     query(getCollectionRef(COLLECTION_REF), where("userUID", "==", userUID)),
   );
@@ -52,27 +68,39 @@ const getMyLists = async (userUID: string): Promise<List[]> => {
   const resultArray = transformCollectionToArray<List>(result);
   sortList(resultArray, "title");
 
-  return resultArray;
+  return Promise.all(
+    resultArray.map(async (list) => {
+      const profil = await getById(list.userUID);
+      list.username = profil?.username;
+
+      return fetchAllowedUsersFromList(list);
+    }),
+  );
 };
 
-const getListByID = async (id: string): Promise<List | null> => {
+const getListByID = async (id: string): Promise<FullList | null> => {
   const result: DocumentSnapshot = await getDoc(getDocRef(COLLECTION_REF, id));
   const list = result.exists() ? (result.data() as List) : null;
 
-  if (list) {
-    const profil = await getById(list.userUID);
-    list.username = profil?.username;
-
-    await fetchAllowedUsersFromList(list);
+  if (!list) {
+    return null;
   }
 
-  return list;
+  const profil = await getById(list.userUID);
+  list.username = profil?.username;
+
+  return fetchAllowedUsersFromList(list);
 };
 
-const setList = async (list: List): Promise<void> => {
+const setList = async (list: FullList): Promise<void> => {
+  const newList: List = {
+    ...list,
+    allowedUsers: list.allowedUsers.map((allowedUser) => allowedUser.userUID),
+  };
+
   const listCollection = getCollectionRef(COLLECTION_REF);
-  const listDocument = doc(listCollection, list.id);
-  await setDoc<DocumentData, DocumentData>(listDocument, list);
+  const listDocument = doc(listCollection, newList.id);
+  await setDoc<DocumentData, DocumentData>(listDocument, newList);
 };
 
 const deleteList = async (id: string): Promise<void> => {

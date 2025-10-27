@@ -1,5 +1,4 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { List } from "../interfaces/List.ts";
 import {
   deleteList,
   getListByID,
@@ -47,7 +46,7 @@ const tabs: Array<{ icon: React.ReactNode; key: string; label: string }> = [
 ];
 
 function EditComponent() {
-  const list: List | null = Route.useLoaderData();
+  const list = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const router = useRouter();
 

@@ -15,7 +15,7 @@ import {
   Title,
 } from "@mantine/core";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import { List } from "../interfaces/List.ts";
+import { FullList } from "../interfaces/List.ts";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
@@ -30,7 +30,7 @@ function ViewComponent() {
   const list = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const { user } = useUserContext();
-  const [currentList, setCurrentList] = useState<List | null>(list);
+  const [currentList, setCurrentList] = useState<FullList | null>(list);
 
   if (!currentList) {
     return navigate({ to: "/" });

@@ -6,12 +6,12 @@ import {
   FieldArrayWithId,
   UseFieldArrayRemove,
 } from "react-hook-form";
-import { List } from "../interfaces/List";
+import { FullList } from "../interfaces/List";
 import { FC } from "react";
 
 type ListFormPresentsProps = {
-  control: Control<List>;
-  fields: FieldArrayWithId<List, "presents", "id">[];
+  control: Control<FullList>;
+  fields: FieldArrayWithId<FullList, "presents", "id">[];
   remove: UseFieldArrayRemove;
 };
 

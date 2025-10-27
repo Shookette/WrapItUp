@@ -1,11 +1,11 @@
 import { FC, useMemo } from "react";
 import { Table } from "@mantine/core";
-import { List } from "../interfaces/List.ts";
+import { FullList } from "../interfaces/List.ts";
 
 type Props = {
-  lists: Array<List>;
+  lists: Array<FullList>;
   showAuthor?: boolean;
-  onRedirect: (list: List) => void
+  onRedirect: (list: FullList) => void
 }
 
 const ListTableComponent: FC<Props> = ({ lists, showAuthor = false, onRedirect }) => {

@@ -1,6 +1,6 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { List } from "../interfaces/List.ts";
+import { FullList } from "../interfaces/List.ts";
 import { v4 as uuidv4 } from "uuid";
 import { setList } from "../repository/ListRepository.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
@@ -30,7 +30,7 @@ function NewComponent() {
   const { navigate } = useRouter();
   const { user } = useUserContext();
 
-  const defaultList: List = {
+  const defaultList: FullList = {
     id: uuidv4(),
     userUID: user!.uid,
     createdAt: dayjs().format("YYYY-MM-DD"),
@@ -39,11 +39,11 @@ function NewComponent() {
     allowedUsers: [],
   };
 
-  const { control, handleSubmit } = useForm<List>({
+  const { control, handleSubmit } = useForm<FullList>({
     defaultValues: defaultList,
   });
 
-  const handleOnSubmit: SubmitHandler<List> = useCallback(async (list) => {
+  const handleOnSubmit: SubmitHandler<FullList> = useCallback(async (list) => {
     await setList(list);
     navigate({
       to: `/edit/${list.id}`,

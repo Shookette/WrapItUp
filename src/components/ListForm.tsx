@@ -5,7 +5,7 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { List } from "../interfaces/List";
+import { FullList } from "../interfaces/List";
 import { FC, useCallback, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ListFormPresents from "./ListFormPresents";
@@ -13,14 +13,14 @@ import { setList } from "../repository/ListRepository.ts";
 import { notifications } from "@mantine/notifications";
 
 type ListFormProps = {
-  list: List;
+  list: FullList;
 };
 
 const ListForm: FC<ListFormProps> = ({ list }) => {
   const [loading, setLoading] = useState(false);
   const defaultValues = useMemo(() => list, [list]);
 
-  const { control, handleSubmit, watch } = useForm<List>({
+  const { control, handleSubmit, watch } = useForm<FullList>({
     defaultValues,
   });
 
@@ -31,7 +31,7 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
     control,
   });
 
-  const handleOnSubmit: SubmitHandler<List> = useCallback(async (list) => {
+  const handleOnSubmit: SubmitHandler<FullList> = useCallback(async (list) => {
     setLoading(true);
     await setList(list);
     setLoading(false);

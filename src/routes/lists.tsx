@@ -3,14 +3,22 @@ import { getLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback } from "react";
 import { Container, Paper, Title } from "@mantine/core";
-import { List } from "../interfaces/List.ts";
+import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/lists")({
   component: ListsComponent,
-  loader: getLists,
+  loader: ({ context }) => {
+    const user = context.auth?.user;
+
+    if (!user) {
+      return [];
+    }
+
+    return getLists(user?.uid);
+  },
   beforeLoad: ({ context, location }) => {
     isAuthenticated(context, location);
   },
@@ -22,7 +30,7 @@ function ListsComponent() {
   const { user } = useUserContext();
 
   const redirectTo = useCallback(
-    (list: List) => {
+    (list: FullList) => {
       if (list.userUID === user?.uid) {
         return navigate({
           to: "/edit/$listId",

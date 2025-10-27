@@ -1,11 +1,11 @@
-import { List } from "../interfaces/List";
+import { FullList } from "../interfaces/List";
 import { FC } from "react";
 import { ActionIcon, Button, Table } from "@mantine/core";
 import { IconLink, IconTrash } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 
 type ListUserFormProps = {
-  list: List;
+  list: FullList;
   handleOnRemove: (id: string) => void;
   loading: boolean;
 };

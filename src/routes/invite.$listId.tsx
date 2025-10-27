@@ -3,7 +3,7 @@ import PrivateLayout from "../components/PrivateLayout.tsx";
 import { Button, Container, Paper } from "@mantine/core";
 import { getListByID, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
-import { List } from "../interfaces/List.ts";
+import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect, useState } from "react";
 
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/invite/$listId")({
 });
 
 function InviteComponent() {
-  const list: List | null = Route.useLoaderData();
+  const list: FullList | null = Route.useLoaderData();
   const { user } = useUserContext();
   const [loading, setLoading] = useState(false);
   const navigate = Route.useNavigate();
@@ -47,8 +47,8 @@ function InviteComponent() {
   useEffect(() => {
     if (
       list &&
-      list.allowedUsers.find((user) => user.userUID === user.userUID) !==
-        undefined
+      list.allowedUsers.find((allowedUser) => allowedUser.userUID === user?.uid) !==
+      undefined
     ) {
       navigate({ to: "/list/$listId" });
     }

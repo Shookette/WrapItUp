@@ -3,7 +3,7 @@ import { getMyLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback } from "react";
 import { Button, Container, Flex, Paper, Title } from "@mantine/core";
-import { List } from "../interfaces/List.ts";
+import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
@@ -31,7 +31,7 @@ function IndexComponent() {
   const { user } = useUserContext();
 
   const redirectTo = useCallback(
-    (list: List) => {
+    (list: FullList) => {
       if (list.userUID === user?.uid) {
         return navigate({
           to: "/edit/$listId",
