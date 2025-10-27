@@ -11,6 +11,8 @@ import { routeTree } from "./routeTree.gen";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
+import "./theme.css";
+
 import "@mantine/notifications/styles.css";
 
 // Create a new router instance

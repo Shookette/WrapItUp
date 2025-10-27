@@ -2,12 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getMyLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback } from "react";
-import { Button, Container, Flex, Paper, Title } from "@mantine/core";
+import { Container, Flex, Paper, Title } from "@mantine/core";
 import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,
@@ -49,14 +50,13 @@ function IndexComponent() {
       <Container>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <Title order={2}>
-            <Flex>
+            <Flex justify="space-between">
               Mes listes{" "}
               <Button
-                color="green"
-                style={{ marginLeft: "auto", display: "block" }}
+                icon={<IconPlus size={24} />}
+                type="success"
                 onClick={() => navigate({ to: "/new" })}
               >
-                <IconPlus size={24} />
                 Ajouter
               </Button>
             </Flex>

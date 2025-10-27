@@ -1,4 +1,4 @@
-import { ActionIcon, Table, Text, Textarea, TextInput } from "@mantine/core";
+import { Table, Text, Textarea, TextInput } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import {
   Control,
@@ -6,8 +6,9 @@ import {
   FieldArrayWithId,
   UseFieldArrayRemove,
 } from "react-hook-form";
-import { FullList } from "../interfaces/List";
+import { FullList } from "../../interfaces/List.ts";
 import { FC } from "react";
+import Button from "../Button/Button.tsx";
 
 type ListFormPresentsProps = {
   control: Control<FullList>;
@@ -84,17 +85,12 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
                   />
                 </Table.Td>
                 <Table.Td>
-                  <ActionIcon
-                    variant="filled"
-                    aria-label="Supprimer"
-                    color="red"
+                  <Button
+                    icon={<IconTrash size={16} />}
+                    size="small"
+                    type="danger"
                     onClick={() => remove(index)}
-                  >
-                    <IconTrash
-                      style={{ width: "70%", height: "70%" }}
-                      stroke={1.5}
-                    />
-                  </ActionIcon>
+                  />
                 </Table.Td>
               </Table.Tr>
             );

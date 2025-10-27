@@ -11,9 +11,9 @@ import {
   Space,
   Stack,
   TextInput,
-  Button,
   Title,
 } from "@mantine/core";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
@@ -108,22 +108,17 @@ function RegisterComponent() {
                 )}
               />
               <SimpleGrid>
-                <Button type="submit">Inscription</Button>
+                <Button isSubmit>Inscription</Button>
               </SimpleGrid>
             </Stack>
           </form>
           <Space h="md" />
           <SimpleGrid cols={2}>
-            <Button
-              type="button"
-              color="green"
-              onClick={() => navigate({ to: "/login" })}
-            >
+            <Button type="success" onClick={() => navigate({ to: "/login" })}>
               Connexion
             </Button>
             <Button
-              type="button"
-              color="red"
+              type="danger"
               onClick={() => navigate({ to: "/reset-password" })}
             >
               Réinitialiser le mot de passe

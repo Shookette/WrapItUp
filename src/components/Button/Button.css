@@ -1,0 +1,59 @@
+.button {
+    align-items: center;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    font-weight: bold;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: var(--padding-small) var(--padding-medium);
+}
+
+.button__loader {
+    -webkit-animation:spin 1s linear infinite;
+    -moz-animation:spin 1s linear infinite;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+.button__type--primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.button__type--danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+ .button__type--success {
+     background-color: var(--success-color);
+     color: white;
+}
+
+.button__size--small {
+    font-size: var(--font-size-small);
+}
+
+.button__size--medium {
+    font-size: var(--font-size-medium);
+}
+
+.button__size--large {
+    font-size: var(--font-size-large);
+}
+
+.button__position--left {
+    margin-right: auto;
+}
+
+.button__position--right {
+    margin-left: auto;
+}
+

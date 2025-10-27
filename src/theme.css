@@ -1,0 +1,13 @@
+:root {
+    --green:#078080;
+    --success-color: #2cb67d;
+    --primary-color: #3da9fc;
+    --danger-color: #f45d48;
+
+    --font-size-small: .9rem;
+    --font-size-medium: 1rem;
+    --font-size-large: 1.2rem;
+
+    --padding-small: .5rem;
+    --padding-medium: 1rem;
+}

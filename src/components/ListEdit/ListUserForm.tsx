@@ -1,8 +1,9 @@
-import { FullList } from "../interfaces/List";
+import { FullList } from "../../interfaces/List.ts";
 import { FC, useMemo } from "react";
-import { ActionIcon, Button, Table, Text } from "@mantine/core";
+import { ActionIcon, Table, Text } from "@mantine/core";
 import { IconLink, IconTrash } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
+import Button from "../Button/Button.tsx";
 
 type ListUserFormProps = {
   list: FullList;
@@ -31,14 +32,15 @@ const ListUserForm: FC<ListUserFormProps> = ({
   return (
     <div>
       <Button
-        mb={30}
-        style={{ display: "block", marginLeft: "auto" }}
-        color="green"
+        icon={<IconLink />}
+        position="right"
+        size="small"
+        type="success"
         onClick={copyLink}
       >
-        <IconLink style={{ marginRight: "10px" }} />
         Copier le lien de l'invitation
       </Button>
+
       <Table>
         <Table.Thead>
           <Table.Tr>

@@ -1,11 +1,12 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import PrivateLayout from "../components/PrivateLayout.tsx";
-import { Button, Container, Paper } from "@mantine/core";
+import { Container, Paper } from "@mantine/core";
 import { getListByID, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect, useState } from "react";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/invite/$listId")({
   component: InviteComponent,
@@ -47,8 +48,9 @@ function InviteComponent() {
   useEffect(() => {
     if (
       list &&
-      list.allowedUsers.find((allowedUser) => allowedUser.userUID === user?.uid) !==
-      undefined
+      list.allowedUsers.find(
+        (allowedUser) => allowedUser.userUID === user?.uid,
+      ) !== undefined
     ) {
       navigate({ to: "/list/$listId" });
     }

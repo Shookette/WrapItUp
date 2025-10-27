@@ -3,7 +3,6 @@ import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
-  Button,
   Center,
   Container,
   Paper,
@@ -15,6 +14,7 @@ import {
   Title,
 } from "@mantine/core";
 import { z } from "zod";
+import Button from "../components/Button/Button.tsx";
 
 const productSearchSchema = z.object({
   redirect: z.optional(z.string()),
@@ -93,22 +93,20 @@ function LoginComponent() {
                 )}
               />
               <SimpleGrid>
-                <Button type="submit">Connexion</Button>
+                <Button isSubmit>Connexion</Button>
               </SimpleGrid>
             </Stack>
           </form>
           <Space h="md" />
           <SimpleGrid cols={2}>
             <Button
-              type="button"
-              color="green"
+              type="success"
               onClick={() => navigate({ to: "/register" })}
             >
               <span>Inscription</span>
             </Button>
             <Button
-              type="button"
-              color="red"
+              type="danger"
               onClick={() => navigate({ to: "/reset-password" })}
             >
               <span>Mot de passe oublié</span>

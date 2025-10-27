@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import {
-  Button,
   Center,
   Container,
   Paper,
@@ -12,6 +11,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
@@ -62,24 +62,16 @@ function ResetPasswordComponent() {
                 )}
               />
               <SimpleGrid>
-                <Button type="submit">Réinitialiser le mot de passe</Button>
+                <Button isSubmit>Réinitialiser le mot de passe</Button>
               </SimpleGrid>
             </Stack>
           </form>
           <Space h="md" />
           <SimpleGrid cols={2}>
-            <Button
-              type="button"
-              color="green"
-              onClick={() => navigate({ to: "/login" })}
-            >
+            <Button type="success" onClick={() => navigate({ to: "/login" })}>
               <span>Connexion</span>
             </Button>
-            <Button
-              type="button"
-              color="red"
-              onClick={() => navigate({ to: "/register" })}
-            >
+            <Button type="danger" onClick={() => navigate({ to: "/register" })}>
               <span>Inscription</span>
             </Button>
           </SimpleGrid>

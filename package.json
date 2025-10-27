@@ -29,6 +29,7 @@
     "@tiptap/pm": "^2.10.3",
     "@tiptap/react": "^2.10.3",
     "@tiptap/starter-kit": "^2.10.3",
+    "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^7.1.0",
     "eslint-config-prettier": "^9.1.0",

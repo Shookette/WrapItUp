@@ -8,7 +8,7 @@ import { useUserContext } from "../hooks/UserContext.tsx";
 import { useCallback, useState } from "react";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import {
-  Button,
+  Button as MButton,
   Center,
   Container,
   Divider,
@@ -17,11 +17,12 @@ import {
   Space,
   Title,
 } from "@mantine/core";
-import ListForm from "../components/ListForm.tsx";
-import ListUserForm from "../components/ListUserForm.tsx";
+import ListForm from "../components/ListEdit/ListForm.tsx";
+import ListUserForm from "../components/ListEdit/ListUserForm.tsx";
 import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import { notifications } from "@mantine/notifications";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -94,7 +95,7 @@ function EditComponent() {
             <Space h="md" />
 
             {tabs.map((tab) => (
-              <Button
+              <MButton
                 color={tab.key === activeTab ? "blue" : "gray"}
                 onClick={() => setActiveTab(tab.key)}
                 mr={10}
@@ -102,7 +103,7 @@ function EditComponent() {
               >
                 {tab.icon}
                 {tab.label}
-              </Button>
+              </MButton>
             ))}
             <Divider mt={10} mb={20} />
             {
@@ -117,7 +118,7 @@ function EditComponent() {
                 ),
                 danger: (
                   <div>
-                    <Button color="red" onClick={() => handleDeleteList()}>
+                    <Button type="danger" onClick={() => handleDeleteList()}>
                       Supprimer la liste
                     </Button>
                   </div>

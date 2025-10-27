@@ -1,6 +1,5 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
-  Button,
   Center,
   Container,
   Paper,
@@ -13,8 +12,9 @@ import { isAuthenticated } from "../utils/routeUtils";
 import { useUserContext } from "../hooks/UserContext";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { User } from "firebase/auth";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -25,6 +25,7 @@ export const Route = createFileRoute("/account")({
 
 function AccountComponent() {
   const { user, updateUser } = useUserContext();
+  const [loading, setLoading] = useState(false);
 
   const defaultUser = useMemo(
     () => ({
@@ -38,10 +39,9 @@ function AccountComponent() {
   });
 
   const handleOnSubmit: SubmitHandler<User> = useCallback(async (user) => {
+    setLoading(true);
     await updateUser(user);
-    Navigate({
-      to: "/",
-    });
+    setLoading(false);
   }, []);
 
   return (
@@ -71,7 +71,9 @@ function AccountComponent() {
 
               <Space h="md" />
               <SimpleGrid>
-                <Button type="submit">Envoyer</Button>
+                <Button isSubmit loading={loading}>
+                  Envoyer
+                </Button>
               </SimpleGrid>
             </form>
           </Paper>

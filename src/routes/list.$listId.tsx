@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from "react";
 import {
   Anchor,
   Badge,
-  Button,
   Card,
   Container,
   Group,
@@ -17,6 +16,7 @@ import {
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { FullList } from "../interfaces/List.ts";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import Button from "../components/Button/Button.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,
@@ -90,10 +90,7 @@ function ViewComponent() {
           {!isCurrentUser &&
             (!present.reservedBy || present.reservedBy === user?.uid) && (
               <Button
-                color={present.status === "reserved" ? "red" : "green"}
-                fullWidth
-                mt="md"
-                radius="md"
+                type={present.status === "reserved" ? "danger" : "success"}
                 onClick={() => bookGift(present.id)}
               >
                 {present.status === "reserved"

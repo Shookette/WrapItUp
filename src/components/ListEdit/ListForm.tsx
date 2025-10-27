@@ -1,16 +1,17 @@
-import { Button, SimpleGrid, Space, TextInput } from "@mantine/core";
+import { SimpleGrid, Space, TextInput } from "@mantine/core";
 import {
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
 } from "react-hook-form";
-import { FullList } from "../interfaces/List";
+import { FullList } from "../../interfaces/List.ts";
 import { FC, useCallback, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import ListFormPresents from "./ListFormPresents";
-import { setList } from "../repository/ListRepository.ts";
+import ListFormPresents from "./ListFormPresents.tsx";
+import { setList } from "../../repository/ListRepository.ts";
 import { notifications } from "@mantine/notifications";
+import Button from "../Button/Button.tsx";
 
 type ListFormProps = {
   list: FullList;
@@ -64,8 +65,8 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
       <ListFormPresents control={control} fields={fields} remove={remove} />
       <Space h="md" />
       <Button
-        type="button"
-        color="green"
+        size="small"
+        type="success"
         onClick={() =>
           append({
             id: uuidv4(),
@@ -81,7 +82,7 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
       </Button>
       <Space h="md" />
       <SimpleGrid>
-        <Button loading={loading} type="submit">
+        <Button isSubmit loading={loading}>
           Enregistrer
         </Button>
       </SimpleGrid>
