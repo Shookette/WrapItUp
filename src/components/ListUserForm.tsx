@@ -1,6 +1,6 @@
 import { FullList } from "../interfaces/List";
-import { FC } from "react";
-import { ActionIcon, Button, Table } from "@mantine/core";
+import { FC, useMemo } from "react";
+import { ActionIcon, Button, Table, Text } from "@mantine/core";
 import { IconLink, IconTrash } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 
@@ -15,6 +15,8 @@ const ListUserForm: FC<ListUserFormProps> = ({
   handleOnRemove,
   loading,
 }) => {
+  const allowedUsers = useMemo(() => list.allowedUsers ?? [], [list]);
+
   async function copyLink() {
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
     await navigator.clipboard.writeText(`${baseUrl}/invite/${list.id}`);
@@ -45,25 +47,33 @@ const ListUserForm: FC<ListUserFormProps> = ({
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {(list.allowedUsers ?? []).map((user) => (
-            <Table.Tr key={user.userUID}>
-              <Table.Td>{user.username}</Table.Td>
-              <Table.Td>
-                <ActionIcon
-                  loading={loading}
-                  variant="filled"
-                  aria-label="Supprimer"
-                  color="red"
-                  onClick={() => handleOnRemove(user.userUID)}
-                >
-                  <IconTrash
-                    style={{ width: "70%", height: "70%" }}
-                    stroke={1.5}
-                  />
-                </ActionIcon>
+          {allowedUsers.length > 0 ? (
+            allowedUsers.map((user) => (
+              <Table.Tr key={user.userUID}>
+                <Table.Td>{user.username}</Table.Td>
+                <Table.Td>
+                  <ActionIcon
+                    loading={loading}
+                    variant="filled"
+                    aria-label="Supprimer"
+                    color="red"
+                    onClick={() => handleOnRemove(user.userUID)}
+                  >
+                    <IconTrash
+                      style={{ width: "70%", height: "70%" }}
+                      stroke={1.5}
+                    />
+                  </ActionIcon>
+                </Table.Td>
+              </Table.Tr>
+            ))
+          ) : (
+            <Table.Tr>
+              <Table.Td colSpan={2}>
+                <Text ta="center">Aucun•e utilisateurice</Text>
               </Table.Td>
             </Table.Tr>
-          ))}
+          )}
         </Table.Tbody>
       </Table>
     </div>
