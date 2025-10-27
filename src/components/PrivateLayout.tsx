@@ -38,11 +38,6 @@ const PrivateLayout: FC<Props> = ({ children }) => {
               Listes de cadeaux
             </Text>
           </Link>
-          <Link to="/new" style={{ textDecoration: "none" }}>
-            <Text td="underline" size="lg" c="green.7" fw="bold">
-              Ajouter une liste
-            </Text>
-          </Link>
 
           <Link to="/account" style={{ marginLeft: "auto" }}>
             <Text td="underline" size="lg" c="green.7" fw="bold">
