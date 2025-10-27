@@ -50,7 +50,7 @@ function EditComponent() {
   const navigate = Route.useNavigate();
   const router = useRouter();
 
-  const [tab, setTab] = useState("presents");
+  const [activeTab, setActiveTab] = useState("presents");
   const { user } = useUserContext();
   const [loading, setLoading] = useState(false);
 
@@ -95,8 +95,8 @@ function EditComponent() {
 
             {tabs.map((tab) => (
               <Button
-                color="gray"
-                onClick={() => setTab(tab.key)}
+                color={tab.key === activeTab ? "blue" : "gray"}
+                onClick={() => setActiveTab(tab.key)}
                 mr={10}
                 size="compact-md"
               >
@@ -122,7 +122,7 @@ function EditComponent() {
                     </Button>
                   </div>
                 ),
-              }[tab]
+              }[activeTab]
             }
           </Paper>
         </Center>
