@@ -1,7 +1,8 @@
 import { FC, Fragment, ReactNode, useCallback } from "react";
-import { Box, Flex, Text } from "@mantine/core";
+import { ActionIcon, Box, Flex, Menu, Text } from "@mantine/core";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useUserContext } from "../hooks/UserContext.tsx";
+import { IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
 
 interface Props {
   children: ReactNode;
@@ -39,22 +40,47 @@ const PrivateLayout: FC<Props> = ({ children }) => {
             </Text>
           </Link>
 
-          <Link to="/account" style={{ marginLeft: "auto" }}>
-            <Text td="underline" size="lg" c="green.7" fw="bold">
-              Compte
-            </Text>
-          </Link>
+          <div style={{ marginLeft: "auto" }}>
+            <Menu shadow="md" width={200}>
+              <Menu.Target>
+                <ActionIcon
+                  variant="filled"
+                  size="lg"
+                  radius="xl"
+                  aria-label="Compte"
+                  color="green.7"
+                >
+                  <IconUser
+                    style={{ width: "70%", height: "70%" }}
+                    stroke={1.5}
+                  />
+                </ActionIcon>
+              </Menu.Target>
 
-          <Text
-            style={{ cursor: "pointer" }}
-            td="underline"
-            size="lg"
-            c="green.7"
-            fw="bold"
-            onClick={handleLogout}
-          >
-            Déconnexion
-          </Text>
+              <Menu.Dropdown>
+                <Menu.Item leftSection={<IconSettings size={14} />}>
+                  <Link to="/account" style={{ marginLeft: "auto" }}>
+                    <Text td="underline" size="lg" c="green.7" fw="bold">
+                      Compte
+                    </Text>
+                  </Link>
+                </Menu.Item>
+
+                <Menu.Item leftSection={<IconLogout size={14} />}>
+                  <Text
+                    style={{ cursor: "pointer" }}
+                    td="underline"
+                    size="lg"
+                    c="green.7"
+                    fw="bold"
+                    onClick={handleLogout}
+                  >
+                    Déconnexion
+                  </Text>
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </div>
         </Flex>
       </Box>
 
