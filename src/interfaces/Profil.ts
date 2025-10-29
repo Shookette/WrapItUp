@@ -3,3 +3,5 @@ export type Profil = {
   username: string;
   userUID: string;
 };
+
+export type UpdateUser = { displayName: string };

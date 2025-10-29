@@ -11,10 +11,10 @@ import {
 import { isAuthenticated } from "../utils/routeUtils";
 import { useUserContext } from "../hooks/UserContext";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { User } from "firebase/auth";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
+import { UpdateUser } from "../interfaces/Profil.ts";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -27,20 +27,19 @@ function AccountComponent() {
   const { user, updateUser } = useUserContext();
   const [loading, setLoading] = useState(false);
 
-  const defaultUser = useMemo(
-    () => ({
-      ...user,
-    }),
-    [user],
-  );
-
-  const { control, handleSubmit } = useForm<User>({
-    defaultValues: defaultUser,
+  const { control, handleSubmit } = useForm<UpdateUser>({
+    defaultValues: {
+      displayName: user?.displayName ?? ''
+    },
   });
 
-  const handleOnSubmit: SubmitHandler<User> = useCallback(async (user) => {
+  const handleOnSubmit: SubmitHandler<UpdateUser> = useCallback(async (userData) => {
+    if (!user) {
+      return;
+    }
+
     setLoading(true);
-    await updateUser(user);
+    await updateUser({ ...user, displayName: userData.displayName });
     setLoading(false);
   }, []);
 
