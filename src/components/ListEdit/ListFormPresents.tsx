@@ -32,7 +32,7 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
-        {fields.length > 1 ? (
+        {fields.length > 0 ? (
           fields.map((_, index) => {
             return (
               <Table.Tr key={index}>
