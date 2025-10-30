@@ -17,13 +17,13 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
-  updateCurrentUser,
   updateProfile,
 } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 
 import { FirebaseError } from "@firebase/util";
 import { setProfil } from "../repository/ProfilRepository.ts";
+import { UpdateUser } from "../interfaces/Profil.ts";
 
 type UserProvider = {
   user: User | null;
@@ -34,7 +34,7 @@ type UserProvider = {
     userName: string,
   ) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  updateUser: (user: User) => Promise<void>;
+  updateUser: (data: UpdateUser) => Promise<void>;
   logout: () => Promise<void>;
   deleteCurrentUser: (user: User) => Promise<void>;
   isAuthenticated: boolean;
@@ -133,9 +133,18 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const updateUser = useCallback(async (user: User) => {
-    await updateProfile(user, { displayName: user.displayName });
-    await updateCurrentUser(auth, user);
+  const updateUser = useCallback(async (data: UpdateUser) => {
+    const auth = getAuth();
+    if (!auth.currentUser || !user) {
+      return;
+    }
+
+    await updateProfile(auth.currentUser, { displayName: data.displayName });
+
+    setStoredUser({
+      ...user,
+      displayName: data.displayName,
+    });
   }, []);
 
   const logout = useCallback(async () => {

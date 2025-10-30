@@ -1,3 +1,6 @@
+import { useCallback, useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Center,
@@ -8,13 +11,14 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+
 import { isAuthenticated } from "../utils/routeUtils";
 import { useUserContext } from "../hooks/UserContext";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useCallback, useState } from "react";
-import PrivateLayout from "../components/PrivateLayout.tsx";
-import Button from "../components/Button/Button.tsx";
 import { UpdateUser } from "../interfaces/Profil.ts";
+
+import Button from "../components/Button/Button.tsx";
+import PrivateLayout from "../components/PrivateLayout.tsx";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -29,19 +33,36 @@ function AccountComponent() {
 
   const { control, handleSubmit } = useForm<UpdateUser>({
     defaultValues: {
-      displayName: user?.displayName ?? ''
+      displayName: user?.displayName ?? "",
     },
   });
 
-  const handleOnSubmit: SubmitHandler<UpdateUser> = useCallback(async (userData) => {
-    if (!user) {
-      return;
-    }
+  const handleOnSubmit: SubmitHandler<UpdateUser> = useCallback(
+    async (userData) => {
+      if (!user) {
+        return;
+      }
 
-    setLoading(true);
-    await updateUser({ ...user, displayName: userData.displayName });
-    setLoading(false);
-  }, []);
+      setLoading(true);
+      await updateUser({ displayName: userData.displayName })
+        .then(() => {
+          notifications.show({
+            color: "green",
+            position: "top-right",
+            message: `Les informations ont été modifiées`,
+          });
+        })
+        .catch(() => {
+          notifications.show({
+            color: "red",
+            position: "top-right",
+            message: `Une erreur est survenue`,
+          });
+        });
+      setLoading(false);
+    },
+    [],
+  );
 
   return (
     <PrivateLayout>
