@@ -1,5 +1,6 @@
-import { FC, ReactNode } from "react";
 import "./Button.css";
+
+import { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { IconLoader2 } from "@tabler/icons-react";
 

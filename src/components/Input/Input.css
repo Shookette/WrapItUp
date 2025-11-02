@@ -1,0 +1,19 @@
+.input__label {
+    display: block;
+    padding-left: .1em;
+}
+
+.input__label-asterix {
+    color: red;
+}
+
+.input__field {
+    border: 1px solid var(--input-color);
+    border-radius: 5px;
+    padding: .3em .7em;
+    width: 100%;
+}
+
+.input__field::placeholder {
+    color: var(--placeholder-color);
+}

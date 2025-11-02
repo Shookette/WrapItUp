@@ -10,11 +10,11 @@ import {
   SimpleGrid,
   Space,
   Stack,
-  TextInput,
   Title,
 } from "@mantine/core";
 import { z } from "zod";
 import Button from "../components/Button/Button.tsx";
+import Input from "../components/Input/Input.tsx";
 
 const productSearchSchema = z.object({
   redirect: z.optional(z.string()),
@@ -66,15 +66,16 @@ function LoginComponent() {
                 name="email"
                 control={control}
                 render={({ field: { onChange, value, name } }) => (
-                  <TextInput
-                    error={errors.email && "L'adresse email est obligatoire"}
+                  <Input
+                    error={!!errors.email}
+                    errorMessage="L'adresse email est obligatoire"
                     id="email"
                     label="Email"
                     name={name}
                     placeholder="Email"
+                    required
                     type="email"
                     value={value}
-                    withAsterisk
                     onChange={onChange}
                   />
                 )}
