@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -57,24 +57,25 @@ function LoginComponent() {
   return (
     <Container>
       <Center>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md" miw="320">
           <Title order={1}>Connexion</Title>
           <Space h="md" />
           <form onSubmit={handleSubmit(handleOnSubmit)}>
-            <Stack>
+            <Stack gap="xs">
               <Controller
                 name="email"
                 control={control}
                 render={({ field: { onChange, value, name } }) => (
                   <TextInput
+                    error={errors.email && "L'adresse email est obligatoire"}
                     id="email"
-                    name={name}
-                    value={value}
-                    onChange={onChange}
                     label="Email"
+                    name={name}
+                    placeholder="Email"
                     type="email"
+                    value={value}
                     withAsterisk
-                    error={errors.email && "L'adresse mail est obligatoire"}
+                    onChange={onChange}
                   />
                 )}
               />
@@ -83,33 +84,40 @@ function LoginComponent() {
                 control={control}
                 render={({ field: { onChange, name } }) => (
                   <PasswordInput
-                    name={name}
-                    onChange={onChange}
-                    type="password"
-                    label="Mot de Passe"
-                    withAsterisk
                     error={errors.password && "Le mot de passe est obligatoire"}
+                    label="Mot de passe"
+                    name={name}
+                    placeholder="Mot de passe"
+                    type="password"
+                    withAsterisk
+                    onChange={onChange}
                   />
                 )}
               />
+              <Link
+                to="/reset-password"
+                style={{
+                  fontSize: ".8em",
+                  marginLeft: "auto",
+                  textDecoration: "none",
+                }}
+              >
+                <span>Mot de passe oublié</span>
+              </Link>
               <SimpleGrid>
-                <Button isSubmit>Connexion</Button>
+                <Button isSubmit type="success">
+                  Connexion
+                </Button>
               </SimpleGrid>
             </Stack>
           </form>
-          <Space h="md" />
-          <SimpleGrid cols={2}>
+          <Space h="xl" />
+          <SimpleGrid cols={1}>
             <Button
-              type="success"
+              type="primary"
               onClick={() => navigate({ to: "/register" })}
             >
               <span>Inscription</span>
-            </Button>
-            <Button
-              type="danger"
-              onClick={() => navigate({ to: "/reset-password" })}
-            >
-              <span>Mot de passe oublié</span>
             </Button>
           </SimpleGrid>
         </Paper>

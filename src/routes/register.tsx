@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect } from "react";
@@ -52,79 +52,88 @@ function RegisterComponent() {
   return (
     <Container>
       <Center>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Title order={1}>Inscription</Title>
-          <Space h="md" />
-          <form onSubmit={handleSubmit(handleOnSubmit)}>
-            <Stack>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field: { onChange, value, name } }) => (
-                  <TextInput
-                    id="email"
-                    name={name}
-                    value={value}
-                    onChange={onChange}
-                    label="Email"
-                    type="email"
-                    withAsterisk
-                    required
-                    error={errors.email && "L'adresse mail est obligatoire"}
-                  />
-                )}
-              />
-              <Controller
-                name="username"
-                control={control}
-                render={({ field: { onChange, value, name } }) => (
-                  <TextInput
-                    id="username"
-                    name={name}
-                    value={value}
-                    onChange={onChange}
-                    label="Nom/Prenom"
-                    withAsterisk
-                    required
-                    error={
-                      errors.username && "Le nom et le prénom est obligatoire"
-                    }
-                  />
-                )}
-              />
-              <Controller
-                name="password"
-                control={control}
-                render={({ field: { onChange, name } }) => (
-                  <PasswordInput
-                    name={name}
-                    onChange={onChange}
-                    type="password"
-                    label="Mot de Passe"
-                    withAsterisk
-                    required
-                    error={errors.password && "Le mot de passe est obligatoire"}
-                  />
-                )}
-              />
-              <SimpleGrid>
-                <Button isSubmit>Inscription</Button>
-              </SimpleGrid>
-            </Stack>
-          </form>
-          <Space h="md" />
-          <SimpleGrid cols={2}>
-            <Button type="success" onClick={() => navigate({ to: "/login" })}>
-              Connexion
-            </Button>
-            <Button
-              type="danger"
-              onClick={() => navigate({ to: "/reset-password" })}
-            >
-              Réinitialiser le mot de passe
-            </Button>
-          </SimpleGrid>
-        </Paper>
+        <Stack gap="xs" mt={30}>
+          <Link
+            to="/login"
+            style={{
+              fontSize: ".8em",
+              marginLeft: "1em",
+              textDecoration: "none",
+            }}
+          >
+            {"< "}
+            Retour à la page de connexion
+          </Link>
+
+          <Paper withBorder shadow="md" p={30} radius="md" miw="320">
+            <Title order={1}>Inscription</Title>
+            <Space h="md" />
+            <form onSubmit={handleSubmit(handleOnSubmit)}>
+              <Stack>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field: { onChange, value, name } }) => (
+                    <TextInput
+                      id="email"
+                      name={name}
+                      value={value}
+                      onChange={onChange}
+                      label="Email"
+                      placeholder="Email"
+                      type="email"
+                      withAsterisk
+                      required
+                      error={errors.email && "L'adresse mail est obligatoire"}
+                    />
+                  )}
+                />
+                <Controller
+                  name="username"
+                  control={control}
+                  render={({ field: { onChange, value, name } }) => (
+                    <TextInput
+                      id="username"
+                      name={name}
+                      value={value}
+                      onChange={onChange}
+                      label="Nom/Prénom"
+                      placeholder="Nom/Prénom"
+                      withAsterisk
+                      required
+                      error={
+                        errors.username && "Le nom et le prénom est obligatoire"
+                      }
+                    />
+                  )}
+                />
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field: { onChange, name } }) => (
+                    <PasswordInput
+                      name={name}
+                      onChange={onChange}
+                      type="password"
+                      label="Mot de passe"
+                      placeholder="Mot de passe"
+                      withAsterisk
+                      required
+                      error={
+                        errors.password && "Le mot de passe est obligatoire"
+                      }
+                    />
+                  )}
+                />
+                <SimpleGrid>
+                  <Button type="success" isSubmit>
+                    Inscription
+                  </Button>
+                </SimpleGrid>
+              </Stack>
+            </form>
+          </Paper>
+        </Stack>
       </Center>
     </Container>
   );
