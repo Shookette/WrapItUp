@@ -1,0 +1,29 @@
+.banner {
+    border: 1px solid black;
+    border-radius: var(--border-radius);
+    display: flex;
+    margin-bottom: 1em;
+    padding: var(--padding-small);
+}
+
+.banner__text {
+    margin: 0 auto 0 1em;
+}
+
+.banner__type--success {
+    background-color: var(--success-background-color);
+    border-color: var(--success-color);
+}
+
+.banner__type--success svg {
+    stroke: var(--success-color);
+}
+
+.banner__type--danger {
+    background-color: var(--danger-background-color);
+    border-color: var(--danger-color);
+}
+
+.banner__type--danger svg {
+    stroke: var(--danger-color);
+}

@@ -1,8 +1,10 @@
 :root {
     --green:#078080;
     --success-color: #2cb67d;
+    --success-background-color: #2CB67DFF;
     --primary-color: #3da9fc;
     --danger-color: #f45d48;
+    --danger-background-color: #F45D4866;
     --input-color: #D3D3D3;
     --placeholder-color: #A9A9A9;
 
@@ -12,4 +14,6 @@
 
     --padding-small: .5rem;
     --padding-medium: 1rem;
+
+    --border-radius: 10px;
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   Center,
@@ -15,6 +15,8 @@ import {
 import { z } from "zod";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
+import Banner from "../components/Banner/Banner.tsx";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 const productSearchSchema = z.object({
   redirect: z.optional(z.string()),
@@ -32,11 +34,16 @@ export type FormLogin = {
 
 function LoginComponent() {
   const { login, user } = useUserContext();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<null | string>(null);
 
   const navigate = Route.useNavigate();
 
   const handleOnSubmit: SubmitHandler<FormLogin> = async (data) => {
-    await login(data.email, data.password);
+    setLoading(true);
+    const loginResponse = await login(data.email, data.password);
+    setError(loginResponse);
+    setLoading(false);
   };
   const { redirect } = Route.useSearch();
 
@@ -57,9 +64,23 @@ function LoginComponent() {
   return (
     <Container>
       <Center>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md" miw="320">
+        <Paper
+          withBorder
+          shadow="md"
+          p={30}
+          mt={30}
+          radius="md"
+          miw="320"
+          w="50%"
+        >
           <Title order={1}>Connexion</Title>
           <Space h="md" />
+          {error && (
+            <Banner iconPrefix={<IconExclamationCircle />} type="danger">
+              {error}
+            </Banner>
+          )}
+
           <form onSubmit={handleSubmit(handleOnSubmit)}>
             <Stack gap="xs">
               <Controller
@@ -106,7 +127,7 @@ function LoginComponent() {
                 <span>Mot de passe oublié</span>
               </Link>
               <SimpleGrid>
-                <Button isSubmit type="success">
+                <Button isSubmit loading={loading} type="success">
                   Connexion
                 </Button>
               </SimpleGrid>

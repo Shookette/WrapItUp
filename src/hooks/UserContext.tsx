@@ -24,10 +24,12 @@ import { v4 as uuidv4 } from "uuid";
 import { FirebaseError } from "@firebase/util";
 import { setProfil } from "../repository/ProfilRepository.ts";
 import { UpdateUser } from "../interfaces/Profil.ts";
+const FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL =
+  "Firebase: Error (auth/invalid-credential).";
 
 type UserProvider = {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<null | string>;
   register: (
     email: string,
     password: string,
@@ -80,6 +82,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
+    let errorMessage = null;
     try {
       let userCredential = await signInWithEmailAndPassword(
         auth,
@@ -91,9 +94,15 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
       setStoredUser(user);
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
-        console.error(`erreur lors de la connexion: ${error.message}`);
+        if (error.message === FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL) {
+          errorMessage = `L'email ou le mot de passe est incorrect`;
+        } else {
+          errorMessage = `Une erreur est survenue lors de la connexion, veuillez réessayer`;
+        }
       }
     }
+
+    return errorMessage;
   }, []);
 
   const register = useCallback(
