@@ -8,7 +8,6 @@ import {
   Paper,
   SimpleGrid,
   Space,
-  TextInput,
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -19,6 +18,7 @@ import { UpdateUser } from "../interfaces/Profil.ts";
 
 import Button from "../components/Button/Button.tsx";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import Input from "../components/Input/Input.tsx";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -75,16 +75,14 @@ function AccountComponent() {
                 name="displayName"
                 control={control}
                 render={({ field: { onChange, value, name } }) => (
-                  <TextInput
+                  <Input
                     id="displayName"
-                    name={name}
-                    value={value ?? ""}
-                    placeholder="Nom / Prénom"
-                    onChange={onChange}
                     label="Nom / Prénom"
-                    autoFocus
-                    withAsterisk
+                    placeholder="Nom / Prénom"
+                    name={name}
                     required
+                    value={value ?? ""}
+                    onChange={onChange}
                   />
                 )}
               />

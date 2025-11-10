@@ -11,7 +11,7 @@ type InputProps = {
   name?: string;
   placeholder?: string;
   required?: boolean;
-  type?: "email" | "text" | "textarea";
+  type?: "email" | "text" | "textarea" | "password";
   value?: string;
   onChange: (value: string) => void;
 };
@@ -41,16 +41,29 @@ const Input: FC<InputProps> = ({
         ""
       )}
 
-      <input
-        className="input__field"
-        id={id}
-        name={name}
-        placeholder={placeholder}
-        required={required}
-        value={value}
-        type={type}
-        onChange={(e) => onChange(e.target.value)}
-      />
+      {type === "textarea" ? (
+        <textarea
+          className="input__field"
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          required={required}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      ) : (
+        <input
+          className="input__field"
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          required={required}
+          value={value}
+          type={type}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      )}
+
       {error ? <p>{errorMessage ?? "Champ obligatoire"}</p> : ""}
     </div>
   );

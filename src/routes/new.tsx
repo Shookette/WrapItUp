@@ -13,11 +13,11 @@ import {
   Paper,
   SimpleGrid,
   Space,
-  TextInput,
   Title,
 } from "@mantine/core";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
+import Input from "../components/Input/Input.tsx";
 
 export const Route = createFileRoute("/new")({
   component: NewComponent,
@@ -65,16 +65,14 @@ function NewComponent() {
                 name="title"
                 control={control}
                 render={({ field: { onChange, value, name } }) => (
-                  <TextInput
+                  <Input
                     id="title"
+                    label="Nom de la liste"
                     name={name}
+                    placeholder="Nom de la liste"
+                    required
                     value={value}
                     onChange={onChange}
-                    label="Nom de la liste"
-                    placeholder="Nom de la liste"
-                    autoFocus
-                    withAsterisk
-                    required
                   />
                 )}
               />

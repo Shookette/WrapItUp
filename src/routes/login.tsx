@@ -6,7 +6,6 @@ import {
   Center,
   Container,
   Paper,
-  PasswordInput,
   SimpleGrid,
   Space,
   Stack,
@@ -104,14 +103,16 @@ function LoginComponent() {
               <Controller
                 name="password"
                 control={control}
-                render={({ field: { onChange, name } }) => (
-                  <PasswordInput
-                    error={errors.password && "Le mot de passe est obligatoire"}
+                render={({ field: { onChange, name, value } }) => (
+                  <Input
+                    error={!!errors.password}
+                    errorMessage={"Le mot de passe est obligatoire"}
                     label="Mot de passe"
                     name={name}
                     placeholder="Mot de passe"
+                    required
                     type="password"
-                    withAsterisk
+                    value={value}
                     onChange={onChange}
                   />
                 )}

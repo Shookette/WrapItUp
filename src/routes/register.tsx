@@ -6,14 +6,13 @@ import {
   Center,
   Container,
   Paper,
-  PasswordInput,
   SimpleGrid,
   Space,
   Stack,
-  TextInput,
   Title,
 } from "@mantine/core";
 import Button from "../components/Button/Button.tsx";
+import Input from "../components/Input/Input.tsx";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
@@ -74,17 +73,17 @@ function RegisterComponent() {
                   name="email"
                   control={control}
                   render={({ field: { onChange, value, name } }) => (
-                    <TextInput
+                    <Input
+                      error={!!errors.email}
+                      errorMessage={"L'adresse mail est obligatoire"}
                       id="email"
-                      name={name}
-                      value={value}
-                      onChange={onChange}
                       label="Email"
+                      name={name}
                       placeholder="Email"
                       type="email"
-                      withAsterisk
                       required
-                      error={errors.email && "L'adresse mail est obligatoire"}
+                      value={value}
+                      onChange={onChange}
                     />
                   )}
                 />
@@ -92,36 +91,33 @@ function RegisterComponent() {
                   name="username"
                   control={control}
                   render={({ field: { onChange, value, name } }) => (
-                    <TextInput
+                    <Input
+                      error={!!errors.username}
+                      errorMessage={"Le nom et le prénom est obligatoire"}
                       id="username"
+                      label="Nom/Prénom"
                       name={name}
+                      placeholder="Nom/Prénom"
+                      required
                       value={value}
                       onChange={onChange}
-                      label="Nom/Prénom"
-                      placeholder="Nom/Prénom"
-                      withAsterisk
-                      required
-                      error={
-                        errors.username && "Le nom et le prénom est obligatoire"
-                      }
                     />
                   )}
                 />
                 <Controller
                   name="password"
                   control={control}
-                  render={({ field: { onChange, name } }) => (
-                    <PasswordInput
-                      name={name}
-                      onChange={onChange}
-                      type="password"
+                  render={({ field: { onChange, name, value } }) => (
+                    <Input
+                      error={!!errors.password}
+                      errorMessage={"Le mot de passe est obligatoire"}
                       label="Mot de passe"
+                      name={name}
                       placeholder="Mot de passe"
-                      withAsterisk
                       required
-                      error={
-                        errors.password && "Le mot de passe est obligatoire"
-                      }
+                      type="password"
+                      value={value}
+                      onChange={onChange}
                     />
                   )}
                 />

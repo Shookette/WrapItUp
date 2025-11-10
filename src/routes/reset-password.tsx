@@ -8,10 +8,10 @@ import {
   SimpleGrid,
   Space,
   Stack,
-  TextInput,
   Title,
 } from "@mantine/core";
 import Button from "../components/Button/Button.tsx";
+import Input from "../components/Input/Input.tsx";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
@@ -60,17 +60,17 @@ function ResetPasswordComponent() {
                   name="email"
                   control={control}
                   render={({ field: { onChange, value, name } }) => (
-                    <TextInput
+                    <Input
+                      error={!!errors.email}
+                      errorMessage={"L'adresse mail est obligatoire"}
                       id="email"
+                      label="Email"
                       name={name}
+                      placeholder="Email"
+                      required
+                      type="email"
                       value={value}
                       onChange={onChange}
-                      placeholder="Email"
-                      label="Email"
-                      type="email"
-                      withAsterisk
-                      required
-                      error={errors.email && "L'adresse mail est obligatoire"}
                     />
                   )}
                 />

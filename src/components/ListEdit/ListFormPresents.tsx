@@ -1,4 +1,4 @@
-import { Table, Text, Textarea, TextInput } from "@mantine/core";
+import { Table, Text } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import {
   Control,
@@ -9,6 +9,7 @@ import {
 import { FullList } from "../../interfaces/List.ts";
 import { FC } from "react";
 import Button from "../Button/Button.tsx";
+import Input from "../Input/Input.tsx";
 
 type ListFormPresentsProps = {
   control: Control<FullList>;
@@ -41,15 +42,13 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
                     name={`presents.${index}.title`}
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
-                      <TextInput
+                      <Input
                         id="title"
                         name={name}
                         placeholder="Titre"
+                        required
                         value={value}
                         onChange={onChange}
-                        autoFocus
-                        withAsterisk
-                        required
                       />
                     )}
                   />
@@ -59,10 +58,11 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
                     name={`presents.${index}.description`}
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
-                      <Textarea
+                      <Input
                         id="description"
-                        placeholder="Description"
                         name={name}
+                        placeholder="Description"
+                        type="textarea"
                         value={value}
                         onChange={onChange}
                       />
@@ -74,7 +74,7 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
                     name={`presents.${index}.url`}
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
-                      <TextInput
+                      <Input
                         id="url"
                         placeholder="Lien"
                         name={name}

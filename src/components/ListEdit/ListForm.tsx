@@ -1,4 +1,4 @@
-import { SimpleGrid, Space, TextInput } from "@mantine/core";
+import { SimpleGrid, Space } from "@mantine/core";
 import {
   Controller,
   SubmitHandler,
@@ -12,6 +12,7 @@ import ListFormPresents from "./ListFormPresents.tsx";
 import { setList } from "../../repository/ListRepository.ts";
 import { notifications } from "@mantine/notifications";
 import Button from "../Button/Button.tsx";
+import Input from "../Input/Input.tsx";
 
 type ListFormProps = {
   list: FullList;
@@ -50,15 +51,14 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
         name="title"
         control={control}
         render={({ field: { onChange, value, name } }) => (
-          <TextInput
+          <Input
             id="title"
+            label="Nom de la liste de cadeau"
             name={name}
+            placeholder="Nom de la liste de cadeau"
+            required
             value={value}
             onChange={onChange}
-            label="Nom de la liste de cadeau"
-            autoFocus
-            withAsterisk
-            required
           />
         )}
       />
