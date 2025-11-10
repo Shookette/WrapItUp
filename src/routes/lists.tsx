@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { getLists } from "../repository/ListRepository.ts";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { getLists, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Container, Paper, Title } from "@mantine/core";
 import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
@@ -28,6 +28,8 @@ function ListsComponent() {
   const lists = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const { user } = useUserContext();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const redirectTo = useCallback(
     (list: FullList) => {
@@ -43,6 +45,16 @@ function ListsComponent() {
     [navigate],
   );
 
+  const removeAddedList = useCallback(async (removedList: FullList) => {
+    setLoading(true);
+    removedList.allowedUsers = removedList.allowedUsers.filter(
+      (allowedUser) => allowedUser.userUID !== user?.uid,
+    );
+    await setList(removedList);
+    router.invalidate();
+    setLoading(false);
+  }, []);
+
   return (
     <PrivateLayout>
       <Container>
@@ -50,8 +62,10 @@ function ListsComponent() {
           <Title order={2}>Listes de cadeaux</Title>
           <ListTableComponent
             lists={lists}
+            loading={loading}
             showAuthor
             onRedirect={redirectTo}
+            onRemoveAddedList={removeAddedList}
           />
         </Paper>
       </Container>
