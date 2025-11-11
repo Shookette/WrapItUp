@@ -32,16 +32,17 @@ function ViewComponent() {
   const { user } = useUserContext();
   const [currentList, setCurrentList] = useState<FullList | null>(list);
 
-  if (!currentList) {
+  if (
+    !currentList ||
+    !currentList.allowedUsers.find(({ userUID }) => userUID === user?.uid)
+  ) {
     return navigate({ to: "/" });
   }
 
   const isCurrentUser = currentList.userUID === user?.uid;
 
   const bookGift = useCallback(async (presentId: string) => {
-    const present = currentList.presents.find(
-      (present) => present.id === presentId,
-    );
+    const present = currentList.presents.find(({ id }) => id === presentId);
     if (present) {
       const isBooked = present.status === "reserved";
 
