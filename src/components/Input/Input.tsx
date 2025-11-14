@@ -1,6 +1,6 @@
 import "./Input.css";
 
-import { FC } from "react";
+import { ChangeEvent, FC, useMemo } from "react";
 import classNames from "classnames";
 
 type InputProps = {
@@ -30,6 +30,16 @@ const Input: FC<InputProps> = ({
 }) => {
   const className = classNames("input", {});
 
+  const commonProps = useMemo(() => ({
+    className: "input__field",
+    id,
+    name,
+    placeholder,
+    required,
+    value,
+    onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)
+  }), [id, name, placeholder, required, value, onChange])
+
   return (
     <div className={className}>
       {label ? (
@@ -43,24 +53,12 @@ const Input: FC<InputProps> = ({
 
       {type === "textarea" ? (
         <textarea
-          className="input__field"
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          required={required}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          {...commonProps}
         />
       ) : (
         <input
-          className="input__field"
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          required={required}
-          value={value}
+          {...commonProps}
           type={type}
-          onChange={(e) => onChange(e.target.value)}
         />
       )}
 
