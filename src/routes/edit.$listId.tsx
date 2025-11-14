@@ -1,28 +1,22 @@
+import { useCallback, useMemo, useState } from "react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { notifications } from "@mantine/notifications";
+import { Center, Container, Flex, Paper, Space, Title } from "@mantine/core";
+import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
+
 import {
   deleteList,
   getListByID,
   setList,
 } from "../repository/ListRepository.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import { useCallback, useState } from "react";
 import { isAuthenticated } from "../utils/routeUtils.ts";
-import {
-  Button as MButton,
-  Center,
-  Container,
-  Divider,
-  Flex,
-  Paper,
-  Space,
-  Title,
-} from "@mantine/core";
+
 import ListForm from "../components/ListEdit/ListForm.tsx";
 import ListUserForm from "../components/ListEdit/ListUserForm.tsx";
-import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
-import { notifications } from "@mantine/notifications";
 import Button from "../components/Button/Button.tsx";
+import Tabs from "../components/Tabs/Tabs.tsx";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -32,26 +26,11 @@ export const Route = createFileRoute("/edit/$listId")({
   },
 });
 
-const tabs: Array<{ icon: React.ReactNode; key: string; label: string }> = [
-  {
-    icon: <IconGift size={20} />,
-    key: "presents",
-    label: "Cadeaux",
-  },
-  { icon: <IconUser size={20} />, key: "users", label: "Utilisateurices" },
-  {
-    icon: <IconExclamationCircle size={20} />,
-    key: "danger",
-    label: "Danger zone",
-  },
-];
-
 function EditComponent() {
   const list = Route.useLoaderData();
   const navigate = Route.useNavigate();
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState("presents");
   const { user } = useUserContext();
   const [loading, setLoading] = useState(false);
 
@@ -82,11 +61,50 @@ function EditComponent() {
     setLoading(false);
   };
 
+  const tabs = useMemo(
+    () =>
+      list
+        ? [
+          {
+            children: <ListForm list={list} />,
+            icon: <IconGift size={20} />,
+            key: "presents",
+            title: "Cadeaux",
+          },
+          {
+            children: (
+              <ListUserForm
+                list={list}
+                handleOnRemove={removeUser}
+                loading={loading}
+              />
+            ),
+            icon: <IconUser size={20} />,
+            key: "users",
+            title: "Utilisateurices",
+          },
+          {
+            children: (
+              <div>
+                <Button type="danger" onClick={() => handleDeleteList()}>
+                  Supprimer la liste
+                </Button>
+              </div>
+            ),
+            icon: <IconExclamationCircle size={20} />,
+            key: "danger",
+            title: "Danger zone",
+          },
+        ]
+        : [],
+    [],
+  );
+
   return (
     <PrivateLayout>
       <Container>
         <Center>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <Paper withBorder shadow="md" p={30} mt={30} w="80%" radius="md">
             <Flex justify="space-between">
               <Title order={2} mr={20}>
                 Modifier votre liste de cadeau
@@ -94,37 +112,7 @@ function EditComponent() {
             </Flex>
             <Space h="md" />
 
-            {tabs.map((tab) => (
-              <MButton
-                color={tab.key === activeTab ? "blue" : "gray"}
-                onClick={() => setActiveTab(tab.key)}
-                mr={10}
-                size="compact-md"
-              >
-                {tab.icon}
-                {tab.label}
-              </MButton>
-            ))}
-            <Divider mt={10} mb={20} />
-            {
-              {
-                presents: <ListForm list={list} />,
-                users: (
-                  <ListUserForm
-                    list={list}
-                    handleOnRemove={removeUser}
-                    loading={loading}
-                  />
-                ),
-                danger: (
-                  <div>
-                    <Button type="danger" onClick={() => handleDeleteList()}>
-                      Supprimer la liste
-                    </Button>
-                  </div>
-                ),
-              }[activeTab]
-            }
+            <Tabs tabs={tabs} />
           </Paper>
         </Center>
       </Container>

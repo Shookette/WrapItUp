@@ -1,0 +1,21 @@
+.tabs__options {
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+
+.tabs__options_option {
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  gap: 0.3em;
+  padding: 0.3em;
+}
+
+.tabs__options_option--active {
+  border-bottom: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 700;
+}
