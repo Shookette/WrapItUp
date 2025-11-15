@@ -25,7 +25,7 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
   return (
     <Table>
       <Table.Thead>
-        <Table.Tr>
+        <Table.Tr key="header-list-present">
           <Table.Th>Nom du cadeau</Table.Th>
           <Table.Th>Description du cadeau</Table.Th>
           <Table.Th>Lien du cadeau</Table.Th>
@@ -34,16 +34,16 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
       </Table.Thead>
       <Table.Tbody>
         {fields.length > 0 ? (
-          fields.map((_, index) => {
+          fields.map((field, index) => {
             return (
-              <Table.Tr key={index}>
+              <Table.Tr key={field.id}>
                 <Table.Td>
                   <Controller
                     name={`presents.${index}.title`}
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
                       <Input
-                        id="title"
+                        id={`title-${index}`}
                         name={name}
                         placeholder="Titre"
                         required
@@ -59,7 +59,7 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
                       <Input
-                        id="description"
+                        id={`description-${index}`}
                         name={name}
                         placeholder="Description"
                         type="textarea"
@@ -75,7 +75,7 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
                     control={control}
                     render={({ field: { onChange, value, name } }) => (
                       <Input
-                        id="url"
+                        id={`url-${index}`}
                         placeholder="Lien"
                         name={name}
                         value={value}
@@ -96,7 +96,7 @@ const ListFormPresents: FC<ListFormPresentsProps> = ({
             );
           })
         ) : (
-          <Table.Tr>
+          <Table.Tr key="row-without-present">
             <Table.Td colSpan={4}>
               <Text ta="center">Aucun cadeau</Text>
             </Table.Td>
