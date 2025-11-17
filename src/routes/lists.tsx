@@ -2,11 +2,12 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { getLists, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback, useState } from "react";
-import { Container, Paper, Title } from "@mantine/core";
+import { Title } from "@mantine/core";
 import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import Page from "../components/Page/Page.tsx";
 
 export const Route = createFileRoute("/lists")({
   component: ListsComponent,
@@ -57,18 +58,16 @@ function ListsComponent() {
 
   return (
     <PrivateLayout>
-      <Container>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Title order={2}>Listes de cadeaux</Title>
-          <ListTableComponent
-            lists={lists}
-            loading={loading}
-            showAuthor
-            onRedirect={redirectTo}
-            onRemoveAddedList={removeAddedList}
-          />
-        </Paper>
-      </Container>
+      <Page size="lg">
+        <Title order={2}>Listes de cadeaux</Title>
+        <ListTableComponent
+          lists={lists}
+          loading={loading}
+          showAuthor
+          onRedirect={redirectTo}
+          onRemoveAddedList={removeAddedList}
+        />
+      </Page>
     </PrivateLayout>
   );
 }

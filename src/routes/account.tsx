@@ -3,9 +3,6 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  Center,
-  Container,
-  Paper,
   SimpleGrid,
   Space,
   Title,
@@ -19,6 +16,7 @@ import { UpdateUser } from "../interfaces/Profil.ts";
 import Button from "../components/Button/Button.tsx";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Input from "../components/Input/Input.tsx";
+import Page from "../components/Page/Page.tsx";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -66,37 +64,33 @@ function AccountComponent() {
 
   return (
     <PrivateLayout>
-      <Container>
-        <Center>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <Title order={2}>Informations personnelles</Title>
-            <form onSubmit={handleSubmit(handleOnSubmit)}>
-              <Controller
-                name="displayName"
-                control={control}
-                render={({ field: { onChange, value, name } }) => (
-                  <Input
-                    id="displayName"
-                    label="Nom / Prénom"
-                    placeholder="Nom / Prénom"
-                    name={name}
-                    required
-                    value={value ?? ""}
-                    onChange={onChange}
-                  />
-                )}
+      <Page size="md">
+        <Title order={2}>Informations personnelles</Title>
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
+          <Controller
+            name="displayName"
+            control={control}
+            render={({ field: { onChange, value, name } }) => (
+              <Input
+                id="displayName"
+                label="Nom / Prénom"
+                placeholder="Nom / Prénom"
+                name={name}
+                required
+                value={value ?? ""}
+                onChange={onChange}
               />
+            )}
+          />
 
-              <Space h="md" />
-              <SimpleGrid>
-                <Button isSubmit loading={loading}>
-                  Envoyer
-                </Button>
-              </SimpleGrid>
-            </form>
-          </Paper>
-        </Center>
-      </Container>
+          <Space h="md" />
+          <SimpleGrid>
+            <Button isSubmit loading={loading}>
+              Envoyer
+            </Button>
+          </SimpleGrid>
+        </form>
+      </Page>
     </PrivateLayout>
   );
 }

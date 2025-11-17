@@ -7,6 +7,7 @@
     --danger-background-color: #F45D4866;
     --input-color: #D3D3D3;
     --placeholder-color: #A9A9A9;
+    --white: #ffffff;
 
     --font-size-small: .9rem;
     --font-size-medium: 1rem;
@@ -14,6 +15,9 @@
 
     --padding-small: .5rem;
     --padding-medium: 1rem;
+    --padding-large: 2rem;
+    --padding-extra-large: 4rem;
 
     --border-radius: 10px;
+    --border-radius-large: 20px;
 }

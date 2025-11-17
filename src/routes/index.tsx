@@ -2,13 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { getMyLists } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useCallback } from "react";
-import { Container, Flex, Paper, Title } from "@mantine/core";
+import { Flex, Title } from "@mantine/core";
 import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import ListTableComponent from "../components/ListTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
+import Page from "../components/Page/Page.tsx";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,
@@ -47,24 +48,22 @@ function IndexComponent() {
 
   return (
     <PrivateLayout>
-      <Container>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Title order={2}>
-            <Flex justify="space-between">
-              Mes listes{" "}
-              <Button
-                icon={<IconPlus size={24} />}
-                type="success"
-                onClick={() => navigate({ to: "/new" })}
-              >
-                Ajouter
-              </Button>
-            </Flex>
-          </Title>
+      <Page size="lg">
+        <Title order={2}>
+          <Flex justify="space-between">
+            Mes listes{" "}
+            <Button
+              icon={<IconPlus size={24} />}
+              type="success"
+              onClick={() => navigate({ to: "/new" })}
+            >
+              Ajouter
+            </Button>
+          </Flex>
+        </Title>
 
-          <ListTableComponent lists={lists} onRedirect={redirectTo} />
-        </Paper>
-      </Container>
+        <ListTableComponent lists={lists} onRedirect={redirectTo} />
+      </Page>
     </PrivateLayout>
   );
 }

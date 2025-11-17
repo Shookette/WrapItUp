@@ -1,12 +1,12 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import PrivateLayout from "../components/PrivateLayout.tsx";
-import { Container, Paper } from "@mantine/core";
 import { getListByID, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { FullList } from "../interfaces/List.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect, useState } from "react";
 import Button from "../components/Button/Button.tsx";
+import Page from "../components/Page/Page.tsx";
 
 export const Route = createFileRoute("/invite/$listId")({
   component: InviteComponent,
@@ -58,25 +58,23 @@ function InviteComponent() {
 
   return (
     <PrivateLayout>
-      <Container>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          {!list ? (
-            <p>Liste introuvable</p>
-          ) : (
-            [
-              <p>
-                Vous avez reçu une invitation pour rejoindre la liste{" "}
-                <strong>{list?.title}</strong> de{" "}
-                <strong>{list?.username}</strong>
-              </p>,
+      <Page size="md">
+        {!list ? (
+          <p>Liste introuvable</p>
+        ) : (
+          [
+            <p>
+              Vous avez reçu une invitation pour rejoindre la liste{" "}
+              <strong>{list?.title}</strong> de{" "}
+              <strong>{list?.username}</strong>
+            </p>,
 
-              <Button loading={loading} onClick={joinList}>
-                Rejoindre la liste
-              </Button>,
-            ]
-          )}
-        </Paper>
-      </Container>
+            <Button loading={loading} onClick={joinList}>
+              Rejoindre la liste
+            </Button>,
+          ]
+        )}
+      </Page>
     </PrivateLayout>
   );
 }
