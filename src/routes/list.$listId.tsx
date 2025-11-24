@@ -6,6 +6,7 @@ import {
   Anchor,
   Badge,
   Card as CardMantine,
+  Flex,
   Group,
   SimpleGrid,
   Text,
@@ -16,6 +17,7 @@ import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
 import Page from "../components/Page/Page.tsx";
 import Title from "../components/Title/Title.tsx";
+import Grid from "../components/Grid/Grid.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,
@@ -107,7 +109,7 @@ function ViewComponent() {
     <PrivateLayout>
       <Page size='lg'>
         <Title>{currentList.title}</Title>
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>{cards}</SimpleGrid>
+        <Grid>{cards}</Grid>
       </Page>
     </PrivateLayout>
   );
