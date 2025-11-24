@@ -8,8 +8,8 @@ type PageProps = {
 }
 
 const Page: FC<PageProps> = ({ children, size = 'md' }) => {
-    const className = classNames("card", {
-        [`card__size--${size}`]: true,
+    const className = classNames("page", {
+        [`page__size--${size}`]: true,
     });
 
     return <div className={className}>{children}</div>

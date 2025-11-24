@@ -1,4 +1,4 @@
-.card {
+.page {
     background-color: var(--white);
     border-radius: var(--border-radius-large);
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px;
@@ -6,16 +6,16 @@
     min-width: 320px;
 }
 
-.card__size--sm {
+.page__size--sm {
     width: 35%;
 }
 
 
-.card__size--md {
+.page__size--md {
     width: 40%;
 }
 
 
-.card__size--lg {
+.page__size--lg {
     width: 60%;
 }
