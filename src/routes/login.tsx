@@ -5,7 +5,6 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   SimpleGrid,
   Space,
-  Title,
 } from "@mantine/core";
 import { z } from "zod";
 import Button from "../components/Button/Button.tsx";
@@ -14,6 +13,7 @@ import Banner from "../components/Banner/Banner.tsx";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import Center from "../components/Center/Center.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 const productSearchSchema = z.object({
   redirect: z.optional(z.string()),
@@ -61,7 +61,7 @@ function LoginComponent() {
   return (
     <Center>
       <Page size="sm">
-        <Title order={1}>Connexion</Title>
+        <Title>Connexion</Title>
         <Space h="md" />
         {error && (
           <Banner iconPrefix={<IconExclamationCircle />} type="danger">

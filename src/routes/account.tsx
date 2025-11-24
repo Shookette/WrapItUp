@@ -5,7 +5,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   SimpleGrid,
   Space,
-  Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
@@ -17,6 +16,7 @@ import Button from "../components/Button/Button.tsx";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Input from "../components/Input/Input.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -65,7 +65,7 @@ function AccountComponent() {
   return (
     <PrivateLayout>
       <Page size="md">
-        <Title order={2}>Informations personnelles</Title>
+        <Title>Informations personnelles</Title>
         <form onSubmit={handleSubmit(handleOnSubmit)}>
           <Controller
             name="displayName"

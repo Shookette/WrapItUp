@@ -9,13 +9,13 @@ import {
   Group,
   SimpleGrid,
   Text,
-  Title,
 } from "@mantine/core";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { FullList } from "../interfaces/List.ts";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,
@@ -106,7 +106,7 @@ function ViewComponent() {
   return (
     <PrivateLayout>
       <Page size='lg'>
-        <Title order={2}>{currentList.title}</Title>
+        <Title>{currentList.title}</Title>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>{cards}</SimpleGrid>
       </Page>
     </PrivateLayout>

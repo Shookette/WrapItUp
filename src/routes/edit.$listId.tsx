@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { notifications } from "@mantine/notifications";
-import { Flex, Space, Title } from "@mantine/core";
+import { Flex, Space } from "@mantine/core";
 import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 
 import {
@@ -18,6 +18,7 @@ import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
 import Tabs from "../components/Tabs/Tabs.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,
@@ -105,7 +106,7 @@ function EditComponent() {
     <PrivateLayout>
       <Page size="lg">
         <Flex justify="space-between">
-          <Title order={2} mr={20}>
+          <Title>
             Modifier votre liste de cadeau
           </Title>
         </Flex>

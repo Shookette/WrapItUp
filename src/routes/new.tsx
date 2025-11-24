@@ -10,12 +10,12 @@ import { isAuthenticated } from "../utils/routeUtils.ts";
 import {
   SimpleGrid,
   Space,
-  Title,
 } from "@mantine/core";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/new")({
   component: NewComponent,
@@ -54,7 +54,7 @@ function NewComponent() {
   return (
     <PrivateLayout>
       <Page size="md">
-        <Title order={2}>Ajouter une nouvelle liste de cadeau</Title>
+        <Title>Ajouter une nouvelle liste de cadeau</Title>
         <Space h="md" />
         <form onSubmit={handleSubmit(handleOnSubmit)}>
           <Controller

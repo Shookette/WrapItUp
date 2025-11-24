@@ -5,12 +5,12 @@ import { useEffect } from "react";
 import {
   SimpleGrid,
   Space,
-  Title,
 } from "@mantine/core";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
 import Center from "../components/Center/Center.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
@@ -61,7 +61,7 @@ function RegisterComponent() {
       </Link>
 
       <Page size="md">
-        <Title order={1}>Inscription</Title>
+        <Title>Inscription</Title>
         <Space h="md" />
         <form style={{ display: 'flex', gap: '15px', flexDirection: 'column' }} onSubmit={handleSubmit(handleOnSubmit)}>
           <Controller

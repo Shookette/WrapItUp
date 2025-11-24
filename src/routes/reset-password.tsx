@@ -4,12 +4,12 @@ import { useUserContext } from "../hooks/UserContext.tsx";
 import {
   SimpleGrid,
   Space,
-  Title,
 } from "@mantine/core";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
 import Center from "../components/Center/Center.tsx";
 import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
@@ -48,7 +48,7 @@ function ResetPasswordComponent() {
         Retour à la page de connexion
       </Link>
       <Page size="md">
-        <Title order={1}>Réinitialiser le mot de passe</Title>
+        <Title>Réinitialiser le mot de passe</Title>
         <Space h="md" />
         <form className="form" onSubmit={handleSubmit(handleOnSubmit)}>
           <Controller
