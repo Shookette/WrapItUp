@@ -54,7 +54,7 @@ function InviteComponent() {
     ) {
       navigate({ to: "/list/$listId" });
     }
-  }, [list]);
+  }, [list, navigate, user?.uid]);
 
   return (
     <PrivateLayout>

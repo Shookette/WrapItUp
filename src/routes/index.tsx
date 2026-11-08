@@ -44,7 +44,7 @@ function IndexComponent() {
 
       return navigate({ to: "/list/$listId", params: { listId: list.id } });
     },
-    [navigate],
+    [navigate, user?.uid],
   );
 
   return (

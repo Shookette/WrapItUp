@@ -36,7 +36,7 @@ function RegisterComponent() {
     if (user) {
       navigate({ to: "/" });
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const {
     handleSubmit,

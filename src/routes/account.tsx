@@ -59,7 +59,7 @@ function AccountComponent() {
         });
       setLoading(false);
     },
-    [],
+    [user, updateUser],
   );
 
   return (

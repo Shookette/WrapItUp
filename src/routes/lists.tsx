@@ -43,7 +43,7 @@ function ListsComponent() {
 
       return navigate({ to: "/list/$listId", params: { listId: list.id } });
     },
-    [navigate],
+    [navigate, user?.uid],
   );
 
   const removeAddedList = useCallback(async (removedList: FullList) => {
@@ -54,7 +54,7 @@ function ListsComponent() {
     await setList(removedList);
     router.invalidate();
     setLoading(false);
-  }, []);
+  }, [router, user?.uid]);
 
   return (
     <PrivateLayout>
