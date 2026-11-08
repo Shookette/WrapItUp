@@ -12,17 +12,18 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 
 ## Avancement
 
-| #   | Étape                                                                      | Risque                 | État            |
-| --- | -------------------------------------------------------------------------- | ---------------------- | --------------- |
-| 1   | ESLint → oxlint + lint dans la CI                                          | faible                 | ✅ fait (PR #2) |
-| 2   | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | à faire         |
-| 3   | Mises à jour mineures                                                      | faible                 | à faire         |
-| 4   | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | à faire         |
-| 5   | Suppression de Mantine                                                     | moyen, découpable      | à faire         |
-| 6   | React 18 → 19                                                              | faible après l'étape 5 | à faire         |
-| 7   | Vite 5 → 8 + version de Node dans la CI                                    | faible à moyen         | à faire         |
-| 8   | Firebase 11 → 13                                                           | moyen                  | à faire         |
-| 9   | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | à faire         |
+| #     | Étape                                                                      | Risque                 | État            |
+| ----- | -------------------------------------------------------------------------- | ---------------------- | --------------- |
+| 1     | ESLint → oxlint + lint dans la CI                                          | faible                 | ✅ fait (PR #2) |
+| 1 bis | Prettier → oxfmt + `.nvmrc` (Node 24.16.0) dans la CI                      | faible                 | ✅ fait         |
+| 2     | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | à faire         |
+| 3     | Mises à jour mineures                                                      | faible                 | à faire         |
+| 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | à faire         |
+| 5     | Suppression de Mantine                                                     | moyen, découpable      | à faire         |
+| 6     | React 18 → 19                                                              | faible après l'étape 5 | à faire         |
+| 7     | Vite 5 → 8                                                                 | faible à moyen         | à faire         |
+| 8     | Firebase 11 → 13                                                           | moyen                  | à faire         |
+| 9     | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | à faire         |
 
 Les versions « cibles » ci-dessous sont celles disponibles le 8 novembre 2026 : relancer `npm outdated` avant chaque étape.
 
@@ -33,6 +34,13 @@ Les versions « cibles » ci-dessous sont celles disponibles le 8 novembre 2026 
 Fait dans la PR #2 : `.oxlintrc.json` remplace `eslint.config.js`, ESLint et ses 10 plugins / configs sont retirés, `npm run lint` (`oxlint --deny-warnings src`) est lancé par les deux workflows avant le build. Détail de la configuration dans `CLAUDE.md`.
 
 Fait en premier pour avoir un garde-fou rapide et strict pendant les migrations suivantes.
+
+## 1 bis. Prettier → oxfmt + `.nvmrc` ✅
+
+- `.oxfmtrc.json` (migré depuis `.prettierrc` avec `oxfmt --migrate=prettier`, largeur 80) ; `prettier`, `.prettierrc` et `.prettierignore` retirés. Prettier reste présent en dépendance transitive (`@tanstack/router-generator`, `stylelint-prettier`).
+- Scripts `format` / `format:check`, vérification du format dans les deux workflows.
+- Reformatage global en un commit séparé, listé dans `.git-blame-ignore-revs`.
+- `.nvmrc` = `24.16.0`, lu par `actions/setup-node` (`node-version-file`) dans les deux workflows : la CI utilise la même version de Node qu'en local.
 
 ## 2. Suppression des paquets inutilisés
 
@@ -72,7 +80,7 @@ Bonus attendu : réduction du bundle (avertissement > 500 kB au build).
 | `@mantine/core`, `@mantine/notifications`           | 7.14 → 7.17                  |
 | `typescript`                                        | 5.7 → 5.9                    |
 | `vite`                                              | 5.4.11 → 5.4.21              |
-| `prettier`, `dayjs`, `postcss`, `uuid`              | correctifs                   |
+| `dayjs`, `postcss`, `uuid`                          | correctifs                   |
 
 Point d'attention : `@tanstack/router-plugin` a renommé son export Vite (`TanStackRouterVite` → `tanstackRouter`) ; l'ancien nom est déprécié. Mettre à jour `vite.config.ts` et laisser le plugin régénérer `src/routeTree.gen.ts`.
 
@@ -133,7 +141,7 @@ Conventions des composants maison : voir la section « Migration hors de Mantine
 ## 7. Vite 5 → 8
 
 - `vite@8` (bundler Rolldown) et `@vitejs/plugin-react@6`. Node ≥ 20.19 requis.
-- Les workflows GitHub n'utilisent pas `actions/setup-node` (Node par défaut du runner) : l'ajouter avec `node-version: 24` pour s'aligner sur le local.
+- La version de Node est fixée par `.nvmrc` (24.16.0, utilisé par la CI) : compatible.
 - Vérifier le build et le plugin TanStack Router.
 
 ## 8. Firebase 11 → 13
@@ -146,4 +154,3 @@ Conventions des composants maison : voir la section « Migration hors de Mantine
 
 - **uuid** : plutôt que de passer en v14, le supprimer et utiliser `crypto.randomUUID()` (3 usages : `ListForm.tsx`, `UserContext.tsx`, `new.tsx`).
 - **TypeScript 7** (compilateur natif en Go) : en dernier. Vérifier d'abord la compatibilité avec le plugin TanStack Router. Rester en 5.9 en attendant.
-- **Prettier → oxfmt** : à évaluer séparément, quand l'outil sera mûr.

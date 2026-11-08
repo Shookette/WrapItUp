@@ -6,6 +6,7 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 
 ## Stack
 
+- **Node 24.16.0**, fixé par `.nvmrc` (`nvm use`) et utilisé par la CI (`actions/setup-node`)
 - **React 18** + **TypeScript** + **Vite 5**
 - **TanStack Router** (routage par fichiers, plugin Vite) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
 - **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
@@ -16,15 +17,17 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 ## Commandes
 
 ```bash
-npm run dev      # serveur de développement Vite
-npm run build    # tsc + vite build (sortie dans dist/)
-npm run lint     # oxlint sur src/, 0 warning toléré (--deny-warnings)
-npm run preview  # prévisualiser le build
+npm run dev           # serveur de développement Vite
+npm run build         # tsc + vite build (sortie dans dist/)
+npm run lint          # oxlint sur src/, 0 warning toléré (--deny-warnings)
+npm run format        # oxfmt : formate tout le projet
+npm run format:check  # oxfmt --check : vérifie sans modifier
+npm run preview       # prévisualiser le build
 ```
 
-Il n'y a **aucun test** dans le projet pour l'instant. Après une modification, vérifier au minimum `npm run build` (le typage TS fait office de garde-fou) et `npm run lint`.
+Il n'y a **aucun test** dans le projet pour l'instant. Après une modification, vérifier au minimum `npm run format`, `npm run lint` et `npm run build` (le typage TS fait office de garde-fou).
 
-Le lint (oxlint) passe sans erreur ni warning et **est lancé par la CI** avant le build (`npm ci && npm run lint && npm run build`) : un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB.
+Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB.
 
 ## Déploiement
 
@@ -108,7 +111,8 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 - **Authentification** (`hooks/UserContext.tsx`) : l'utilisateurice Firebase est mis·e en cache dans `localStorage` (clé `wrapitup.user`). L'email doit être vérifié pour que la session soit restaurée. L'inscription crée aussi un document `profils`.
 - **Formulaires** : react-hook-form + `Controller` + composant `Input` maison ; listes dynamiques avec `useFieldArray`.
 - **Textes de l'interface en français**, en **écriture inclusive** avec le point médian (« utilisateurice », « invité·e », « supprimé•e »).
-- **Formatage** : Prettier avec la config par défaut (`.prettierrc` vide). Lint avec **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
+- **Formatage** : **oxfmt** (`.oxfmtrc.json`, remplace Prettier depuis le 8 novembre 2026, sortie compatible Prettier), largeur 80, `src/routeTree.gen.ts` et `package-lock.json` ignorés. Le commit de reformatage global est listé dans `.git-blame-ignore-revs` (`git config blame.ignoreRevsFile .git-blame-ignore-revs`).
+- **Lint** : **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
 - **Nommage** : les noms d'entités suivent le code existant (`Profil` et non `Profile`, `Present` pour un cadeau).
 
 ## Migration hors de Mantine (en cours)
