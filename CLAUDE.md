@@ -115,14 +115,22 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 
 ## Points d'attention connus
 
-- **Sécurité Firestore** : les règles autorisent tout·e utilisateurice connecté·e à lire et écrire **tous** les documents. Le secret des réservations n'est donc garanti que par l'interface. **À préciser** : comportement accepté (usage entre proches) ou à durcir ?
+- **Sécurité Firestore** : les règles autorisent tout·e utilisateurice connecté·e à lire et écrire **tous** les documents. Le secret des réservations n'est donc garanti que par l'interface. Le durcissement est détaillé dans `docs/security-audit.md` (§1).
 - **`zod`** est importé dans `routes/login.tsx` mais n'apparaît pas dans `package.json` (il est probablement présent en dépendance transitive) : à ajouter explicitement.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
 - Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
 
 ## Todo / feuille de route
 
-Voir `todo.md`. À ce jour :
-- Supprimer Mantine
-- Revoir l'UX du formulaire d'ajout de cadeaux
+Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
+
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (oxlint fait ; suivant : suppression des paquets inutilisés). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
+- `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
+
+Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
+
+Petites tâches, voir `todo.md`. À ce jour :
+- Améliorer les pages hors `PrivateLayout` avec le nouveau composant `Page` (CSS)
+- Supprimer Mantine (étape 5 du plan d'upgrade)
+- Revoir l'UX du formulaire d'ajout de cadeaux (à faire avec l'étape 4 du plan d'upgrade)
 - Corriger le bug quand on veut rejoindre une liste sans être connecté·e
