@@ -85,9 +85,7 @@ const PrivateLayout: FC<Props> = ({ children }) => {
         </Flex>
       </Box>
 
-      <Center>
-        {children}
-      </Center>
+      <Center>{children}</Center>
     </Fragment>
   );
 };

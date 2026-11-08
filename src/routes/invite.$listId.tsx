@@ -50,7 +50,8 @@ function InviteComponent() {
       list &&
       (list.allowedUsers.find(
         (allowedUser) => allowedUser.userUID === user?.uid,
-      ) !== undefined || list.userUID === user?.uid)
+      ) !== undefined ||
+        list.userUID === user?.uid)
     ) {
       navigate({ to: "/list/$listId" });
     }

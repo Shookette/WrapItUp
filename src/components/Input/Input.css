@@ -1,28 +1,28 @@
 .input__label {
-    display: block;
-    padding-left: .1em;
+  display: block;
+  padding-left: 0.1em;
 }
 
 .input__label-asterix {
-    color: red;
+  color: red;
 }
 
 .input__field {
-    border: 1px solid var(--input-color);
-    border-radius: 5px;
-    padding: .3em .7em;
-    width: 100%;
+  border: 1px solid var(--input-color);
+  border-radius: 5px;
+  padding: 0.3em 0.7em;
+  width: 100%;
 }
 
 textarea.input__field {
-    resize: none;
+  resize: none;
 }
 
 .input__field::placeholder {
-    color: var(--placeholder-color);
+  color: var(--placeholder-color);
 }
 
 .input__field:focus {
-    outline: none;
-    outline-width: 0;
+  outline: none;
+  outline-width: 0;
 }

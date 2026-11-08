@@ -1,14 +1,14 @@
-import initFirebase from '../firebaseLoader';
-import {FC, ReactNode} from "react";
+import initFirebase from "../firebaseLoader";
+import { FC, ReactNode } from "react";
 
 interface Props {
-    children: ReactNode;
+  children: ReactNode;
 }
 
-const WithFirestore: FC<Props> = ({children}) => {
-    initFirebase();
+const WithFirestore: FC<Props> = ({ children }) => {
+  initFirebase();
 
-    return <>{children}</>;
+  return <>{children}</>;
 };
 
 export default WithFirestore;

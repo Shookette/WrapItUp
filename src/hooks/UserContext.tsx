@@ -82,29 +82,32 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
     return unsubscribe;
   }, [auth]);
 
-  const login = useCallback(async (email: string, password: string) => {
-    let errorMessage = null;
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const user = userCredential.user;
-      setUser(user);
-      setStoredUser(user);
-    } catch (error: unknown) {
-      if (error instanceof FirebaseError) {
-        if (error.message === FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL) {
-          errorMessage = `L'email ou le mot de passe est incorrect`;
-        } else {
-          errorMessage = `Une erreur est survenue lors de la connexion, veuillez réessayer`;
+  const login = useCallback(
+    async (email: string, password: string) => {
+      let errorMessage = null;
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+        const user = userCredential.user;
+        setUser(user);
+        setStoredUser(user);
+      } catch (error: unknown) {
+        if (error instanceof FirebaseError) {
+          if (error.message === FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL) {
+            errorMessage = `L'email ou le mot de passe est incorrect`;
+          } else {
+            errorMessage = `Une erreur est survenue lors de la connexion, veuillez réessayer`;
+          }
         }
       }
-    }
 
-    return errorMessage;
-  }, [auth]);
+      return errorMessage;
+    },
+    [auth],
+  );
 
   const register = useCallback(
     async (email: string, password: string, userName: string) => {
@@ -131,31 +134,37 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
     [auth],
   );
 
-  const resetPassword = useCallback(async (email: string): Promise<void> => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-    } catch (error: unknown) {
-      if (error instanceof FirebaseError) {
-        console.error(
-          `erreur lors de la réinitialisation du mot de passe: ${error.message}`,
-        );
+  const resetPassword = useCallback(
+    async (email: string): Promise<void> => {
+      try {
+        await sendPasswordResetEmail(auth, email);
+      } catch (error: unknown) {
+        if (error instanceof FirebaseError) {
+          console.error(
+            `erreur lors de la réinitialisation du mot de passe: ${error.message}`,
+          );
+        }
       }
-    }
-  }, [auth]);
+    },
+    [auth],
+  );
 
-  const updateUser = useCallback(async (data: UpdateUser) => {
-    const auth = getAuth();
-    if (!auth.currentUser || !user) {
-      return;
-    }
+  const updateUser = useCallback(
+    async (data: UpdateUser) => {
+      const auth = getAuth();
+      if (!auth.currentUser || !user) {
+        return;
+      }
 
-    await updateProfile(auth.currentUser, { displayName: data.displayName });
+      await updateProfile(auth.currentUser, { displayName: data.displayName });
 
-    setStoredUser({
-      ...user,
-      displayName: data.displayName,
-    });
-  }, [user]);
+      setStoredUser({
+        ...user,
+        displayName: data.displayName,
+      });
+    },
+    [user],
+  );
 
   const logout = useCallback(async () => {
     await signOut(auth);

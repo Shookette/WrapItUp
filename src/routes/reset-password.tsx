@@ -1,10 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import {
-  SimpleGrid,
-  Space,
-} from "@mantine/core";
+import { SimpleGrid, Space } from "@mantine/core";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
 import Center from "../components/Center/Center.tsx";
@@ -76,6 +73,6 @@ function ResetPasswordComponent() {
           </SimpleGrid>
         </form>
       </Page>
-    </Center >
+    </Center>
   );
 }

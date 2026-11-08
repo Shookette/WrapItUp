@@ -100,9 +100,7 @@ function EditComponent() {
     <PrivateLayout>
       <Page size="lg">
         <Flex justify="space-between">
-          <Title>
-            Modifier votre liste de cadeau
-          </Title>
+          <Title>Modifier votre liste de cadeau</Title>
         </Flex>
         <Space h="md" />
 

@@ -50,20 +50,21 @@ src/
 
 ## Routes
 
-| Route | Rôle | Accès |
-|---|---|---|
-| `/` | « Mes listes » : listes dont je suis propriétaire | connecté |
-| `/lists` | « Listes de cadeaux » : listes auxquelles j'ai été invité·e | connecté |
-| `/new` | Création d'une liste (titre seul, puis redirection vers `/edit`) | connecté |
-| `/edit/$listId` | Édition : onglets Cadeaux / Utilisateurices / Danger zone | propriétaire uniquement |
-| `/list/$listId` | Consultation et réservation des cadeaux | invité·e uniquement |
-| `/invite/$listId` | Page d'invitation, bouton « Rejoindre la liste » | connecté |
-| `/login`, `/register`, `/reset-password` | Authentification | public |
-| `/account` | Compte utilisateurice | connecté |
+| Route                                    | Rôle                                                             | Accès                   |
+| ---------------------------------------- | ---------------------------------------------------------------- | ----------------------- |
+| `/`                                      | « Mes listes » : listes dont je suis propriétaire                | connecté                |
+| `/lists`                                 | « Listes de cadeaux » : listes auxquelles j'ai été invité·e      | connecté                |
+| `/new`                                   | Création d'une liste (titre seul, puis redirection vers `/edit`) | connecté                |
+| `/edit/$listId`                          | Édition : onglets Cadeaux / Utilisateurices / Danger zone        | propriétaire uniquement |
+| `/list/$listId`                          | Consultation et réservation des cadeaux                          | invité·e uniquement     |
+| `/invite/$listId`                        | Page d'invitation, bouton « Rejoindre la liste »                 | connecté                |
+| `/login`, `/register`, `/reset-password` | Authentification                                                 | public                  |
+| `/account`                               | Compte utilisateurice                                            | connecté                |
 
 ## Modèle de données Firestore
 
 ### Collection `lists`
+
 Identifiant du document = `list.id` (uuid).
 
 ```ts
@@ -82,12 +83,19 @@ Identifiant du document = `list.id` (uuid).
 - Une réservation = modifier `status` (`"available"` / `"reserved"`) et `reservedBy` (uid) du cadeau, puis réécrire **toute la liste** avec `setList()`.
 
 ### Collection `profils`
+
 ```ts
-{ id: string; userUID: string; username: string }
+{
+  id: string;
+  userUID: string;
+  username: string;
+}
 ```
+
 Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'uid de l'utilisateurice. On retrouve un profil via `where("userUID", "==", uid)` (`getById` dans `ProfilRepository`).
 
 ### Code mort à connaître
+
 - `PresentRepository.ts` (collection `presents` séparée) et `FileRepository.ts` (Firebase Storage) **ne sont utilisés nulle part**. Les cadeaux vivent dans `lists.presents`. **À préciser** : vestiges à supprimer ou migration prévue ?
 - Le champ `Present.listUID` est rempli mais n'est utile que pour cette ancienne collection.
 
@@ -130,6 +138,7 @@ Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
 
 Petites tâches, voir `todo.md`. À ce jour :
+
 - Améliorer les pages hors `PrivateLayout` avec le nouveau composant `Page` (CSS)
 - Supprimer Mantine (étape 5 du plan d'upgrade)
 - Revoir l'UX du formulaire d'ajout de cadeaux (à faire avec l'étape 4 du plan d'upgrade)
