@@ -119,6 +119,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 **Fichier** : `src/hooks/UserContext.tsx` (`setStoredUser`)
 
 `JSON.stringify(user)` appelle `User.toJSON()`, qui inclut `stsTokenManager` → **accessToken et refreshToken** copiés dans `wrapitup.user`. Cette clé :
+
 - n'est pas vidée par `deleteCurrentUser` ;
 - n'est pas invalidée quand Firebase termine la session (`onAuthStateChanged(null)` est ignoré).
 
@@ -148,7 +149,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 - Transitives notables : `protobufjs`, `websocket-driver` (critiques), `zod`, `lodash`, `@grpc/grpc-js`, `prosemirror-view`, `markdown-it`, `js-yaml`…
 
 - [ ] `npm audit fix`, puis mettre à jour `@tanstack/react-router` / `@tanstack/router-plugin`.
-- [ ] Vérifier `npm run build` et `npm run lint` après mise à jour.
+- [ ] Vérifier `npm run build` et `npm run lint` après mise à jour (fait par la CI depuis la PR #2).
 - [ ] Activer **Dependabot** (`.github/dependabot.yml`) pour npm et GitHub Actions.
 - [ ] Ajouter `zod` explicitement dans `package.json` (importé dans `login.tsx`, absent des dépendances), version ≥ 4.6.6.
 
@@ -191,7 +192,7 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 **Fichier** : `firebase.json`, section `hosting.headers`
 
 - [ ] `Content-Security-Policy` (limite fortement l'impact d'une XSS). Point de départ à ajuster :
-  `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; frame-src https://wrap-it-up-2d42a.firebaseapp.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'`
+      `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; frame-src https://wrap-it-up-2d42a.firebaseapp.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'`
 - [ ] `X-Content-Type-Options: nosniff`
 - [ ] `Referrer-Policy: strict-origin-when-cross-origin`
 - [ ] `Permissions-Policy: camera=(), microphone=(), geolocation=()`
@@ -224,7 +225,8 @@ Tester d'abord en `Content-Security-Policy-Report-Only` sur un canal de preview.
 - [ ] Épingler les actions par SHA (`actions/checkout@<sha>`, `FirebaseExtended/action-hosting-deploy@<sha>`) : `@v0` est une étiquette mobile.
 - [ ] Ajouter un bloc `permissions:` minimal au workflow de merge (`contents: read`, `checks: write`).
 - [ ] Vérifier que le compte de service `FIREBASE_SERVICE_ACCOUNT_WRAP_IT_UP_2D42A` n'a que le rôle **Firebase Hosting Admin** (+ Firebase Rules Admin si les règles sont déployées par la CI).
-- [ ] Lancer `npm run lint` et `npm audit --audit-level=high --omit=dev` dans la CI avant le déploiement.
+- [x] Lancer `npm run lint` dans la CI avant le déploiement (fait, PR #2 : oxlint).
+- [ ] Lancer `npm audit --audit-level=high --omit=dev` dans la CI avant le déploiement.
 - [ ] Protéger la branche `main` (PR obligatoire, checks verts) puisqu'un push déploie en production.
 
 ---
@@ -233,8 +235,8 @@ Tester d'abord en `Content-Security-Policy-Report-Only` sur un canal de preview.
 
 - [ ] Supprimer `src/repository/PresentRepository.ts` et `src/repository/FileRepository.ts` (inutilisés).
 - [ ] Supprimer `Present.listUID` si la collection `presents` est abandonnée.
-- [ ] Retirer les dépendances Mantine/tiptap inutilisées : `@mantine/carousel`, `charts`, `code-highlight`, `dates`, `dropzone`, `form`, `modals`, `nprogress`, `spotlight`, `tiptap`, `@tiptap/*`, `embla-carousel-react`, `recharts` (à vérifier avec un `grep` avant). Réduit aussi le bundle > 500 kB.
-- [ ] Déplacer `eslint-config-prettier` dans `devDependencies`.
+- [ ] Retirer les dépendances Mantine/tiptap inutilisées : `@mantine/carousel`, `charts`, `code-highlight`, `dates`, `dropzone`, `form`, `modals`, `nprogress`, `spotlight`, `tiptap`, `@tiptap/*`, `embla-carousel-react`, `recharts` (vérifié le 8/11/2026 : aucun import ; voir l'étape 2 de `docs/upgrade-plan.md`). Réduit aussi le bundle > 500 kB.
+- [x] ~~Déplacer `eslint-config-prettier` dans `devDependencies`~~ : retiré avec ESLint (PR #2).
 - [ ] Retirer les `console.error` qui affichent les messages Firebase bruts en production (ou passer par un vrai suivi d'erreurs).
 
 ---

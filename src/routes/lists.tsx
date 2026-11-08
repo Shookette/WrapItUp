@@ -46,15 +46,18 @@ function ListsComponent() {
     [navigate, user?.uid],
   );
 
-  const removeAddedList = useCallback(async (removedList: FullList) => {
-    setLoading(true);
-    removedList.allowedUsers = removedList.allowedUsers.filter(
-      (allowedUser) => allowedUser.userUID !== user?.uid,
-    );
-    await setList(removedList);
-    router.invalidate();
-    setLoading(false);
-  }, [router, user?.uid]);
+  const removeAddedList = useCallback(
+    async (removedList: FullList) => {
+      setLoading(true);
+      removedList.allowedUsers = removedList.allowedUsers.filter(
+        (allowedUser) => allowedUser.userUID !== user?.uid,
+      );
+      await setList(removedList);
+      router.invalidate();
+      setLoading(false);
+    },
+    [router, user?.uid],
+  );
 
   return (
     <PrivateLayout>

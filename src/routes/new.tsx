@@ -7,10 +7,7 @@ import { useUserContext } from "../hooks/UserContext.tsx";
 import dayjs from "dayjs";
 import { useCallback, useState } from "react";
 import { isAuthenticated } from "../utils/routeUtils.ts";
-import {
-  SimpleGrid,
-  Space,
-} from "@mantine/core";
+import { SimpleGrid, Space } from "@mantine/core";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
@@ -42,14 +39,17 @@ function NewComponent() {
     defaultValues: defaultList,
   });
 
-  const handleOnSubmit: SubmitHandler<FullList> = useCallback(async (list) => {
-    setLoading(true);
-    await setList(list);
-    setLoading(false);
-    navigate({
-      to: `/edit/${list.id}`,
-    });
-  }, [navigate]);
+  const handleOnSubmit: SubmitHandler<FullList> = useCallback(
+    async (list) => {
+      setLoading(true);
+      await setList(list);
+      setLoading(false);
+      navigate({
+        to: `/edit/${list.id}`,
+      });
+    },
+    [navigate],
+  );
 
   return (
     <PrivateLayout>
@@ -81,6 +81,6 @@ function NewComponent() {
           </SimpleGrid>
         </form>
       </Page>
-    </PrivateLayout >
+    </PrivateLayout>
   );
 }

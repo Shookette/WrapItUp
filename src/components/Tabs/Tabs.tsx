@@ -11,7 +11,7 @@ type Tab = {
 };
 type TabsProps = {
   tabs: Tab[];
-}
+};
 
 const Tabs: FC<TabsProps> = ({ tabs }) => {
   const className = classNames("tabs", {});
@@ -29,7 +29,7 @@ const Tabs: FC<TabsProps> = ({ tabs }) => {
         {tabs.map((tab) => (
           <span
             key={tab.key}
-            className={`tabs__options_option${activeTab === tab.key ? ' tabs__options_option--active' : ''}`}
+            className={`tabs__options_option${activeTab === tab.key ? " tabs__options_option--active" : ""}`}
             onClick={() => setActiveTab(tab.key)}
           >
             {tab.icon}

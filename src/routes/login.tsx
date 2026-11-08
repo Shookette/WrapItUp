@@ -2,10 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import {
-  SimpleGrid,
-  Space,
-} from "@mantine/core";
+import { SimpleGrid, Space } from "@mantine/core";
 import { z } from "zod";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
@@ -123,14 +120,11 @@ function LoginComponent() {
         </form>
         <Space h="xl" />
         <SimpleGrid cols={1}>
-          <Button
-            type="primary"
-            onClick={() => navigate({ to: "/register" })}
-          >
+          <Button type="primary" onClick={() => navigate({ to: "/register" })}>
             <span>Inscription</span>
           </Button>
         </SimpleGrid>
       </Page>
-    </Center >
+    </Center>
   );
 }

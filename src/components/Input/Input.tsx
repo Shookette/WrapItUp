@@ -30,15 +30,19 @@ const Input: FC<InputProps> = ({
 }) => {
   const className = classNames("input", {});
 
-  const commonProps = useMemo(() => ({
-    className: "input__field",
-    id,
-    name,
-    placeholder,
-    required,
-    value,
-    onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value)
-  }), [id, name, placeholder, required, value, onChange])
+  const commonProps = useMemo(
+    () => ({
+      className: "input__field",
+      id,
+      name,
+      placeholder,
+      required,
+      value,
+      onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        onChange(e.target.value),
+    }),
+    [id, name, placeholder, required, value, onChange],
+  );
 
   return (
     <div className={className}>
@@ -52,14 +56,9 @@ const Input: FC<InputProps> = ({
       )}
 
       {type === "textarea" ? (
-        <textarea
-          {...commonProps}
-        />
+        <textarea {...commonProps} />
       ) : (
-        <input
-          {...commonProps}
-          type={type}
-        />
+        <input {...commonProps} type={type} />
       )}
 
       {error ? <p>{errorMessage ?? "Champ obligatoire"}</p> : ""}

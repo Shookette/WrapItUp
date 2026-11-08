@@ -2,10 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { useEffect } from "react";
-import {
-  SimpleGrid,
-  Space,
-} from "@mantine/core";
+import { SimpleGrid, Space } from "@mantine/core";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
 import Center from "../components/Center/Center.tsx";
@@ -63,7 +60,10 @@ function RegisterComponent() {
       <Page size="md">
         <Title>Inscription</Title>
         <Space h="md" />
-        <form style={{ display: 'flex', gap: '15px', flexDirection: 'column' }} onSubmit={handleSubmit(handleOnSubmit)}>
+        <form
+          style={{ display: "flex", gap: "15px", flexDirection: "column" }}
+          onSubmit={handleSubmit(handleOnSubmit)}
+        >
           <Controller
             name="email"
             control={control}
@@ -123,6 +123,6 @@ function RegisterComponent() {
           </SimpleGrid>
         </form>
       </Page>
-    </Center >
+    </Center>
   );
 }

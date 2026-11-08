@@ -2,10 +2,7 @@ import { useCallback, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  SimpleGrid,
-  Space,
-} from "@mantine/core";
+import { SimpleGrid, Space } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 
 import { isAuthenticated } from "../utils/routeUtils";
