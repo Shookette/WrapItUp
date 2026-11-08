@@ -21,9 +21,9 @@ const Banner: FC<BannerProps> = ({
   });
   return (
     <div className={className}>
-      {iconPrefix && iconPrefix}
+      {iconPrefix}
       <p className="banner__text">{children}</p>
-      {iconSuffix && iconSuffix}
+      {iconSuffix}
     </div>
   );
 };

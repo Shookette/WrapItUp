@@ -42,8 +42,10 @@ const InnerApp = () => {
     return { auth };
   }, [auth]);
 
+  // Volontaire : on relance les loaders quand l'authentification change.
   useEffect(() => {
     router.invalidate();
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies
   }, [context]);
 
   return <RouterProvider router={router} context={context} />;

@@ -28,6 +28,7 @@ const Tabs: FC<TabsProps> = ({ tabs }) => {
       <div className="tabs__options">
         {tabs.map((tab) => (
           <span
+            key={tab.key}
             className={`tabs__options_option${activeTab === tab.key ? ' tabs__options_option--active' : ''}`}
             onClick={() => setActiveTab(tab.key)}
           >
