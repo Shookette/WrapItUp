@@ -187,7 +187,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
 };
 
 // Le hook partage le fichier du provider : seul le rechargement à chaud (HMR) est concerné.
-// eslint-disable-next-line react-refresh/only-export-components
+// oxlint-disable-next-line react/only-export-components
 export const useUserContext: hookUserContext = () => {
   const userContext = useContext(UserContext);
 

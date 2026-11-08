@@ -62,17 +62,17 @@ function InviteComponent() {
         {!list ? (
           <p>Liste introuvable</p>
         ) : (
-          [
+          <>
             <p>
               Vous avez reçu une invitation pour rejoindre la liste{" "}
               <strong>{list?.title}</strong> de{" "}
               <strong>{list?.username}</strong>
-            </p>,
+            </p>
 
             <Button loading={loading} onClick={joinList}>
               Rejoindre la liste
-            </Button>,
-          ]
+            </Button>
+          </>
         )}
       </Page>
     </PrivateLayout>

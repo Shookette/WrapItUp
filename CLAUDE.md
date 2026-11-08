@@ -18,13 +18,13 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 ```bash
 npm run dev      # serveur de développement Vite
 npm run build    # tsc + vite build (sortie dans dist/)
-npm run lint     # ESLint sur src/, 0 warning toléré
+npm run lint     # oxlint sur src/, 0 warning toléré (--deny-warnings)
 npm run preview  # prévisualiser le build
 ```
 
 Il n'y a **aucun test** dans le projet pour l'instant. Après une modification, vérifier au minimum `npm run build` (le typage TS fait office de garde-fou) et `npm run lint`.
 
-Le lint a été réparé le 8 novembre 2026 (il n'analysait aucun fichier jusque-là) et passe sans erreur ni warning. Il n'est pas lancé par la CI. Le build affiche un avertissement : bundle JS > 500 kB.
+Le lint (oxlint) passe sans erreur ni warning et **est lancé par la CI** avant le build (`npm ci && npm run lint && npm run build`) : un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB.
 
 ## Déploiement
 
@@ -100,7 +100,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 - **Authentification** (`hooks/UserContext.tsx`) : l'utilisateurice Firebase est mis·e en cache dans `localStorage` (clé `wrapitup.user`). L'email doit être vérifié pour que la session soit restaurée. L'inscription crée aussi un document `profils`.
 - **Formulaires** : react-hook-form + `Controller` + composant `Input` maison ; listes dynamiques avec `useFieldArray`.
 - **Textes de l'interface en français**, en **écriture inclusive** avec le point médian (« utilisateurice », « invité·e », « supprimé•e »).
-- **Formatage** : Prettier avec la config par défaut (`.prettierrc` vide). ESLint 8 en flat config (`eslint.config.js`) : `standard` (converti via `FlatCompat`), `@typescript-eslint` (recommended), `react-hooks`, `react-refresh`, puis `prettier` en dernier. Les règles en doublon avec TypeScript (`no-undef`, `no-unused-vars`…) sont désactivées. `src/routeTree.gen.ts` est ignoré.
+- **Formatage** : Prettier avec la config par défaut (`.prettierrc` vide). Lint avec **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
 - **Nommage** : les noms d'entités suivent le code existant (`Profil` et non `Profile`, `Present` pour un cadeau).
 
 ## Migration hors de Mantine (en cours)
@@ -118,7 +118,7 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 - **Sécurité Firestore** : les règles autorisent tout·e utilisateurice connecté·e à lire et écrire **tous** les documents. Le secret des réservations n'est donc garanti que par l'interface. **À préciser** : comportement accepté (usage entre proches) ou à durcir ?
 - **`zod`** est importé dans `routes/login.tsx` mais n'apparaît pas dans `package.json` (il est probablement présent en dépendance transitive) : à ajouter explicitement.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
-- Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react-hooks/rules-of-hooks`).
+- Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
 
 ## Todo / feuille de route
 

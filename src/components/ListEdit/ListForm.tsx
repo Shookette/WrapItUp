@@ -22,11 +22,9 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
   const [loading, setLoading] = useState(false);
   const defaultValues = useMemo(() => list, [list]);
 
-  const { control, handleSubmit, watch } = useForm<FullList>({
+  const { control, handleSubmit } = useForm<FullList>({
     defaultValues,
   });
-
-  const watchListId = watch("id");
 
   const { fields, append, remove } = useFieldArray({
     name: "presents",
@@ -72,7 +70,7 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
             id: uuidv4(),
             title: "",
             status: "available",
-            listUID: watchListId,
+            listUID: list.id,
             description: "",
             url: "",
           })
