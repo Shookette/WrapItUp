@@ -8,16 +8,14 @@ import dayjs from "dayjs";
 import { useCallback, useState } from "react";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import {
-  Center,
-  Container,
-  Paper,
   SimpleGrid,
   Space,
-  Title,
 } from "@mantine/core";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
 import Input from "../components/Input/Input.tsx";
+import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
 
 export const Route = createFileRoute("/new")({
   component: NewComponent,
@@ -55,38 +53,34 @@ function NewComponent() {
 
   return (
     <PrivateLayout>
-      <Container>
-        <Center>
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <Title order={2}>Ajouter une nouvelle liste de cadeau</Title>
-            <Space h="md" />
-            <form onSubmit={handleSubmit(handleOnSubmit)}>
-              <Controller
-                name="title"
-                control={control}
-                render={({ field: { onChange, value, name } }) => (
-                  <Input
-                    id="title"
-                    label="Nom de la liste"
-                    name={name}
-                    placeholder="Nom de la liste"
-                    required
-                    value={value}
-                    onChange={onChange}
-                  />
-                )}
+      <Page size="md">
+        <Title>Ajouter une nouvelle liste de cadeau</Title>
+        <Space h="md" />
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
+          <Controller
+            name="title"
+            control={control}
+            render={({ field: { onChange, value, name } }) => (
+              <Input
+                id="title"
+                label="Nom de la liste"
+                name={name}
+                placeholder="Nom de la liste"
+                required
+                value={value}
+                onChange={onChange}
               />
+            )}
+          />
 
-              <Space h="md" />
-              <SimpleGrid>
-                <Button isSubmit loading={loading} type="primary">
-                  Envoyer
-                </Button>
-              </SimpleGrid>
-            </form>
-          </Paper>
-        </Center>
-      </Container>
-    </PrivateLayout>
+          <Space h="md" />
+          <SimpleGrid>
+            <Button isSubmit loading={loading} type="primary">
+              Envoyer
+            </Button>
+          </SimpleGrid>
+        </form>
+      </Page>
+    </PrivateLayout >
   );
 }

@@ -3,6 +3,7 @@ import { ActionIcon, Box, Flex, Menu, Text } from "@mantine/core";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
+import Center from "./Center/Center.tsx";
 
 interface Props {
   children: ReactNode;
@@ -84,7 +85,9 @@ const PrivateLayout: FC<Props> = ({ children }) => {
         </Flex>
       </Box>
 
-      {children}
+      <Center>
+        {children}
+      </Center>
     </Fragment>
   );
 };

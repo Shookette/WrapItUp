@@ -2,21 +2,14 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { getListByID, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
 import { useState } from "react";
-import {
-  Anchor,
-  Badge,
-  Card,
-  Container,
-  Group,
-  Paper,
-  SimpleGrid,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Anchor, Badge, Card as CardMantine, Group, Text } from "@mantine/core";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { FullList } from "../interfaces/List.ts";
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Button from "../components/Button/Button.tsx";
+import Page from "../components/Page/Page.tsx";
+import Title from "../components/Title/Title.tsx";
+import Grid from "../components/Grid/Grid.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,
@@ -55,7 +48,13 @@ function ViewComponent() {
   };
 
   const cards = (currentList.presents ?? []).map((present) => (
-    <Card shadow="sm" padding="lg" radius="md" withBorder key={present.id}>
+    <CardMantine
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      key={present.id}
+    >
       <Group justify="space-between" mt="md" mb="xs">
         <Text fw={500}>{present.title}</Text>
         <Badge
@@ -96,17 +95,15 @@ function ViewComponent() {
               : "Réserver"}
           </Button>
         )}
-    </Card>
+    </CardMantine>
   ));
 
   return (
     <PrivateLayout>
-      <Container>
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <Title order={2}>{currentList.title}</Title>
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}>{cards}</SimpleGrid>
-        </Paper>
-      </Container>
+      <Page size="lg">
+        <Title>{currentList.title}</Title>
+        <Grid>{cards}</Grid>
+      </Page>
     </PrivateLayout>
   );
 }
