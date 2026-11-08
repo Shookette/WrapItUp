@@ -24,7 +24,7 @@ npm run preview  # prévisualiser le build
 
 Il n'y a **aucun test** dans le projet pour l'instant. Après une modification, vérifier au minimum `npm run build` (le typage TS fait office de garde-fou) et `npm run lint`.
 
-Le lint a été réparé le 8 novembre 2026 (il n'analysait aucun fichier jusque-là). Au moment de la réparation, il remonte 26 problèmes existants (5 erreurs, 21 warnings), donc `npm run lint` échoue tant qu'ils ne sont pas corrigés. Le build affiche un avertissement : bundle JS > 500 kB.
+Le lint a été réparé le 8 novembre 2026 (il n'analysait aucun fichier jusque-là) et passe sans erreur ni warning. Il n'est pas lancé par la CI. Le build affiche un avertissement : bundle JS > 500 kB.
 
 ## Déploiement
 
@@ -118,8 +118,7 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 - **Sécurité Firestore** : les règles autorisent tout·e utilisateurice connecté·e à lire et écrire **tous** les documents. Le secret des réservations n'est donc garanti que par l'interface. **À préciser** : comportement accepté (usage entre proches) ou à durcir ?
 - **`zod`** est importé dans `routes/login.tsx` mais n'apparaît pas dans `package.json` (il est probablement présent en dépendance transitive) : à ajouter explicitement.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
-- Plusieurs `useCallback` / `useMemo` ont des tableaux de dépendances vides alors qu'ils utilisent des props ou un état : source probable de données périmées.
-- Des hooks sont appelés après un `return` conditionnel (`list.$listId.tsx`, `edit.$listId.tsx`), ce qui enfreint les règles des hooks React.
+- Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react-hooks/rules-of-hooks`).
 
 ## Todo / feuille de route
 

@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { getListByID, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Anchor,
   Badge,
@@ -28,7 +28,6 @@ export const Route = createFileRoute("/list/$listId")({
 
 function ViewComponent() {
   const list = Route.useLoaderData();
-  const navigate = Route.useNavigate();
   const { user } = useUserContext();
   const [currentList, setCurrentList] = useState<FullList | null>(list);
 
@@ -36,12 +35,12 @@ function ViewComponent() {
     !currentList ||
     !currentList.allowedUsers.find(({ userUID }) => userUID === user?.uid)
   ) {
-    return navigate({ to: "/" });
+    return <Navigate to="/" />;
   }
 
   const isCurrentUser = currentList.userUID === user?.uid;
 
-  const bookGift = useCallback(async (presentId: string) => {
+  const bookGift = async (presentId: string) => {
     const present = currentList.presents.find(({ id }) => id === presentId);
     if (present) {
       const isBooked = present.status === "reserved";
@@ -53,56 +52,52 @@ function ViewComponent() {
 
       setCurrentList(await getListByID(currentList.id));
     }
-  }, []);
+  };
 
-  const cards = useMemo(
-    () =>
-      (currentList.presents ?? []).map((present) => (
-        <Card shadow="sm" padding="lg" radius="md" withBorder key={present.id}>
-          <Group justify="space-between" mt="md" mb="xs">
-            <Text fw={500}>{present.title}</Text>
-            <Badge
-              color={
-                isCurrentUser
-                  ? "green"
-                  : present.status === "reserved"
-                    ? "red"
-                    : "green"
-              }
-            >
-              {isCurrentUser
-                ? `C'est un secret`
-                : present.status === "reserved"
-                  ? "Réservé"
-                  : "Disponible"}
-            </Badge>
-          </Group>
+  const cards = (currentList.presents ?? []).map((present) => (
+    <Card shadow="sm" padding="lg" radius="md" withBorder key={present.id}>
+      <Group justify="space-between" mt="md" mb="xs">
+        <Text fw={500}>{present.title}</Text>
+        <Badge
+          color={
+            isCurrentUser
+              ? "green"
+              : present.status === "reserved"
+                ? "red"
+                : "green"
+          }
+        >
+          {isCurrentUser
+            ? `C'est un secret`
+            : present.status === "reserved"
+              ? "Réservé"
+              : "Disponible"}
+        </Badge>
+      </Group>
 
-          <Text size="sm" c="dimmed">
-            {present.description}
-          </Text>
+      <Text size="sm" c="dimmed">
+        {present.description}
+      </Text>
 
-          {present.url && (
-            <Anchor href={present.url} target="_blank">
-              Lien du cadeau
-            </Anchor>
-          )}
+      {present.url && (
+        <Anchor href={present.url} target="_blank">
+          Lien du cadeau
+        </Anchor>
+      )}
 
-          {!isCurrentUser &&
-            (!present.reservedBy || present.reservedBy === user?.uid) && (
-              <Button
-                type={present.status === "reserved" ? "danger" : "success"}
-                onClick={() => bookGift(present.id)}
-              >
-                {present.status === "reserved"
-                  ? "Supprimer la réservation"
-                  : "Réserver"}
-              </Button>
-            )}
-        </Card>
-      )),
-    [currentList.presents],
-  );
+      {!isCurrentUser &&
+        (!present.reservedBy || present.reservedBy === user?.uid) && (
+          <Button
+            type={present.status === "reserved" ? "danger" : "success"}
+            onClick={() => bookGift(present.id)}
+          >
+            {present.status === "reserved"
+              ? "Supprimer la réservation"
+              : "Réserver"}
+          </Button>
+        )}
+    </Card>
+  ));
 
   return (
     <PrivateLayout>

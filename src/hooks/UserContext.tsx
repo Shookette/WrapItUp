@@ -73,18 +73,19 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
   const isAuthenticated = !!user;
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user && user.emailVerified) {
         setUser(user);
         setStoredUser(user);
       }
     });
-  }, []);
+    return unsubscribe;
+  }, [auth]);
 
   const login = useCallback(async (email: string, password: string) => {
     let errorMessage = null;
     try {
-      let userCredential = await signInWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password,
@@ -103,7 +104,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
     }
 
     return errorMessage;
-  }, []);
+  }, [auth]);
 
   const register = useCallback(
     async (email: string, password: string, userName: string) => {
@@ -127,7 +128,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
         }
       }
     },
-    [],
+    [auth],
   );
 
   const resetPassword = useCallback(async (email: string): Promise<void> => {
@@ -140,7 +141,7 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
         );
       }
     }
-  }, []);
+  }, [auth]);
 
   const updateUser = useCallback(async (data: UpdateUser) => {
     const auth = getAuth();
@@ -154,13 +155,13 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
       ...user,
       displayName: data.displayName,
     });
-  }, []);
+  }, [user]);
 
   const logout = useCallback(async () => {
     await signOut(auth);
     setStoredUser(null);
     setUser(null);
-  }, []);
+  }, [auth]);
 
   const deleteCurrentUser = useCallback(async (user: User) => {
     await deleteUser(user);
@@ -185,6 +186,8 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
   );
 };
 
+// Le hook partage le fichier du provider : seul le rechargement à chaud (HMR) est concerné.
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUserContext: hookUserContext = () => {
   const userContext = useContext(UserContext);
 

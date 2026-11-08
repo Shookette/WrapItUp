@@ -51,7 +51,7 @@ function NewComponent() {
     navigate({
       to: `/edit/${list.id}`,
     });
-  }, []);
+  }, [navigate]);
 
   return (
     <PrivateLayout>

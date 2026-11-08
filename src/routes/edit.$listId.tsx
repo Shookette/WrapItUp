@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute, Navigate, useRouter } from "@tanstack/react-router";
 import { notifications } from "@mantine/notifications";
 import { Center, Container, Flex, Paper, Space, Title } from "@mantine/core";
 import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
@@ -35,13 +35,13 @@ function EditComponent() {
   const [loading, setLoading] = useState(false);
 
   if (!list || list.userUID !== user?.uid) {
-    return navigate({ to: "/" });
+    return <Navigate to="/" />;
   }
 
-  const handleDeleteList = useCallback(async () => {
+  const handleDeleteList = async () => {
     await deleteList(list.id);
     return navigate({ to: "/" });
-  }, [list]);
+  };
 
   const removeUser = async (userUID: string) => {
     setLoading(true);
@@ -61,44 +61,38 @@ function EditComponent() {
     setLoading(false);
   };
 
-  const tabs = useMemo(
-    () =>
-      list
-        ? [
-          {
-            children: <ListForm list={list} />,
-            icon: <IconGift size={20} />,
-            key: "presents",
-            title: "Cadeaux",
-          },
-          {
-            children: (
-              <ListUserForm
-                list={list}
-                handleOnRemove={removeUser}
-                loading={loading}
-              />
-            ),
-            icon: <IconUser size={20} />,
-            key: "users",
-            title: "Utilisateurices",
-          },
-          {
-            children: (
-              <div>
-                <Button type="danger" onClick={() => handleDeleteList()}>
-                  Supprimer la liste
-                </Button>
-              </div>
-            ),
-            icon: <IconExclamationCircle size={20} />,
-            key: "danger",
-            title: "Danger zone",
-          },
-        ]
-        : [],
-    [],
-  );
+  const tabs = [
+    {
+      children: <ListForm list={list} />,
+      icon: <IconGift size={20} />,
+      key: "presents",
+      title: "Cadeaux",
+    },
+    {
+      children: (
+        <ListUserForm
+          list={list}
+          handleOnRemove={removeUser}
+          loading={loading}
+        />
+      ),
+      icon: <IconUser size={20} />,
+      key: "users",
+      title: "Utilisateurices",
+    },
+    {
+      children: (
+        <div>
+          <Button type="danger" onClick={() => handleDeleteList()}>
+            Supprimer la liste
+          </Button>
+        </div>
+      ),
+      icon: <IconExclamationCircle size={20} />,
+      key: "danger",
+      title: "Danger zone",
+    },
+  ];
 
   return (
     <PrivateLayout>

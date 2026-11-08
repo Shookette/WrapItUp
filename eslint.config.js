@@ -47,5 +47,10 @@ export default [
       "import/no-unresolved": "off",
     },
   },
+  {
+    // Point d'entrée : jamais rechargé à chaud en tant que module de composant.
+    files: ["src/main.tsx"],
+    rules: { "react-refresh/only-export-components": "off" },
+  },
   eslintConfigPrettier,
 ];

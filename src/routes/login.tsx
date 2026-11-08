@@ -50,7 +50,7 @@ function LoginComponent() {
     if (user) {
       navigate({ to: redirect ?? "/" });
     }
-  }, [user]);
+  }, [user, navigate, redirect]);
 
   const {
     handleSubmit,

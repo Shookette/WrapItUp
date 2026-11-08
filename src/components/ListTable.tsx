@@ -47,7 +47,7 @@ const ListTableComponent: FC<Props> = ({
           )}
         </Table.Tr>
       )),
-    [lists],
+    [lists, loading, onRedirect, onRemoveAddedList, showAuthor],
   );
 
   return (
