@@ -151,7 +151,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 - [ ] `npm audit fix`, puis mettre à jour `@tanstack/react-router` / `@tanstack/router-plugin`.
 - [ ] Vérifier `npm run build` et `npm run lint` après mise à jour (fait par la CI depuis la PR #2).
 - [ ] Activer **Dependabot** (`.github/dependabot.yml`) pour npm et GitHub Actions.
-- [ ] Ajouter `zod` explicitement dans `package.json` (importé dans `login.tsx`, absent des dépendances), version ≥ 4.6.6.
+- [x] Ajouter `zod` explicitement dans `package.json` (importé dans `login.tsx`, absent des dépendances), version ≥ 4.6.6.
 
 ---
 
@@ -233,9 +233,9 @@ Tester d'abord en `Content-Security-Policy-Report-Only` sur un canal de preview.
 
 ## 🟡 11. Réduction de la surface d'attaque
 
-- [ ] Supprimer `src/repository/PresentRepository.ts` et `src/repository/FileRepository.ts` (inutilisés).
+- [x] Supprimer `src/repository/PresentRepository.ts` et `src/repository/FileRepository.ts` (inutilisés).
 - [ ] Supprimer `Present.listUID` si la collection `presents` est abandonnée.
-- [ ] Retirer les dépendances Mantine/tiptap inutilisées : `@mantine/carousel`, `charts`, `code-highlight`, `dates`, `dropzone`, `form`, `modals`, `nprogress`, `spotlight`, `tiptap`, `@tiptap/*`, `embla-carousel-react`, `recharts` (vérifié le 8/11/2026 : aucun import ; voir l'étape 2 de `docs/upgrade-plan.md`). Réduit aussi le bundle > 500 kB.
+- [x] Retirer les dépendances Mantine/tiptap inutilisées : `@mantine/carousel`, `charts`, `code-highlight`, `dates`, `dropzone`, `form`, `modals`, `nprogress`, `spotlight`, `tiptap`, `@tiptap/*`, `embla-carousel-react`, `recharts` (vérifié le 8/11/2026 : aucun import ; voir l'étape 2 de `docs/upgrade-plan.md`). Fait à l'étape 2 ; pas d'effet sur le bundle, ces paquets n'étaient pas importés.
 - [x] ~~Déplacer `eslint-config-prettier` dans `devDependencies`~~ : retiré avec ESLint (PR #2).
 - [ ] Retirer les `console.error` qui affichent les messages Firebase bruts en production (ou passer par un vrai suivi d'erreurs).
 

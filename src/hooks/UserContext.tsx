@@ -21,7 +21,7 @@ import {
 } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 
-import { FirebaseError } from "@firebase/util";
+import { FirebaseError } from "firebase/app";
 import { setProfil } from "../repository/ProfilRepository.ts";
 import { UpdateUser } from "../interfaces/Profil.ts";
 const FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL =

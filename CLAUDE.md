@@ -12,6 +12,7 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 - **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
 - **react-hook-form** pour tous les formulaires (`Controller` + composants `Input` maison)
 - **Mantine 7** (en cours de suppression, voir plus bas), icônes **@tabler/icons-react**
+- **zod 4** pour valider les paramètres de recherche des routes (`validateSearch`)
 - `uuid` pour générer les identifiants, `dayjs` pour les dates, `classnames` pour les classes CSS
 
 ## Commandes
@@ -97,10 +98,10 @@ Identifiant du document = `list.id` (uuid).
 
 Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'uid de l'utilisateurice. On retrouve un profil via `where("userUID", "==", uid)` (`getById` dans `ProfilRepository`).
 
-### Code mort à connaître
+### Vestiges à connaître
 
-- `PresentRepository.ts` (collection `presents` séparée) et `FileRepository.ts` (Firebase Storage) **ne sont utilisés nulle part**. Les cadeaux vivent dans `lists.presents`. **À préciser** : vestiges à supprimer ou migration prévue ?
-- Le champ `Present.listUID` est rempli mais n'est utile que pour cette ancienne collection.
+- Les cadeaux vivent dans `lists.presents`. Une ancienne collection `presents` séparée (et un `FileRepository` pour Firebase Storage) existait : le code a été supprimé à l'étape 2 du plan d'upgrade.
+- Le champ `Present.listUID` est encore rempli mais n'était utile que pour cette ancienne collection.
 
 ## Architecture et conventions
 
@@ -128,7 +129,6 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 ## Points d'attention connus
 
 - **Sécurité Firestore** : les règles autorisent tout·e utilisateurice connecté·e à lire et écrire **tous** les documents. Le secret des réservations n'est donc garanti que par l'interface. Le durcissement est détaillé dans `docs/security-audit.md` (§1).
-- **`zod`** est importé dans `routes/login.tsx` mais n'apparaît pas dans `package.json` (il est probablement présent en dépendance transitive) : à ajouter explicitement.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
 - Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
 
@@ -136,7 +136,7 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (oxlint fait ; suivant : suppression des paquets inutilisés). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 et 2 faites ; suivant : mises à jour mineures). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
