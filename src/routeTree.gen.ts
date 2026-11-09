@@ -8,160 +8,68 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as ListsRouteImport } from './routes/lists'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as NewRouteImport } from './routes/new'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as EditListIdRouteImport } from './routes/edit.$listId'
+import { Route as InviteListIdRouteImport } from './routes/invite.$listId'
+import { Route as ListListIdRouteImport } from './routes/list.$listId'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as ResetPasswordImport } from './routes/reset-password'
-import { Route as RegisterImport } from './routes/register'
-import { Route as NewImport } from './routes/new'
-import { Route as LoginImport } from './routes/login'
-import { Route as ListsImport } from './routes/lists'
-import { Route as AccountImport } from './routes/account'
-import { Route as IndexImport } from './routes/index'
-import { Route as ListListIdImport } from './routes/list.$listId'
-import { Route as InviteListIdImport } from './routes/invite.$listId'
-import { Route as EditListIdImport } from './routes/edit.$listId'
-
-// Create/Update Routes
-
-const ResetPasswordRoute = ResetPasswordImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const RegisterRoute = RegisterImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const NewRoute = NewImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ListsRoute = ListsImport.update({
-  id: '/lists',
-  path: '/lists',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AccountRoute = AccountImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ListListIdRoute = ListListIdImport.update({
-  id: '/list/$listId',
-  path: '/list/$listId',
-  getParentRoute: () => rootRoute,
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const InviteListIdRoute = InviteListIdImport.update({
-  id: '/invite/$listId',
-  path: '/invite/$listId',
-  getParentRoute: () => rootRoute,
+const ListsRoute = ListsRouteImport.update({
+  id: '/lists',
+  path: '/lists',
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const EditListIdRoute = EditListIdImport.update({
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewRoute = NewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditListIdRoute = EditListIdRouteImport.update({
   id: '/edit/$listId',
   path: '/edit/$listId',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountImport
-      parentRoute: typeof rootRoute
-    }
-    '/lists': {
-      id: '/lists'
-      path: '/lists'
-      fullPath: '/lists'
-      preLoaderRoute: typeof ListsImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/new': {
-      id: '/new'
-      path: '/new'
-      fullPath: '/new'
-      preLoaderRoute: typeof NewImport
-      parentRoute: typeof rootRoute
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterImport
-      parentRoute: typeof rootRoute
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordImport
-      parentRoute: typeof rootRoute
-    }
-    '/edit/$listId': {
-      id: '/edit/$listId'
-      path: '/edit/$listId'
-      fullPath: '/edit/$listId'
-      preLoaderRoute: typeof EditListIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/invite/$listId': {
-      id: '/invite/$listId'
-      path: '/invite/$listId'
-      fullPath: '/invite/$listId'
-      preLoaderRoute: typeof InviteListIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/list/$listId': {
-      id: '/list/$listId'
-      path: '/list/$listId'
-      fullPath: '/list/$listId'
-      preLoaderRoute: typeof ListListIdImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
+const InviteListIdRoute = InviteListIdRouteImport.update({
+  id: '/invite/$listId',
+  path: '/invite/$listId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListListIdRoute = ListListIdRouteImport.update({
+  id: '/list/$listId',
+  path: '/list/$listId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -175,7 +83,6 @@ export interface FileRoutesByFullPath {
   '/invite/$listId': typeof InviteListIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
@@ -188,9 +95,8 @@ export interface FileRoutesByTo {
   '/invite/$listId': typeof InviteListIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/lists': typeof ListsRoute
@@ -202,7 +108,6 @@ export interface FileRoutesById {
   '/invite/$listId': typeof InviteListIdRoute
   '/list/$listId': typeof ListListIdRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -242,7 +147,6 @@ export interface FileRouteTypes {
     | '/list/$listId'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
@@ -254,6 +158,81 @@ export interface RootRouteChildren {
   EditListIdRoute: typeof EditListIdRoute
   InviteListIdRoute: typeof InviteListIdRoute
   ListListIdRoute: typeof ListListIdRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lists': {
+      id: '/lists'
+      path: '/lists'
+      fullPath: '/lists'
+      preLoaderRoute: typeof ListsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/new': {
+      id: '/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof NewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit/$listId': {
+      id: '/edit/$listId'
+      path: '/edit/$listId'
+      fullPath: '/edit/$listId'
+      preLoaderRoute: typeof EditListIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite/$listId': {
+      id: '/invite/$listId'
+      path: '/invite/$listId'
+      fullPath: '/invite/$listId'
+      preLoaderRoute: typeof InviteListIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/list/$listId': {
+      id: '/list/$listId'
+      path: '/list/$listId'
+      fullPath: '/list/$listId'
+      preLoaderRoute: typeof ListListIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -268,59 +247,6 @@ const rootRouteChildren: RootRouteChildren = {
   InviteListIdRoute: InviteListIdRoute,
   ListListIdRoute: ListListIdRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/account",
-        "/lists",
-        "/login",
-        "/new",
-        "/register",
-        "/reset-password",
-        "/edit/$listId",
-        "/invite/$listId",
-        "/list/$listId"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/account": {
-      "filePath": "account.tsx"
-    },
-    "/lists": {
-      "filePath": "lists.tsx"
-    },
-    "/login": {
-      "filePath": "login.tsx"
-    },
-    "/new": {
-      "filePath": "new.tsx"
-    },
-    "/register": {
-      "filePath": "register.tsx"
-    },
-    "/reset-password": {
-      "filePath": "reset-password.tsx"
-    },
-    "/edit/$listId": {
-      "filePath": "edit.$listId.tsx"
-    },
-    "/invite/$listId": {
-      "filePath": "invite.$listId.tsx"
-    },
-    "/list/$listId": {
-      "filePath": "list.$listId.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

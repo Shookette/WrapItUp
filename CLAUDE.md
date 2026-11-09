@@ -8,7 +8,7 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 
 - **Node 24.16.0**, fixé par `.nvmrc` (`nvm use`) et utilisé par la CI (`actions/setup-node`)
 - **React 18** + **TypeScript** + **Vite 5**
-- **TanStack Router** (routage par fichiers, plugin Vite) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
+- **TanStack Router** (routage par fichiers, plugin Vite `tanstackRouter`, épinglé en `~1.168` tant que Vite est en v5) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
 - **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
 - **react-hook-form** pour tous les formulaires (`Controller` + composants `Input` maison)
 - **Mantine 7** (en cours de suppression, voir plus bas), icônes **@tabler/icons-react**
@@ -136,7 +136,7 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 et 2 faites ; suivant : mises à jour mineures). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 3 faites ; suivant : TanStack Form). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
