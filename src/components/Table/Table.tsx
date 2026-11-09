@@ -1,13 +1,12 @@
 import "./Table.css";
 
-import { FC, ReactNode } from "react";
+import { FC, PropsWithChildren, ReactNode } from "react";
 
-type TableProps = {
-  children?: ReactNode;
+type TableProps = PropsWithChildren<{
   emptyMessage?: string;
   headers: ReactNode[];
   isEmpty?: boolean;
-};
+}>;
 
 /**
  * Tableau simple. Les lignes sont passées en `children`

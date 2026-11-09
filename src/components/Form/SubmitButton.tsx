@@ -1,11 +1,10 @@
-import { FC, ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
 import Button from "../Button/Button.tsx";
 import { useFormContext } from "./formContext.ts";
 
-type SubmitButtonProps = {
-  children: ReactNode;
+type SubmitButtonProps = PropsWithChildren<{
   type?: "primary" | "danger" | "success";
-};
+}>;
 
 /** Bouton d'envoi pleine largeur, en chargement pendant la soumission. */
 const SubmitButton: FC<SubmitButtonProps> = ({ children, type }) => {

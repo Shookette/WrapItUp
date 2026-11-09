@@ -48,16 +48,32 @@ const Input: FC<InputProps> = ({
     [id, name, placeholder, required, value, error, onBlur, onChange],
   );
 
+  const labelElement = useMemo(() => {
+    if (!label) {
+      return null;
+    }
+
+    return (
+      <label className="input__label" htmlFor={id}>
+        {label}
+        {required && <span className="input__label-asterix"> *</span>}
+      </label>
+    );
+  }, [id, label, required]);
+
+  const errorElement = useMemo(() => {
+    if (!error) {
+      return null;
+    }
+
+    return (
+      <p className="input__error">{errorMessage ?? "Champ obligatoire"}</p>
+    );
+  }, [error, errorMessage]);
+
   return (
     <div className={className}>
-      {label ? (
-        <label className="input__label" htmlFor={id}>
-          {label}
-          {required ? <span className="input__label-asterix"> *</span> : ""}
-        </label>
-      ) : (
-        ""
-      )}
+      {labelElement}
 
       {type === "textarea" ? (
         <textarea {...commonProps} />
@@ -65,11 +81,7 @@ const Input: FC<InputProps> = ({
         <input {...commonProps} type={type} />
       )}
 
-      {error ? (
-        <p className="input__error">{errorMessage ?? "Champ obligatoire"}</p>
-      ) : (
-        ""
-      )}
+      {errorElement}
     </div>
   );
 };

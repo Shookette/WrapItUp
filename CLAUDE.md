@@ -133,7 +133,8 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
   - `form.SubmitButton` affiche le chargement pendant `onSubmit` (pas de `useState` de chargement).
   - Tableaux : `<form.Field name="presents" mode="array">` + `pushFieldValue` / `removeValue`, sous-champs `presents[${i}].title`, `key` = `present.id`.
   - Un sous-composant qui reçoit le formulaire se crée avec `withForm` et des options partagées (`formOptions`), voir `ListEdit/listFormOptions.ts`.
-  - Un schéma zod doit avoir le même type d'entrée que les valeurs du formulaire : les champs non saisis y sont déclarés en `z.any()`.
+  - Un schéma zod doit avoir le même type d'entrée que les valeurs du formulaire : décrire tous les champs, alignés sur `interfaces/` avec `satisfies z.ZodType<T, T>` (le build casse si l'interface change).
+- **Composants** : typer `children` avec `PropsWithChildren<…>` plutôt qu'un `children: ReactNode` à la main.
 - **Textes de l'interface en français**, en **écriture inclusive** avec le point médian (« utilisateurice », « invité·e », « supprimé•e »).
 - **Formatage** : **oxfmt** (`.oxfmtrc.json`, remplace Prettier depuis le 8 novembre 2026, sortie compatible Prettier), largeur 80, `src/routeTree.gen.ts` et `package-lock.json` ignorés. Le commit de reformatage global est listé dans `.git-blame-ignore-revs` (`git config blame.ignoreRevsFile .git-blame-ignore-revs`).
 - **Lint** : **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
