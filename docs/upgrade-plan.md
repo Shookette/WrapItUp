@@ -17,7 +17,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 1     | ESLint → oxlint + lint dans la CI                                          | faible                 | ✅ fait (PR #2) |
 | 1 bis | Prettier → oxfmt + `.nvmrc` (Node 24.16.0) dans la CI                      | faible                 | ✅ fait         |
 | 2     | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | ✅ fait         |
-| 3     | Mises à jour mineures                                                      | faible                 | à faire         |
+| 3     | Mises à jour mineures                                                      | faible                 | ✅ fait         |
 | 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | à faire         |
 | 5     | Suppression de Mantine                                                     | moyen, découpable      | à faire         |
 | 6     | React 18 → 19                                                              | faible après l'étape 5 | à faire         |
@@ -70,7 +70,15 @@ Optionnel : supprimer le code mort `src/repository/PresentRepository.ts` et `src
 
 Bonus attendu : réduction du bundle (avertissement > 500 kB au build).
 
-## 3. Mises à jour mineures
+## 3. Mises à jour mineures ✅
+
+Fait avec `npm update --save` + `npm audit fix` (plages de versions remontées dans `package.json`).
+
+- `@tanstack/router-plugin` **épinglé en `~1.168.48`** : à partir de 1.169, le plugin exige Vite ≥ 6. À libérer à l'étape 7 (Vite 8).
+- `vite.config.ts` : `tanstackRouter({ target: "react" })`, placé avant le plugin React ; `src/routeTree.gen.ts` régénéré.
+- `utils/routeUtils.ts` : le routeur type désormais strictement `to` ; le paramètre `redirect` passe par `search` au lieu d'être concaténé dans l'URL (il est maintenant encodé).
+- Bundle : 957 kB → 1 018 kB (nouvelle version du routeur).
+- `npm audit --omit=dev` : 45 → 4 vulnérabilités, toutes dans `firebase` → `@grpc/grpc-js` (code Node, absent du bundle navigateur) ; corrigées à l'étape 8 (Firebase 13). Côté dev, `esbuild` (serveur de dev) sera corrigé par l'étape 7.
 
 `npm update` (pas de changement de version majeure) :
 
