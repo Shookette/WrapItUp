@@ -1,0 +1,10 @@
+.login__forgotten-password {
+  font-size: 0.8em;
+  margin-left: auto;
+  text-decoration: none;
+}
+
+.login__register {
+  display: grid;
+  margin-top: var(--padding-large);
+}

@@ -1,90 +1,66 @@
-import { SimpleGrid, Space } from "@mantine/core";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
-import { FullList } from "../../interfaces/List.ts";
-import { FC, useCallback, useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import ListFormPresents from "./ListFormPresents.tsx";
-import { setList } from "../../repository/ListRepository.ts";
 import { notifications } from "@mantine/notifications";
+import { FC } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { FullList } from "../../interfaces/List.ts";
+import { setList } from "../../repository/ListRepository.ts";
+import { useAppForm } from "../../hooks/useAppForm.ts";
 import Button from "../Button/Button.tsx";
-import Input from "../Input/Input.tsx";
+import ListFormPresents from "./ListFormPresents.tsx";
+import { listFormOptions } from "./listFormOptions.ts";
 
 type ListFormProps = {
   list: FullList;
 };
 
 const ListForm: FC<ListFormProps> = ({ list }) => {
-  const [loading, setLoading] = useState(false);
-  const defaultValues = useMemo(() => list, [list]);
+  const form = useAppForm({
+    ...listFormOptions,
+    defaultValues: list,
+    onSubmit: async ({ value }) => {
+      await setList(value);
 
-  const { control, handleSubmit } = useForm<FullList>({
-    defaultValues,
+      notifications.show({
+        color: "green",
+        position: "top-right",
+        message: "Liste modifiée",
+      });
+    },
   });
-
-  const { fields, append, remove } = useFieldArray({
-    name: "presents",
-    control,
-  });
-
-  const handleOnSubmit: SubmitHandler<FullList> = useCallback(async (list) => {
-    setLoading(true);
-    await setList(list);
-    setLoading(false);
-
-    notifications.show({
-      color: "green",
-      position: "top-right",
-      message: "Liste modifiée",
-    });
-  }, []);
 
   return (
-    <form onSubmit={handleSubmit(handleOnSubmit)}>
-      <Controller
-        name="title"
-        control={control}
-        render={({ field: { onChange, value, name } }) => (
-          <Input
-            id="title"
-            label="Nom de la liste de cadeau"
-            name={name}
-            placeholder="Nom de la liste de cadeau"
-            required
-            value={value}
-            onChange={onChange}
-          />
-        )}
-      />
-      <ListFormPresents control={control} fields={fields} remove={remove} />
-      <Space h="md" />
-      <Button
-        size="small"
-        type="success"
-        onClick={() =>
-          append({
-            id: uuidv4(),
-            title: "",
-            status: "available",
-            listUID: list.id,
-            description: "",
-            url: "",
-          })
-        }
-      >
-        Ajouter un cadeau
-      </Button>
-      <Space h="md" />
-      <SimpleGrid>
-        <Button isSubmit loading={loading}>
-          Enregistrer
-        </Button>
-      </SimpleGrid>
-    </form>
+    <form.AppForm>
+      <form.Form>
+        <form.AppField name="title">
+          {(field) => (
+            <field.TextField
+              label="Nom de la liste de cadeau"
+              placeholder="Nom de la liste de cadeau"
+              required
+            />
+          )}
+        </form.AppField>
+        <ListFormPresents form={form} />
+        <div>
+          <Button
+            size="small"
+            type="success"
+            onClick={() =>
+              form.pushFieldValue("presents", {
+                id: uuidv4(),
+                title: "",
+                status: "available",
+                listUID: list.id,
+                description: "",
+                url: "",
+              })
+            }
+          >
+            Ajouter un cadeau
+          </Button>
+        </div>
+        <form.SubmitButton>Enregistrer</form.SubmitButton>
+      </form.Form>
+    </form.AppForm>
   );
 };
 

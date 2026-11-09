@@ -1,0 +1,25 @@
+.table {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table__table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table__header {
+  font-weight: bold;
+  text-align: left;
+}
+
+.table__header,
+.table__cell {
+  border-bottom: 1px solid var(--input-color);
+  padding: var(--padding-small);
+  vertical-align: top;
+}
+
+.table__cell--empty {
+  text-align: center;
+}

@@ -11,8 +11,9 @@ type InputProps = {
   name?: string;
   placeholder?: string;
   required?: boolean;
-  type?: "email" | "text" | "textarea" | "password";
+  type?: "email" | "text" | "textarea" | "password" | "url";
   value?: string;
+  onBlur?: () => void;
   onChange: (value: string) => void;
 };
 
@@ -26,9 +27,10 @@ const Input: FC<InputProps> = ({
   required = false,
   type = "text",
   value = "",
+  onBlur,
   onChange,
 }) => {
-  const className = classNames("input", {});
+  const className = classNames("input", { "input--error": error });
 
   const commonProps = useMemo(
     () => ({
@@ -38,16 +40,18 @@ const Input: FC<InputProps> = ({
       placeholder,
       required,
       value,
+      "aria-invalid": error || undefined,
+      onBlur,
       onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         onChange(e.target.value),
     }),
-    [id, name, placeholder, required, value, onChange],
+    [id, name, placeholder, required, value, error, onBlur, onChange],
   );
 
   return (
     <div className={className}>
       {label ? (
-        <label className="input__label">
+        <label className="input__label" htmlFor={id}>
           {label}
           {required ? <span className="input__label-asterix"> *</span> : ""}
         </label>
@@ -61,7 +65,11 @@ const Input: FC<InputProps> = ({
         <input {...commonProps} type={type} />
       )}
 
-      {error ? <p>{errorMessage ?? "Champ obligatoire"}</p> : ""}
+      {error ? (
+        <p className="input__error">{errorMessage ?? "Champ obligatoire"}</p>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
