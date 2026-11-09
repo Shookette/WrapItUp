@@ -16,7 +16,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | ----- | -------------------------------------------------------------------------- | ---------------------- | --------------- |
 | 1     | ESLint → oxlint + lint dans la CI                                          | faible                 | ✅ fait (PR #2) |
 | 1 bis | Prettier → oxfmt + `.nvmrc` (Node 24.16.0) dans la CI                      | faible                 | ✅ fait         |
-| 2     | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | à faire         |
+| 2     | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | ✅ fait         |
 | 3     | Mises à jour mineures                                                      | faible                 | à faire         |
 | 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | à faire         |
 | 5     | Suppression de Mantine                                                     | moyen, découpable      | à faire         |
@@ -42,7 +42,9 @@ Fait en premier pour avoir un garde-fou rapide et strict pendant les migrations 
 - Reformatage global en un commit séparé, listé dans `.git-blame-ignore-revs`.
 - `.nvmrc` = `24.16.0`, lu par `actions/setup-node` (`node-version-file`) dans les deux workflows : la CI utilise la même version de Node qu'en local.
 
-## 2. Suppression des paquets inutilisés
+## 2. Suppression des paquets inutilisés ✅
+
+Fait : 22 paquets retirés (liste ci-dessous), `zod@^4.6.6` déclaré, import `@firebase/util` remplacé par `firebase/app`, `PresentRepository.ts` et `FileRepository.ts` supprimés. Pas de gain sur le bundle (les paquets retirés n'étaient pas importés, donc déjà absents du build) ; le gain est sur `npm ci` et la surface d'attaque.
 
 Paquets **jamais importés** dans `src/` :
 
