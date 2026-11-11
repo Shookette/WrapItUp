@@ -148,10 +148,10 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 - Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
   - mise en page : `Page` (carte blanche centrale, `size`), `Center`, `Grid`, `Card`, `Title` (prop `actions` pour un bouton à droite), `Header` (bandeau du haut) ;
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
-  - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `isEmpty` + `emptyMessage`, `striped`, `highlightOnHover` ;
+  - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
   - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).
-- Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--danger-color`, `--padding-medium`…). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
+- Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--padding-medium`, `--font-size-small`, `--shadow-large`…) : pas de valeur d'espacement, de taille de texte, d'arrondi ou d'ombre en dur. Une dimension propre à un composant devient une variable locale sur son bloc (`.header { --header-height: 100px; }`). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
 - Le CSS propre à une route va dans un fichier à côté (`routes/login.css`, `routes/list.css`).
 - Variantes communes : `type: "primary" | "danger" | "success"`, `size: "small" | "medium" | "large"`.
 - `Button` est en `type="button"` par défaut : seul `isSubmit` envoie un formulaire.

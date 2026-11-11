@@ -34,5 +34,5 @@ textarea.input__field {
 .input__error {
   color: var(--danger-color);
   font-size: var(--font-size-small);
-  margin: 0.2em 0 0;
+  margin: var(--padding-extra-small) 0 0;
 }

@@ -27,7 +27,6 @@ const ListTableComponent: FC<Props> = ({
         : ["Nom", "Date de création"]
     }
     highlightOnHover
-    isEmpty={lists.length === 0}
     striped
   >
     {lists.map((list) => (

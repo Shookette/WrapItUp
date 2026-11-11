@@ -46,7 +46,6 @@ const ListUserForm: FC<ListUserFormProps> = ({
       <Table
         emptyMessage="Aucun•e utilisateurice"
         headers={["Utilisateurices", "Actions"]}
-        isEmpty={allowedUsers.length === 0}
       >
         {allowedUsers.map((user) => (
           <tr className="table__row" key={user.userUID}>

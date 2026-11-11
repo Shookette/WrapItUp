@@ -1,6 +1,6 @@
 import "./Table.css";
 
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { Children, FC, PropsWithChildren, ReactNode } from "react";
 import classNames from "classnames";
 
 type TableProps = PropsWithChildren<{
@@ -8,7 +8,6 @@ type TableProps = PropsWithChildren<{
   headers: ReactNode[];
   /** Surligne la ligne survolée. */
   highlightOnHover?: boolean;
-  isEmpty?: boolean;
   /** Lignes alternées grisées. */
   striped?: boolean;
 }>;
@@ -17,47 +16,52 @@ type TableProps = PropsWithChildren<{
  * Tableau simple. Les lignes sont passées en `children`
  * (`<tr className="table__row"><td className="table__cell">`).
  * Cellule cliquable : ajouter `table__cell--clickable`.
+ * Sans ligne, affiche `emptyMessage`.
  */
 const Table: FC<TableProps> = ({
   children,
   emptyMessage = "Aucun élément",
   headers,
   highlightOnHover = false,
-  isEmpty = false,
   striped = false,
-}) => (
-  <div
-    className={classNames("table", {
-      "table--hoverable": highlightOnHover,
-      "table--striped": striped,
-    })}
-  >
-    <table className="table__table">
-      <thead>
-        <tr className="table__row">
-          {headers.map((header, index) => (
-            <th className="table__header" key={index}>
-              {header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {isEmpty ? (
+}) => {
+  // `Children.toArray` ignore null / false / tableau vide
+  const isEmpty = Children.toArray(children).length === 0;
+
+  return (
+    <div
+      className={classNames("table", {
+        "table--hoverable": highlightOnHover,
+        "table--striped": striped,
+      })}
+    >
+      <table className="table__table">
+        <thead>
           <tr className="table__row">
-            <td
-              className="table__cell table__cell--empty"
-              colSpan={headers.length}
-            >
-              {emptyMessage}
-            </td>
+            {headers.map((header, index) => (
+              <th className="table__header" key={index}>
+                {header}
+              </th>
+            ))}
           </tr>
-        ) : (
-          children
-        )}
-      </tbody>
-    </table>
-  </div>
-);
+        </thead>
+        <tbody>
+          {isEmpty ? (
+            <tr className="table__row">
+              <td
+                className="table__cell table__cell--empty"
+                colSpan={headers.length}
+              >
+                {emptyMessage}
+              </td>
+            </tr>
+          ) : (
+            children
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export default Table;

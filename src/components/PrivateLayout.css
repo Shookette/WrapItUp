@@ -1,9 +1,11 @@
 .private-layout__nav {
+  --nav-height: 40px;
+
   align-items: center;
   background-color: var(--nav-color);
   display: flex;
   gap: var(--padding-large);
-  height: 40px;
+  height: var(--nav-height);
   padding: 0 var(--padding-small);
 }
 
