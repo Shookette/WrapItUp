@@ -1,12 +1,16 @@
+import "./list.css";
+
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { getListByID, setList } from "../repository/ListRepository.ts";
 import { isAuthenticated } from "../utils/routeUtils.ts";
+import { isHttpUrl } from "../utils/url.ts";
 import { useState } from "react";
-import { Anchor, Badge, Card as CardMantine, Group, Text } from "@mantine/core";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { FullList } from "../interfaces/List.ts";
 import PrivateLayout from "../components/PrivateLayout.tsx";
+import Badge from "../components/Badge/Badge.tsx";
 import Button from "../components/Button/Button.tsx";
+import Card from "../components/Card/Card.tsx";
 import Page from "../components/Page/Page.tsx";
 import Title from "../components/Title/Title.tsx";
 import Grid from "../components/Grid/Grid.tsx";
@@ -48,22 +52,16 @@ function ViewComponent() {
   };
 
   const cards = (currentList.presents ?? []).map((present) => (
-    <CardMantine
-      shadow="sm"
-      padding="lg"
-      radius="md"
-      withBorder
-      key={present.id}
-    >
-      <Group justify="space-between" mt="md" mb="xs">
-        <Text fw={500}>{present.title}</Text>
+    <Card key={present.id}>
+      <div className="present__header">
+        <span className="present__title">{present.title}</span>
         <Badge
-          color={
+          type={
             isCurrentUser
-              ? "green"
+              ? "success"
               : present.status === "reserved"
-                ? "red"
-                : "green"
+                ? "danger"
+                : "success"
           }
         >
           {isCurrentUser
@@ -72,16 +70,16 @@ function ViewComponent() {
               ? "Réservé"
               : "Disponible"}
         </Badge>
-      </Group>
+      </div>
 
-      <Text size="sm" c="dimmed">
-        {present.description}
-      </Text>
+      {present.description && (
+        <p className="present__description">{present.description}</p>
+      )}
 
-      {present.url && (
-        <Anchor href={present.url} target="_blank">
+      {isHttpUrl(present.url) && (
+        <a href={present.url} rel="noopener noreferrer" target="_blank">
           Lien du cadeau
-        </Anchor>
+        </a>
       )}
 
       {!isCurrentUser &&
@@ -95,7 +93,7 @@ function ViewComponent() {
               : "Réserver"}
           </Button>
         )}
-    </CardMantine>
+    </Card>
   ));
 
   return (

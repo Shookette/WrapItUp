@@ -1,0 +1,52 @@
+.menu {
+  position: relative;
+}
+
+.menu__trigger {
+  align-items: center;
+  background-color: var(--nav-link-color);
+  border: none;
+  border-radius: 50%;
+  color: var(--white);
+  cursor: pointer;
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  padding: 0;
+  width: 34px;
+}
+
+.menu__dropdown {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: rgba(0, 0, 0, 0.15) 0 4px 12px;
+  list-style: none;
+  margin: 4px 0 0;
+  min-width: 200px;
+  padding: 4px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 100;
+}
+
+.menu__item {
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--nav-link-color);
+  cursor: pointer;
+  display: flex;
+  font-weight: bold;
+  gap: var(--padding-small);
+  padding: var(--padding-small);
+  text-align: left;
+  width: 100%;
+}
+
+.menu__item:hover,
+.menu__item:focus-visible {
+  background-color: var(--hover-color);
+}

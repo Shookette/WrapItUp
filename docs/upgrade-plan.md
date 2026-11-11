@@ -19,7 +19,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 2     | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | ✅ fait         |
 | 3     | Mises à jour mineures                                                      | faible                 | ✅ fait         |
 | 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | ✅ fait         |
-| 5     | Suppression de Mantine                                                     | moyen, découpable      | à faire         |
+| 5     | Suppression de Mantine                                                     | moyen, découpable      | ✅ fait         |
 | 6     | React 18 → 19                                                              | faible après l'étape 5 | à faire         |
 | 7     | Vite 5 → 8                                                                 | faible à moyen         | à faire         |
 | 8     | Firebase 11 → 13                                                           | moyen                  | à faire         |
@@ -134,7 +134,18 @@ Recommandations :
 - À combiner avec le point de la todo « Revoir l'UX du formulaire d'ajout de cadeaux ».
 - Retirer `react-hook-form` à la fin et mettre à jour `CLAUDE.md` (section Formulaires).
 
-## 5. Suppression de Mantine
+## 5. Suppression de Mantine ✅
+
+Fait en une PR. `@mantine/*`, `postcss`, `postcss-preset-mantine`, `postcss-simple-vars` et `.postcss.config.cjs` retirés.
+
+- Nouveaux composants maison : `Toast` (provider + `useToast`), `Menu`, `Header`, `Card`, `Badge` ; `Title` gagne `actions`, `Table` gagne `striped` / `highlightOnHover`, `Button` gagne `ariaLabel`.
+- Reset CSS de base dans `theme.css` (remplace celui de Mantine) ; couleurs de l'en-tête et de la navigation reprises de la palette Mantine pour garder le rendu.
+- `Page` : classe `card` renommée `page` (le nom `card` sert au nouveau composant `Card`).
+- Correctif : `Button` est en `type="button"` par défaut. Avant, dans un formulaire, « Ajouter un cadeau » et la corbeille soumettaient aussi le formulaire.
+- Audit §2 : le lien d'un cadeau n'est affiché que s'il est en http(s), avec `rel="noopener noreferrer"`.
+- Bundle : CSS 198 kB → 8 kB, JS 1 042 kB → 890 kB.
+
+Plan initial, pour mémoire :
 
 **Ne pas monter Mantine en 8 / 9** : ce serait migrer du code destiné à disparaître. Le retirer avant React 19.
 

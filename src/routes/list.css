@@ -1,0 +1,16 @@
+.present__header {
+  align-items: center;
+  display: flex;
+  gap: var(--padding-small);
+  justify-content: space-between;
+}
+
+.present__title {
+  font-weight: 500;
+}
+
+.present__description {
+  color: var(--dimmed-color);
+  font-size: var(--font-size-small);
+  margin: 0;
+}

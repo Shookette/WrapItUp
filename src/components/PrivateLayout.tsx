@@ -1,15 +1,13 @@
-import { FC, Fragment, ReactNode, useCallback } from "react";
-import { ActionIcon, Box, Flex, Menu, Text } from "@mantine/core";
+import "./PrivateLayout.css";
+
+import { FC, Fragment, PropsWithChildren, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
 import Center from "./Center/Center.tsx";
+import Menu, { MenuItem } from "./Menu/Menu.tsx";
 
-interface Props {
-  children: ReactNode;
-}
-
-const PrivateLayout: FC<Props> = ({ children }) => {
+const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
   const { logout } = useUserContext();
   const navigate = useNavigate();
 
@@ -18,72 +16,51 @@ const PrivateLayout: FC<Props> = ({ children }) => {
     await logout();
   }, [navigate, logout]);
 
+  const menuItems: MenuItem[] = useMemo(
+    () => [
+      {
+        icon: <IconSettings size={14} />,
+        key: "account",
+        label: "Compte",
+        onClick: () => navigate({ to: "/account" }),
+      },
+      {
+        icon: <IconLogout size={14} />,
+        key: "logout",
+        label: "Déconnexion",
+        onClick: handleLogout,
+      },
+    ],
+    [navigate, handleLogout],
+  );
+
   return (
     <Fragment>
-      <Box component="nav" h={40} bg="red.4" color="green" pl="8" pr="8">
-        <Flex gap="xl" align="center" h="inherit">
-          <Link
-            to="/"
-            style={{ textDecoration: "none" }}
-            activeProps={{ className: "underline" }}
-          >
-            <Text td="underline" size="lg" c="green.7" fw="bold">
-              Mes listes
-            </Text>
-          </Link>
-          <Link
-            to="/lists"
-            style={{ textDecoration: "none" }}
-            activeProps={{ className: "underline" }}
-          >
-            <Text td="underline" size="lg" c="green.7" fw="bold">
-              Listes de cadeaux
-            </Text>
-          </Link>
+      <nav className="private-layout__nav">
+        <Link
+          activeOptions={{ exact: true }}
+          activeProps={{ className: "private-layout__link--active" }}
+          className="private-layout__link"
+          to="/"
+        >
+          Mes listes
+        </Link>
+        <Link
+          activeProps={{ className: "private-layout__link--active" }}
+          className="private-layout__link"
+          to="/lists"
+        >
+          Listes de cadeaux
+        </Link>
 
-          <div style={{ marginLeft: "auto" }}>
-            <Menu shadow="md" width={200}>
-              <Menu.Target>
-                <ActionIcon
-                  variant="filled"
-                  size="lg"
-                  radius="xl"
-                  aria-label="Compte"
-                  color="green.7"
-                >
-                  <IconUser
-                    style={{ width: "70%", height: "70%" }}
-                    stroke={1.5}
-                  />
-                </ActionIcon>
-              </Menu.Target>
-
-              <Menu.Dropdown>
-                <Menu.Item leftSection={<IconSettings size={14} />}>
-                  <Link to="/account" style={{ marginLeft: "auto" }}>
-                    <Text td="underline" size="lg" c="green.7" fw="bold">
-                      Compte
-                    </Text>
-                  </Link>
-                </Menu.Item>
-
-                <Menu.Item leftSection={<IconLogout size={14} />}>
-                  <Text
-                    style={{ cursor: "pointer" }}
-                    td="underline"
-                    size="lg"
-                    c="green.7"
-                    fw="bold"
-                    onClick={handleLogout}
-                  >
-                    Déconnexion
-                  </Text>
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </div>
-        </Flex>
-      </Box>
+        <div className="private-layout__menu">
+          <Menu
+            icon={<IconUser size={20} stroke={1.5} />}
+            items={menuItems}
+            label="Compte"
+          />
+        </div>
+      </nav>
 
       <Center>{children}</Center>
     </Fragment>

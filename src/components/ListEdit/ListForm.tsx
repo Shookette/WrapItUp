@@ -1,9 +1,9 @@
-import { notifications } from "@mantine/notifications";
 import { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { FullList } from "../../interfaces/List.ts";
 import { setList } from "../../repository/ListRepository.ts";
 import { useAppForm } from "../../hooks/useAppForm.ts";
+import { useToast } from "../Toast/toastContext.ts";
 import Button from "../Button/Button.tsx";
 import ListFormPresents from "./ListFormPresents.tsx";
 import { listFormOptions } from "./listFormOptions.ts";
@@ -13,15 +13,15 @@ type ListFormProps = {
 };
 
 const ListForm: FC<ListFormProps> = ({ list }) => {
+  const toast = useToast();
   const form = useAppForm({
     ...listFormOptions,
     defaultValues: list,
     onSubmit: async ({ value }) => {
       await setList(value);
 
-      notifications.show({
-        color: "green",
-        position: "top-right",
+      toast.show({
+        type: "success",
         message: "Liste modifiée",
       });
     },

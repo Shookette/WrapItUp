@@ -1,11 +1,12 @@
 import "./Button.css";
 
-import { FC, ReactNode } from "react";
+import { FC, PropsWithChildren, ReactNode } from "react";
 import classNames from "classnames";
 import { IconLoader2 } from "@tabler/icons-react";
 
-type ButtonProps = {
-  children?: ReactNode;
+type ButtonProps = PropsWithChildren<{
+  /** Nom accessible, obligatoire pour un bouton icône seule. */
+  ariaLabel?: string;
   icon?: ReactNode;
   isSubmit?: boolean;
   loading?: boolean;
@@ -13,9 +14,10 @@ type ButtonProps = {
   size?: "small" | "medium" | "large";
   type?: "primary" | "danger" | "success";
   onClick?: () => void;
-};
+}>;
 
 const Button: FC<ButtonProps> = ({
+  ariaLabel,
   children,
   icon,
   isSubmit = false,
@@ -33,9 +35,10 @@ const Button: FC<ButtonProps> = ({
 
   return (
     <button
+      aria-label={ariaLabel}
       className={className}
       disabled={loading}
-      type={isSubmit ? "submit" : undefined}
+      type={isSubmit ? "submit" : "button"}
       onClick={onClick}
     >
       {loading ? <IconLoader2 className="button__loader" /> : icon}

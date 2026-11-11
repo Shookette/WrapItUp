@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { createFileRoute, Navigate, useRouter } from "@tanstack/react-router";
-import { notifications } from "@mantine/notifications";
-import { Flex, Space } from "@mantine/core";
 import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
 
 import {
@@ -11,6 +9,7 @@ import {
 } from "../repository/ListRepository.ts";
 import { useUserContext } from "../hooks/UserContext.tsx";
 import { isAuthenticated } from "../utils/routeUtils.ts";
+import { useToast } from "../components/Toast/toastContext.ts";
 
 import ListForm from "../components/ListEdit/ListForm.tsx";
 import ListUserForm from "../components/ListEdit/ListUserForm.tsx";
@@ -34,6 +33,7 @@ function EditComponent() {
   const router = useRouter();
 
   const { user } = useUserContext();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
 
   if (!list || list.userUID !== user?.uid) {
@@ -55,9 +55,8 @@ function EditComponent() {
       ),
     });
     router.invalidate();
-    notifications.show({
-      color: "green",
-      position: "top-right",
+    toast.show({
+      type: "success",
       message: `L'utilisateurice a été supprimé•e`,
     });
     setLoading(false);
@@ -99,10 +98,7 @@ function EditComponent() {
   return (
     <PrivateLayout>
       <Page size="lg">
-        <Flex justify="space-between">
-          <Title>Modifier votre liste de cadeau</Title>
-        </Flex>
-        <Space h="md" />
+        <Title>Modifier votre liste de cadeau</Title>
 
         <Tabs tabs={tabs} />
       </Page>

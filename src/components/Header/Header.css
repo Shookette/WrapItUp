@@ -1,0 +1,19 @@
+.header {
+  align-items: center;
+  background-color: var(--header-color);
+  color: var(--white);
+  display: flex;
+  gap: var(--padding-large);
+  height: 100px;
+}
+
+.header__logo {
+  height: 100px;
+  object-fit: contain;
+  width: auto;
+}
+
+.header__title {
+  font-size: 1.625rem;
+  margin: 0;
+}
