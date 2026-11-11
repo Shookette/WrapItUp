@@ -13,7 +13,7 @@ import {
   getDocRef,
   transformCollectionToArray,
 } from "./utils";
-import { Profil } from "../interfaces/Profil.ts";
+import { Profil } from "#interfaces/Profil.ts";
 
 const COLLECTION_REF = "profils";
 

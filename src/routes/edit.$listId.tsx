@@ -6,18 +6,18 @@ import {
   deleteList,
   getListByID,
   setList,
-} from "../repository/ListRepository.ts";
-import { useUserContext } from "../hooks/UserContext.tsx";
-import { isAuthenticated } from "../utils/routeUtils.ts";
-import { useToast } from "../components/Toast/toastContext.ts";
+} from "#repository/ListRepository.ts";
+import { useUserContext } from "#hooks/UserContext.tsx";
+import { isAuthenticated } from "#utils/routeUtils.ts";
+import { useToast } from "#components/Toast/toastContext.ts";
 
-import ListForm from "../components/ListEdit/ListForm.tsx";
-import ListUserForm from "../components/ListEdit/ListUserForm.tsx";
-import PrivateLayout from "../components/PrivateLayout.tsx";
-import Button from "../components/Button/Button.tsx";
-import Tabs from "../components/Tabs/Tabs.tsx";
-import Page from "../components/Page/Page.tsx";
-import Title from "../components/Title/Title.tsx";
+import ListForm from "#components/ListEdit/ListForm.tsx";
+import ListUserForm from "#components/ListEdit/ListUserForm.tsx";
+import PrivateLayout from "#components/PrivateLayout.tsx";
+import Button from "#components/Button/Button.tsx";
+import Tabs from "#components/Tabs/Tabs.tsx";
+import Page from "#components/Page/Page.tsx";
+import Title from "#components/Title/Title.tsx";
 
 export const Route = createFileRoute("/edit/$listId")({
   component: EditComponent,

@@ -1,7 +1,7 @@
 import "./Header.css";
 
 import { FC } from "react";
-import HomeImageUrl from "../../assets/home.png";
+import HomeImageUrl from "#assets/home.png";
 
 /** Bandeau du haut, présent sur toutes les pages. */
 const Header: FC = () => (

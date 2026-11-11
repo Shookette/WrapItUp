@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from "react";
 import ReactDOM from "react-dom/client";
 
-import WithFirestore from "./components/WithFirestore.tsx";
+import WithFirestore from "#components/WithFirestore.tsx";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
-import UserProvider, { useUserContext } from "./hooks/UserContext.tsx";
+import UserProvider, { useUserContext } from "#hooks/UserContext.tsx";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
-import ToastProvider from "./components/Toast/ToastProvider.tsx";
+import ToastProvider from "#components/Toast/ToastProvider.tsx";
 
 import "./theme.css";
 

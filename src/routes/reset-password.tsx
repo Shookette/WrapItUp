@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { revalidateLogic } from "@tanstack/react-form";
 import { z } from "zod";
-import { useUserContext } from "../hooks/UserContext.tsx";
-import { useAppForm } from "../hooks/useAppForm.ts";
-import { emailSchema } from "../utils/formSchemas.ts";
-import Center from "../components/Center/Center.tsx";
-import Page from "../components/Page/Page.tsx";
-import Title from "../components/Title/Title.tsx";
+import { useUserContext } from "#hooks/UserContext.tsx";
+import { useAppForm } from "#hooks/useAppForm.ts";
+import { emailSchema } from "#utils/formSchemas.ts";
+import Center from "#components/Center/Center.tsx";
+import Page from "#components/Page/Page.tsx";
+import Title from "#components/Title/Title.tsx";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,

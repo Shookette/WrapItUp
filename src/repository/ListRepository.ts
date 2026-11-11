@@ -16,7 +16,7 @@ import {
   sortList,
   transformCollectionToArray,
 } from "./utils";
-import { AllowedUser, FullList, List } from "../interfaces/List";
+import { AllowedUser, FullList, List } from "#interfaces/List.ts";
 import { getById } from "./ProfilRepository.ts";
 
 const COLLECTION_REF = "lists";

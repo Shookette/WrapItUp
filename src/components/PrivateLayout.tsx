@@ -2,7 +2,7 @@ import "./PrivateLayout.css";
 
 import { FC, Fragment, PropsWithChildren, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useUserContext } from "../hooks/UserContext.tsx";
+import { useUserContext } from "#hooks/UserContext.tsx";
 import { IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
 import Center from "./Center/Center.tsx";
 import Menu, { MenuItem } from "./Menu/Menu.tsx";

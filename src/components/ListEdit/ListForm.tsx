@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { FullList } from "../../interfaces/List.ts";
-import { setList } from "../../repository/ListRepository.ts";
-import { useAppForm } from "../../hooks/useAppForm.ts";
-import { useToast } from "../Toast/toastContext.ts";
-import Button from "../Button/Button.tsx";
+import { FullList } from "#interfaces/List.ts";
+import { setList } from "#repository/ListRepository.ts";
+import { useAppForm } from "#hooks/useAppForm.ts";
+import { useToast } from "#components/Toast/toastContext.ts";
+import Button from "#components/Button/Button.tsx";
 import ListFormPresents from "./ListFormPresents.tsx";
 import { listFormOptions } from "./listFormOptions.ts";
 

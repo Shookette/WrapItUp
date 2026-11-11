@@ -3,14 +3,14 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import { z } from "zod";
-import { setList } from "../repository/ListRepository.ts";
-import { useUserContext } from "../hooks/UserContext.tsx";
-import { useAppForm } from "../hooks/useAppForm.ts";
-import { isAuthenticated } from "../utils/routeUtils.ts";
-import { requiredString } from "../utils/formSchemas.ts";
-import PrivateLayout from "../components/PrivateLayout.tsx";
-import Page from "../components/Page/Page.tsx";
-import Title from "../components/Title/Title.tsx";
+import { setList } from "#repository/ListRepository.ts";
+import { useUserContext } from "#hooks/UserContext.tsx";
+import { useAppForm } from "#hooks/useAppForm.ts";
+import { isAuthenticated } from "#utils/routeUtils.ts";
+import { requiredString } from "#utils/formSchemas.ts";
+import PrivateLayout from "#components/PrivateLayout.tsx";
+import Page from "#components/Page/Page.tsx";
+import Title from "#components/Title/Title.tsx";
 
 export const Route = createFileRoute("/new")({
   component: NewComponent,

@@ -2,10 +2,10 @@ import "./ListUserForm.css";
 
 import { FC, useMemo } from "react";
 import { IconLink, IconTrash } from "@tabler/icons-react";
-import { FullList } from "../../interfaces/List.ts";
-import { useToast } from "../Toast/toastContext.ts";
-import Button from "../Button/Button.tsx";
-import Table from "../Table/Table.tsx";
+import { FullList } from "#interfaces/List.ts";
+import { useToast } from "#components/Toast/toastContext.ts";
+import Button from "#components/Button/Button.tsx";
+import Table from "#components/Table/Table.tsx";
 
 type ListUserFormProps = {
   list: FullList;
