@@ -1,6 +1,5 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { revalidateLogic } from "@tanstack/react-form";
-import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { setList } from "#repository/ListRepository.ts";
@@ -32,7 +31,7 @@ function NewComponent() {
     validationLogic: revalidateLogic(),
     validators: { onDynamic: newListSchema },
     onSubmit: async ({ value }) => {
-      const listId = uuidv4();
+      const listId = crypto.randomUUID();
       await setList({
         id: listId,
         userUID: user!.uid,

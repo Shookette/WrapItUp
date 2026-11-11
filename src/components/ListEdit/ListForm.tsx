@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { FullList } from "#interfaces/List.ts";
 import { setList } from "#repository/ListRepository.ts";
 import { useAppForm } from "#hooks/useAppForm.ts";
@@ -46,7 +45,7 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
             type="success"
             onClick={() =>
               form.pushFieldValue("presents", {
-                id: uuidv4(),
+                id: crypto.randomUUID(),
                 title: "",
                 status: "available",
                 listUID: list.id,
