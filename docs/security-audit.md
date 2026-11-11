@@ -148,7 +148,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 - Directe : `@tanstack/react-router` (1.56.2 – 1.85.5).
 - Transitives notables : `protobufjs`, `websocket-driver` (critiques), `zod`, `lodash`, `@grpc/grpc-js`, `prosemirror-view`, `markdown-it`, `js-yaml`…
 
-- [x] `npm audit fix`, puis mettre à jour `@tanstack/react-router` / `@tanstack/router-plugin` (étape 3 du plan d'upgrade : 45 → 4 vulnérabilités de prod, toutes via `firebase` → `@grpc/grpc-js`, à traiter avec Firebase 13).
+- [x] `npm audit fix`, puis mettre à jour `@tanstack/react-router` / `@tanstack/router-plugin` (étape 3 du plan d'upgrade : 45 → 4 vulnérabilités de prod, toutes via `firebase` → `@grpc/grpc-js`). Toujours présentes avec Firebase 13 (Firestore épingle `@grpc/grpc-js ~1.9`), mais ce paquet ne sert qu'à la version Node de Firestore et n'est pas dans le bundle navigateur.
 - [x] Vérifier `npm run build` et `npm run lint` après mise à jour (fait par la CI depuis la PR #2).
 - [ ] Activer **Dependabot** (`.github/dependabot.yml`) pour npm et GitHub Actions.
 - [x] Ajouter `zod` explicitement dans `package.json` (importé dans `login.tsx`, absent des dépendances), version ≥ 4.6.6.

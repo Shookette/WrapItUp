@@ -22,7 +22,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 5     | Suppression de Mantine                                                     | moyen, découpable      | ✅ fait         |
 | 6     | React 18 → 19                                                              | faible après l'étape 5 | ✅ fait         |
 | 7     | Vite 5 → 8                                                                 | faible à moyen         | ✅ fait         |
-| 8     | Firebase 11 → 13                                                           | moyen                  | à faire         |
+| 8     | Firebase 11 → 13                                                           | moyen                  | ✅ fait         |
 | 9     | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | à faire         |
 
 Les versions « cibles » ci-dessous sont celles disponibles le 8 novembre 2026 : relancer `npm outdated` avant chaque étape.
@@ -179,7 +179,13 @@ Fait : `vite` 8.3, `@vitejs/plugin-react` 6.3, `@tanstack/router-plugin` libér�
 - La version de Node est fixée par `.nvmrc` (24.16.0, utilisé par la CI) : compatible.
 - Vérifier le build et le plugin TanStack Router.
 
-## 8. Firebase 11 → 13
+## 8. Firebase 11 → 13 ✅
+
+Fait : `firebase` 13.2. Notes de version 12 et 13 relues : rien de cassant pour l'app (v12 : Node ≥ 20 et cible ES2020, déjà le cas ; v13 : changements cassants limités à AI Logic, non utilisé ; aucun changement cassant Auth / Firestore).
+
+- `npm audit` : les 4 vulnérabilités `@grpc/grpc-js` **restent** : `@firebase/firestore` 4.19 épingle toujours `~1.9.0`. Ce paquet ne sert qu'à la version Node de Firestore et **n'est pas dans le bundle** (vérifié) : sans impact pour l'app.
+- Bundle : JS 819 kB → 1 047 kB (gzip 250 → 316 kB). Firestore 13 pèse 1,3 Mo de sources (contre 1 Mo) et ajoute `re2js` (257 kB, expressions régulières des requêtes « Pipeline »).
+- Piste pour réduire : `firebase/firestore/lite` (REST, sans temps réel ni cache). L'app n'utilise que `getDoc`, `getDocs`, `setDoc`, `deleteDoc`, `query`, `where`, tous disponibles dans la version lite. À évaluer dans une PR dédiée.
 
 - Lire les notes de version des v12 et v13 (version minimale de Node, API dépréciées).
 - L'app utilise surtout l'auth email / mot de passe et Firestore `doc` / `setDoc` / `getDocs` / `query` / `where`, des API stables.

@@ -9,7 +9,7 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 - **Node 24.16.0**, fixé par `.nvmrc` (`nvm use`) et utilisé par la CI (`actions/setup-node`)
 - **React 19** + **TypeScript** + **Vite 8** (bundler Rolldown)
 - **TanStack Router** (routage par fichiers, plugin Vite `tanstackRouter`) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
-- **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
+- **Firebase 13** : Auth (email / mot de passe), Firestore, Hosting
 - **TanStack Form** pour tous les formulaires (`useAppForm` + composants maison), validation par schémas **zod**
 - Composants et CSS **maison** (voir « Composants et style »), icônes **@tabler/icons-react**
 - **zod 4** pour valider les formulaires et les paramètres de recherche des routes (`validateSearch`)
@@ -28,7 +28,7 @@ npm run preview       # prévisualiser le build
 
 Il n'y a **aucun test** dans le projet pour l'instant. Après une modification, vérifier au minimum `npm run format`, `npm run lint` et `npm run build` (le typage TS fait office de garde-fou).
 
-Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB.
+Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
 
 ## Déploiement
 
@@ -168,7 +168,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 7 faites ; suivant : Firebase 13).
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 8 faites ; suivant : uuid → `crypto.randomUUID`, puis TypeScript 7).
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
