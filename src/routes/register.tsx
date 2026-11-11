@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { z } from "zod";
 import { useUserContext } from "#hooks/UserContext.tsx";
 import { useAppForm } from "#hooks/useAppForm.ts";
-import { emailSchema, requiredString } from "#utils/formSchemas.ts";
+import { emailSchema, usernameSchema } from "#utils/formSchemas.ts";
 import Center from "#components/Center/Center.tsx";
 import Page from "#components/Page/Page.tsx";
 import Title from "#components/Title/Title.tsx";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/register")({
 
 const registerSchema = z.object({
   email: emailSchema,
-  username: requiredString("Le nom et le prénom sont obligatoires"),
+  username: usernameSchema,
   // minimum imposé par Firebase Auth
   password: z
     .string()

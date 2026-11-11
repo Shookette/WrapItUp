@@ -93,8 +93,11 @@ const getListByID = async (id: string): Promise<FullList | null> => {
 };
 
 const setList = async (list: FullList): Promise<void> => {
+  // `username` est calculé à la lecture (profil du ou de la propriétaire) :
+  // on ne le stocke pas.
+  const { username: _username, ...listData } = list;
   const newList: List = {
-    ...list,
+    ...listData,
     allowedUsers: list.allowedUsers.map((allowedUser) => allowedUser.userUID),
   };
 

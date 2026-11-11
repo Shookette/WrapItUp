@@ -6,7 +6,7 @@ import { setList } from "#repository/ListRepository.ts";
 import { useUserContext } from "#hooks/UserContext.tsx";
 import { useAppForm } from "#hooks/useAppForm.ts";
 import { isAuthenticated } from "#utils/routeUtils.ts";
-import { requiredString } from "#utils/formSchemas.ts";
+import { listTitleSchema } from "#utils/formSchemas.ts";
 import PrivateLayout from "#components/PrivateLayout.tsx";
 import Page from "#components/Page/Page.tsx";
 import Title from "#components/Title/Title.tsx";
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/new")({
 });
 
 const newListSchema = z.object({
-  title: requiredString("Le nom de la liste est obligatoire"),
+  title: listTitleSchema,
 });
 
 function NewComponent() {

@@ -3,7 +3,7 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { z } from "zod";
 
 import { isAuthenticated } from "#utils/routeUtils.ts";
-import { requiredString } from "#utils/formSchemas.ts";
+import { usernameSchema } from "#utils/formSchemas.ts";
 import { useUserContext } from "#hooks/UserContext.tsx";
 import { useAppForm } from "#hooks/useAppForm.ts";
 import { useToast } from "#components/Toast/toastContext.ts";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/account")({
 });
 
 const accountSchema = z.object({
-  displayName: requiredString("Le nom et le prénom sont obligatoires"),
+  displayName: usernameSchema,
 });
 
 function AccountComponent() {
