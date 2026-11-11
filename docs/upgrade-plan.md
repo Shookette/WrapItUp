@@ -20,7 +20,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 3     | Mises à jour mineures                                                      | faible                 | ✅ fait         |
 | 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | ✅ fait         |
 | 5     | Suppression de Mantine                                                     | moyen, découpable      | ✅ fait         |
-| 6     | React 18 → 19                                                              | faible après l'étape 5 | à faire         |
+| 6     | React 18 → 19                                                              | faible après l'étape 5 | ✅ fait         |
 | 7     | Vite 5 → 8                                                                 | faible à moyen         | à faire         |
 | 8     | Firebase 11 → 13                                                           | moyen                  | à faire         |
 | 9     | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | à faire         |
@@ -163,7 +163,9 @@ Ordre suggéré (une ou plusieurs PRs) :
 
 Conventions des composants maison : voir la section « Migration hors de Mantine » de `CLAUDE.md`.
 
-## 6. React 18 → 19
+## 6. React 18 → 19 ✅
+
+Fait : `react` / `react-dom` 19.3, `@types/react` / `@types/react-dom` 19.3. Le codemod `types-react-codemod preset-19` n'a modifié qu'un fichier (`ReactElement` → `ReactElement<any>` dans `UserContext.tsx`), remplacé par `PropsWithChildren` (oxlint interdit `any`). Pas de `forwardRef`, `defaultProps` ni `propTypes` dans le code. Toutes les dépendances acceptent React 19 sans conflit de peer. Bundle : 890 kB → 971 kB (React 19 est plus lourd).
 
 - `react`, `react-dom`, `@types/react`, `@types/react-dom` en v19
 - Codemod : `npx types-react-codemod preset-19`

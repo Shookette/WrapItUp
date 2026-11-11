@@ -7,7 +7,7 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 ## Stack
 
 - **Node 24.16.0**, fixé par `.nvmrc` (`nvm use`) et utilisé par la CI (`actions/setup-node`)
-- **React 18** + **TypeScript** + **Vite 5**
+- **React 19** + **TypeScript** + **Vite 5**
 - **TanStack Router** (routage par fichiers, plugin Vite `tanstackRouter`, épinglé en `~1.168` tant que Vite est en v5) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
 - **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
 - **TanStack Form** pour tous les formulaires (`useAppForm` + composants maison), validation par schémas **zod**
@@ -168,7 +168,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 5 faites ; suivant : React 19).
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 6 faites ; suivant : Vite 8).
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
