@@ -9,7 +9,7 @@
 
 ## Ordre de traitement conseillé
 
-1. [ ] Règles Firestore + tests émulateur + profils indexés par uid → [§1](#1--règles-firestore-ouvertes-à-tous)
+1. [x] Règles Firestore + tests émulateur (profils : protégés par le champ `userUID`, sans migration) → [§1](#1--règles-firestore-ouvertes-à-tous)
 2. [ ] Validation des URLs, `emailVerified` au login, nettoyage du `localStorage` → [§2](#2--xss-via-lurl-dun-cadeau), [§3](#3--jetons-de-connexion-copiés-dans-localstorage), [§4](#4--vérification-de-lemail-contournable)
 3. [ ] `npm audit fix`, Dependabot, en-têtes HTTP → [§5](#5--dépendances-vulnérables), [§9](#9--en-têtes-http-de-sécurité)
 4. [ ] Sous-collection de réservations (migration de données) → [§1.3](#13-secret-des-réservations-changement-de-modèle), [§6](#6--écritures-concurrentes--réservations-perdues)
@@ -35,14 +35,14 @@ match /{document=**} {
 
 ### 1.1 Collection `lists`
 
-- [ ] Lecture : propriétaire **ou** uid présent dans `allowedUsers`.
-- [ ] Création : `request.resource.data.userUID == request.auth.uid`.
-- [ ] Modification complète et suppression : propriétaire uniquement.
-- [ ] Un·e invité·e peut uniquement **s'ajouter** à `allowedUsers` (pour `/invite/$listId`) :
+- [x] Lecture : propriétaire **ou** uid présent dans `allowedUsers` pour les requêtes ; lecture par id ouverte à toute personne connectée (lien d'invitation).
+- [x] Création : `request.resource.data.userUID == request.auth.uid`.
+- [x] Modification complète et suppression : propriétaire uniquement.
+- [x] Un·e invité·e peut uniquement **s'ajouter** à `allowedUsers` (ou s'en retirer pour quitter la liste) (pour `/invite/$listId`) :
   - `request.resource.data.diff(resource.data).affectedKeys().hasOnly(['allowedUsers'])`
   - la nouvelle valeur vaut l'ancienne + son propre uid (et rien d'autre).
-- [ ] Un·e invité·e peut modifier les réservations (tant qu'elles sont imbriquées, cf. §1.3) sans toucher au reste.
-- [ ] Valider le schéma (types, longueurs max de `title`, `description`, `url`).
+- [x] Un·e invité·e peut modifier les réservations (tant qu'elles sont imbriquées, cf. §1.3) sans toucher au reste. Limite : la règle ne peut pas vérifier champ par champ chaque cadeau (pas de boucle dans les règles) ; elle impose seulement que seul `presents` change et que le nombre de cadeaux reste le même. Corrigé pour de bon par §1.3.
+- [x] Valider le schéma : `id` = id du document, `title` (1 à 200 caractères), types de `presents` / `allowedUsers`, 500 cadeaux max. `description` et `url` de chaque cadeau ne sont pas vérifiables sans boucle (même limite que ci-dessus).
 
 > ⚠️ Lire la liste depuis `/invite/$listId` (pour afficher titre et propriétaire) ne sera plus possible pour un non-invité. Prévoir soit une lecture autorisée « par id seulement » (`get` autorisé, `list` interdit), soit un petit document public `invitations/{listId}` avec juste le titre et le nom du propriétaire.
 
@@ -81,8 +81,8 @@ service cloud.firestore {
 
 ### 1.2 Collection `profils`
 
-- [ ] Utiliser **l'uid comme identifiant de document** (au lieu d'un uuid aléatoire) → règle `request.auth.uid == profilId` possible.
-- [ ] Adapter `setProfil` / `getById` dans `src/repository/ProfilRepository.ts` (simple `getDoc` au lieu d'une requête `where`).
+- [x] ~~Utiliser l'uid comme identifiant de document~~ : pas nécessaire, la règle s'appuie sur le champ `userUID` (`resource.data.userUID == request.auth.uid`), sans migration de données.
+- [ ] (Optionnel, performance) Adapter `setProfil` / `getById` pour un simple `getDoc` par uid : demanderait la migration ci-dessous.
 - [ ] Script de migration des profils existants.
 
 ### 1.3 Secret des réservations (changement de modèle)
@@ -95,9 +95,9 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 
 ### 1.4 Outillage
 
-- [ ] Tests des règles avec l'émulateur (`@firebase/rules-unit-testing` + `firebase emulators:exec`).
+- [x] Tests des règles avec l'émulateur (`@firebase/rules-unit-testing` + `firebase emulators:exec`) : `npm run test:rules`, 33 tests, lancés par la CI.
 - [ ] Déployer les règles depuis la CI (aujourd'hui manuel : `firebase deploy --only firestore:rules`).
-- [ ] `storage.rules` est verrouillé (`if false`) mais **non référencé** dans `firebase.json` : l'ajouter, ou supprimer le fichier si `FileRepository` disparaît.
+- [x] Règles Storage (`if false`) sorties de `firestore.rules` dans `storage.rules`, référencé dans `firebase.json`.
 
 ---
 

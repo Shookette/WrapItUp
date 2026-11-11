@@ -24,18 +24,19 @@ npm run lint          # oxlint sur src/, 0 warning toléré (--deny-warnings)
 npm run format        # oxfmt : formate tout le projet
 npm run format:check  # oxfmt --check : vérifie sans modifier
 npm run preview       # prévisualiser le build
+npm run test:rules    # tests des règles Firestore dans l'émulateur (Java 21 requis)
 ```
 
-Il n'y a **aucun test** dans le projet pour l'instant. Après une modification, vérifier au minimum `npm run format`, `npm run lint` et `npm run build` (le typage TS fait office de garde-fou).
+Seules les **règles Firestore** sont testées (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test. Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:rules` et `npm run build`.
 
-Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
+Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
 
 ## Déploiement
 
 - **Push sur `main` → déploiement automatique en production** sur Firebase Hosting (`.github/workflows/firebase-hosting-merge.yml`).
 - Chaque **pull request** déploie un canal de prévisualisation (`firebase-hosting-pull-request.yml`).
 - Projet Firebase : `wrap-it-up-2d42a`. La config client est dans `src/firebaseLoader.ts` (clé API publique par nature côté web).
-- Les règles Firestore (`firestore.rules`) ne sont **pas** déployées par la CI : il faut passer par `firebase deploy --only firestore:rules`.
+- Les règles Firestore (`firestore.rules`) sont **testées** par la CI mais **pas déployées** : après merge, `firebase deploy --only firestore:rules`.
 
 ## Arborescence
 
@@ -160,7 +161,8 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 ## Points d'attention connus
 
-- **Sécurité Firestore** : les règles autorisent tout·e utilisateurice connecté·e à lire et écrire **tous** les documents. Le secret des réservations n'est donc garanti que par l'interface. Le durcissement est détaillé dans `docs/security-audit.md` (§1).
+- **Sécurité Firestore** (`firestore.rules`) : listes lisibles par id par toute personne connectée (lien d'invitation), requêtes limitées à ses listes ; seul·e le ou la propriétaire modifie ou supprime ; un·e invité·e peut seulement réserver (`presents`), rejoindre (s'ajouter) ou quitter (se retirer) ; profils modifiables par leur seul·e titulaire (champ `userUID`). Toute nouvelle écriture doit passer ces règles : ajouter le cas dans les tests.
+- **Limites restantes** : le secret des réservations n'est garanti que par l'interface (réservations imbriquées dans la liste, cf. `docs/security-audit.md` §1.3), et un·e invité·e peut réécrire le contenu des cadeaux.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
 - Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
 
