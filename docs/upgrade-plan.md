@@ -23,7 +23,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 6     | React 18 → 19                                                              | faible après l'étape 5 | ✅ fait         |
 | 7     | Vite 5 → 8                                                                 | faible à moyen         | ✅ fait         |
 | 8     | Firebase 11 → 13                                                           | moyen                  | ✅ fait         |
-| 9     | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | à faire         |
+| 9     | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | ✅ fait         |
 
 Les versions « cibles » ci-dessous sont celles disponibles le 8 novembre 2026 : relancer `npm outdated` avant chaque étape.
 
@@ -191,7 +191,15 @@ Fait : `firebase` 13.2. Notes de version 12 et 13 relues : rien de cassant pour 
 - L'app utilise surtout l'auth email / mot de passe et Firestore `doc` / `setDoc` / `getDocs` / `query` / `where`, des API stables.
 - Tester à la main : connexion, inscription, vérification de l'email, réservation.
 
-## 9. Le reste
+## 9. Le reste ✅
+
+Fait :
+
+- `uuid` supprimé, remplacé par `crypto.randomUUID()` (3 usages). Disponible dans tous les navigateurs récents, en contexte sécurisé (https ou localhost), ce qui est le cas de Firebase Hosting.
+- TypeScript 5.9 → **7.0** (compilateur natif) : aucun changement de code, aucun conflit de peer (le plugin TanStack Router fonctionne). Vérifié que `tsc` signale toujours les erreurs, y compris le garde-fou `satisfies` des schémas zod.
+- Bonus : TypeScript 7 résout l'alias unique `#/*` → `src/*` (testé avec Vite). Les alias par dossier restent en place, à remplacer si on le souhaite.
+
+Plan initial, pour mémoire :
 
 - **uuid** : plutôt que de passer en v14, le supprimer et utiliser `crypto.randomUUID()` (3 usages : `ListForm.tsx`, `UserContext.tsx`, `new.tsx`).
 - **TypeScript 7** (compilateur natif en Go) : en dernier. Vérifier d'abord la compatibilité avec le plugin TanStack Router. Rester en 5.9 en attendant.

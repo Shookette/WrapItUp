@@ -7,13 +7,13 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 ## Stack
 
 - **Node 24.16.0**, fixé par `.nvmrc` (`nvm use`) et utilisé par la CI (`actions/setup-node`)
-- **React 19** + **TypeScript** + **Vite 8** (bundler Rolldown)
+- **React 19** + **TypeScript 7** (compilateur natif) + **Vite 8** (bundler Rolldown)
 - **TanStack Router** (routage par fichiers, plugin Vite `tanstackRouter`) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
 - **Firebase 13** : Auth (email / mot de passe), Firestore, Hosting
 - **TanStack Form** pour tous les formulaires (`useAppForm` + composants maison), validation par schémas **zod**
 - Composants et CSS **maison** (voir « Composants et style »), icônes **@tabler/icons-react**
 - **zod 4** pour valider les formulaires et les paramètres de recherche des routes (`validateSearch`)
-- `uuid` pour générer les identifiants, `dayjs` pour les dates, `classnames` pour les classes CSS
+- `crypto.randomUUID()` pour générer les identifiants, `dayjs` pour les dates, `classnames` pour les classes CSS
 
 ## Commandes
 
@@ -135,7 +135,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
   - Tableaux : `<form.Field name="presents" mode="array">` + `pushFieldValue` / `removeValue`, sous-champs `presents[${i}].title`, `key` = `present.id`.
   - Un sous-composant qui reçoit le formulaire se crée avec `withForm` et des options partagées (`formOptions`), voir `ListEdit/listFormOptions.ts`.
   - Un schéma zod doit avoir le même type d'entrée que les valeurs du formulaire : décrire tous les champs, alignés sur `interfaces/` avec `satisfies z.ZodType<T, T>` (le build casse si l'interface change).
-- **Imports** : alias natifs `#` (champ `imports` de `package.json`, résolus par TypeScript et Vite sans configuration) : `#assets/*`, `#components/*`, `#hooks/*`, `#interfaces/*`, `#repository/*`, `#utils/*`. Toujours **avec l'extension** (`#hooks/UserContext.tsx`), les alias ne la devinent pas. Les imports dans le même dossier restent relatifs (`./Button.css`). `#/*` n'est pas utilisable tant que TypeScript est en 5.x.
+- **Imports** : alias natifs `#` (champ `imports` de `package.json`, résolus par TypeScript et Vite sans configuration) : `#assets/*`, `#components/*`, `#hooks/*`, `#interfaces/*`, `#repository/*`, `#utils/*`. Toujours **avec l'extension** (`#hooks/UserContext.tsx`), les alias ne la devinent pas. Les imports dans le même dossier restent relatifs (`./Button.css`). Un alias unique `#/*` est possible depuis TypeScript 7 (testé), pas encore adopté.
 - **Composants** : typer `children` avec `PropsWithChildren<…>` plutôt qu'un `children: ReactNode` à la main.
 - **Textes de l'interface en français**, en **écriture inclusive** avec le point médian (« utilisateurice », « invité·e », « supprimé•e »).
 - **Formatage** : **oxfmt** (`.oxfmtrc.json`, remplace Prettier depuis le 8 novembre 2026, sortie compatible Prettier), largeur 80, `src/routeTree.gen.ts` et `package-lock.json` ignorés. Le commit de reformatage global est listé dans `.git-blame-ignore-revs` (`git config blame.ignoreRevsFile .git-blame-ignore-revs`).
@@ -168,7 +168,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 8 faites ; suivant : uuid → `crypto.randomUUID`, puis TypeScript 7).
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (toutes les étapes sont faites).
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.

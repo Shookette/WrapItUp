@@ -19,7 +19,6 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { v4 as uuidv4 } from "uuid";
 
 import { FirebaseError } from "firebase/app";
 import { setProfil } from "#repository/ProfilRepository.ts";
@@ -119,7 +118,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         await setProfil({
           userUID: user.uid,
           username: userName,
-          id: uuidv4(),
+          id: crypto.randomUUID(),
         });
         await sendEmailVerification(userCredential.user);
       } catch (error: unknown) {
