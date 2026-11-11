@@ -3,14 +3,14 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { IconExclamationCircle } from "@tabler/icons-react";
-import { useUserContext } from "../hooks/UserContext.tsx";
-import { useAppForm } from "../hooks/useAppForm.ts";
-import { emailSchema, requiredString } from "../utils/formSchemas.ts";
-import Button from "../components/Button/Button.tsx";
-import Banner from "../components/Banner/Banner.tsx";
-import Center from "../components/Center/Center.tsx";
-import Page from "../components/Page/Page.tsx";
-import Title from "../components/Title/Title.tsx";
+import { useUserContext } from "#hooks/UserContext.tsx";
+import { useAppForm } from "#hooks/useAppForm.ts";
+import { emailSchema, requiredString } from "#utils/formSchemas.ts";
+import Button from "#components/Button/Button.tsx";
+import Banner from "#components/Banner/Banner.tsx";
+import Center from "#components/Center/Center.tsx";
+import Page from "#components/Page/Page.tsx";
+import Title from "#components/Title/Title.tsx";
 import "./login.css";
 
 const loginSearchSchema = z.object({

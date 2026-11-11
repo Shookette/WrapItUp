@@ -1,7 +1,7 @@
 import { IconTrash } from "@tabler/icons-react";
-import { withForm } from "../../hooks/useAppForm.ts";
-import Button from "../Button/Button.tsx";
-import Table from "../Table/Table.tsx";
+import { withForm } from "#hooks/useAppForm.ts";
+import Button from "#components/Button/Button.tsx";
+import Table from "#components/Table/Table.tsx";
 import { listFormOptions } from "./listFormOptions.ts";
 
 const ListFormPresents = withForm({

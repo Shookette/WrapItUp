@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { IconTrash } from "@tabler/icons-react";
-import { FullList } from "../interfaces/List.ts";
+import { FullList } from "#interfaces/List.ts";
 import Button from "./Button/Button.tsx";
 import Table from "./Table/Table.tsx";
 

@@ -1,19 +1,19 @@
 import "./list.css";
 
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { getListByID, setList } from "../repository/ListRepository.ts";
-import { isAuthenticated } from "../utils/routeUtils.ts";
-import { isHttpUrl } from "../utils/url.ts";
+import { getListByID, setList } from "#repository/ListRepository.ts";
+import { isAuthenticated } from "#utils/routeUtils.ts";
+import { isHttpUrl } from "#utils/url.ts";
 import { useState } from "react";
-import { useUserContext } from "../hooks/UserContext.tsx";
-import { FullList } from "../interfaces/List.ts";
-import PrivateLayout from "../components/PrivateLayout.tsx";
-import Badge from "../components/Badge/Badge.tsx";
-import Button from "../components/Button/Button.tsx";
-import Card from "../components/Card/Card.tsx";
-import Page from "../components/Page/Page.tsx";
-import Title from "../components/Title/Title.tsx";
-import Grid from "../components/Grid/Grid.tsx";
+import { useUserContext } from "#hooks/UserContext.tsx";
+import { FullList } from "#interfaces/List.ts";
+import PrivateLayout from "#components/PrivateLayout.tsx";
+import Badge from "#components/Badge/Badge.tsx";
+import Button from "#components/Button/Button.tsx";
+import Card from "#components/Card/Card.tsx";
+import Page from "#components/Page/Page.tsx";
+import Title from "#components/Title/Title.tsx";
+import Grid from "#components/Grid/Grid.tsx";
 
 export const Route = createFileRoute("/list/$listId")({
   component: ViewComponent,

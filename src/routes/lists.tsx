@@ -1,13 +1,13 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { getLists, setList } from "../repository/ListRepository.ts";
-import { isAuthenticated } from "../utils/routeUtils.ts";
+import { getLists, setList } from "#repository/ListRepository.ts";
+import { isAuthenticated } from "#utils/routeUtils.ts";
 import { useCallback, useState } from "react";
-import { FullList } from "../interfaces/List.ts";
-import { useUserContext } from "../hooks/UserContext.tsx";
-import ListTableComponent from "../components/ListTable.tsx";
-import PrivateLayout from "../components/PrivateLayout.tsx";
-import Page from "../components/Page/Page.tsx";
-import Title from "../components/Title/Title.tsx";
+import { FullList } from "#interfaces/List.ts";
+import { useUserContext } from "#hooks/UserContext.tsx";
+import ListTableComponent from "#components/ListTable.tsx";
+import PrivateLayout from "#components/PrivateLayout.tsx";
+import Page from "#components/Page/Page.tsx";
+import Title from "#components/Title/Title.tsx";
 
 export const Route = createFileRoute("/lists")({
   component: ListsComponent,
