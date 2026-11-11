@@ -1,8 +1,12 @@
 import { formOptions, revalidateLogic } from "@tanstack/react-form";
 import { z } from "zod";
-import { AllowedUser, FullList } from "#interfaces/List.ts";
-import { Present } from "#interfaces/Present.ts";
-import { optionalUrlSchema, requiredString } from "#utils/formSchemas.ts";
+import { AllowedUser, FullList } from "#/interfaces/List.ts";
+import { Present } from "#/interfaces/Present.ts";
+import {
+  listTitleSchema,
+  optionalUrlSchema,
+  requiredString,
+} from "#/utils/formSchemas.ts";
 
 // Schémas alignés sur `interfaces/` : `satisfies` fait échouer le build si
 // une interface change sans que le schéma suive. Seuls les champs saisis
@@ -26,7 +30,7 @@ const allowedUserSchema = z.object({
 
 const listSchema = z.object({
   id: z.string(),
-  title: requiredString("Le nom de la liste est obligatoire"),
+  title: listTitleSchema,
   userUID: z.string(),
   username: z.string().optional(),
   createdAt: z.string(),

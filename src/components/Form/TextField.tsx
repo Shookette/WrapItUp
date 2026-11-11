@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Input from "#components/Input/Input.tsx";
+import Input from "#/components/Input/Input.tsx";
 import { useFieldContext } from "./formContext.ts";
 
 type TextFieldProps = {

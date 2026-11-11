@@ -4,12 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "imports": {
-    "#assets/*": "./src/assets/*",
-    "#components/*": "./src/components/*",
-    "#hooks/*": "./src/hooks/*",
-    "#interfaces/*": "./src/interfaces/*",
-    "#repository/*": "./src/repository/*",
-    "#utils/*": "./src/utils/*"
+    "#/*": "./src/*"
   },
   "scripts": {
     "dev": "vite",
@@ -17,7 +12,8 @@
     "lint": "oxlint --deny-warnings src",
     "preview": "vite preview",
     "format": "oxfmt",
-    "format:check": "oxfmt --check"
+    "format:check": "oxfmt --check",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-wrap-it-up \"node --test tests/*.test.ts\""
   },
   "dependencies": {
     "@tabler/icons-react": "^3.51.0",
@@ -31,10 +27,12 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
     "@tanstack/router-plugin": "^1.169.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
+    "firebase-tools": "^15.35.0",
     "oxfmt": "^0.77.0",
     "oxlint": "^1.93.0",
     "typescript": "^7.0.2",

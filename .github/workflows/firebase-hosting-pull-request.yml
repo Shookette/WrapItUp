@@ -17,7 +17,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci && npm run format:check && npm run lint && npm run build
+      # Java 21 : requis par l'émulateur Firestore (tests des règles)
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - run: npm ci && npm run format:check && npm run lint && npm run test:rules && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

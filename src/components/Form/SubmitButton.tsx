@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import Button from "#components/Button/Button.tsx";
+import Button from "#/components/Button/Button.tsx";
 import { useFormContext } from "./formContext.ts";
 
 type SubmitButtonProps = PropsWithChildren<{

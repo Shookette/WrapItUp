@@ -16,7 +16,7 @@ import {
   sortList,
   transformCollectionToArray,
 } from "./utils";
-import { AllowedUser, FullList, List } from "#interfaces/List.ts";
+import { AllowedUser, FullList, List } from "#/interfaces/List.ts";
 import { getById } from "./ProfilRepository.ts";
 
 const COLLECTION_REF = "lists";
@@ -93,8 +93,11 @@ const getListByID = async (id: string): Promise<FullList | null> => {
 };
 
 const setList = async (list: FullList): Promise<void> => {
+  // `username` est calculé à la lecture (profil du ou de la propriétaire) :
+  // on ne le stocke pas.
+  const { username: _username, ...listData } = list;
   const newList: List = {
-    ...list,
+    ...listData,
     allowedUsers: list.allowedUsers.map((allowedUser) => allowedUser.userUID),
   };
 

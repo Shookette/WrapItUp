@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { FullList } from "#interfaces/List.ts";
-import { setList } from "#repository/ListRepository.ts";
-import { useAppForm } from "#hooks/useAppForm.ts";
-import { useToast } from "#components/Toast/toastContext.ts";
-import Button from "#components/Button/Button.tsx";
+import { FullList } from "#/interfaces/List.ts";
+import { setList } from "#/repository/ListRepository.ts";
+import { useAppForm } from "#/hooks/useAppForm.ts";
+import { useToast } from "#/components/Toast/toastContext.ts";
+import Button from "#/components/Button/Button.tsx";
 import ListFormPresents from "./ListFormPresents.tsx";
 import { listFormOptions } from "./listFormOptions.ts";
 
