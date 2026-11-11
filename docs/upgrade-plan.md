@@ -21,7 +21,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | ✅ fait         |
 | 5     | Suppression de Mantine                                                     | moyen, découpable      | ✅ fait         |
 | 6     | React 18 → 19                                                              | faible après l'étape 5 | ✅ fait         |
-| 7     | Vite 5 → 8                                                                 | faible à moyen         | à faire         |
+| 7     | Vite 5 → 8                                                                 | faible à moyen         | ✅ fait         |
 | 8     | Firebase 11 → 13                                                           | moyen                  | à faire         |
 | 9     | uuid → `crypto.randomUUID`, TypeScript 7                                   | faible                 | à faire         |
 
@@ -171,7 +171,9 @@ Fait : `react` / `react-dom` 19.3, `@types/react` / `@types/react-dom` 19.3. Le 
 - Codemod : `npx types-react-codemod preset-19`
 - Points d'attention : `ref` devient une prop normale (plus besoin de `forwardRef`), `useRef` exige un argument, `defaultProps` supprimé sur les composants fonctions.
 
-## 7. Vite 5 → 8
+## 7. Vite 5 → 8 ✅
+
+Fait : `vite` 8.3, `@vitejs/plugin-react` 6.3, `@tanstack/router-plugin` libéré (`^1.169`, plus d'épinglage). Aucune modification de `vite.config.ts` nécessaire. Build 2,6 s → 0,9 s, JS 971 kB → 819 kB. La vulnérabilité `esbuild` (serveur de dev) disparaît : il ne reste que `@grpc/grpc-js` via Firebase (étape 8).
 
 - `vite@8` (bundler Rolldown) et `@vitejs/plugin-react@6`. Node ≥ 20.19 requis.
 - La version de Node est fixée par `.nvmrc` (24.16.0, utilisé par la CI) : compatible.
