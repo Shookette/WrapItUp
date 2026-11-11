@@ -1,6 +1,6 @@
 import {
   FC,
-  ReactElement,
+  PropsWithChildren,
   createContext,
   useContext,
   useEffect,
@@ -42,9 +42,6 @@ type UserProvider = {
   isAuthenticated: boolean;
 };
 
-type UserProviderProps = {
-  children: ReactElement;
-};
 type hookUserContext = () => UserProvider;
 
 const UserContext = createContext<UserProvider | null>(null);
@@ -67,7 +64,7 @@ function setStoredUser(user: User | null) {
   }
 }
 
-const UserProvider: FC<UserProviderProps> = ({ children }) => {
+const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | null>(getStoredUser());
   const auth = getAuth();
   const isAuthenticated = !!user;
