@@ -108,7 +108,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 **Risque** : React 18 affiche un simple avertissement mais **rend** les liens `javascript:...`. Avec les règles actuelles, n'importe qui peut injecter un tel lien dans n'importe quelle liste → exécution de code au clic de la victime, vol de session.
 
 - [ ] Valider le protocole à l'affichage : n'afficher le lien que si `new URL(url).protocol` vaut `http:` ou `https:`.
-- [ ] Valider aussi à l'enregistrement (`ListFormPresents.tsx`, règle `pattern` de react-hook-form).
+- [x] Valider aussi à l'enregistrement (`ListEdit/listFormOptions.ts`, schéma zod : vide ou `http(s)://`). Insuffisant seul : les règles Firestore étant ouvertes, l'affichage doit aussi valider.
 - [ ] Valider dans les règles Firestore (`url.matches('^https?://.*')`).
 - [ ] Ajouter `rel="noopener noreferrer"` sur les liens externes.
 

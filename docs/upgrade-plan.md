@@ -18,7 +18,7 @@ Voir `docs/security-audit.md`. Les étapes 2 et 3 traitent une partie du §5 (d�
 | 1 bis | Prettier → oxfmt + `.nvmrc` (Node 24.16.0) dans la CI                      | faible                 | ✅ fait         |
 | 2     | Suppression des paquets inutilisés, déclaration des dépendances manquantes | très faible            | ✅ fait         |
 | 3     | Mises à jour mineures                                                      | faible                 | ✅ fait         |
-| 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | à faire         |
+| 4     | react-hook-form → TanStack Form (+ validation zod)                         | moyen                  | ✅ fait         |
 | 5     | Suppression de Mantine                                                     | moyen, découpable      | à faire         |
 | 6     | React 18 → 19                                                              | faible après l'étape 5 | à faire         |
 | 7     | Vite 5 → 8                                                                 | faible à moyen         | à faire         |
@@ -94,7 +94,17 @@ Fait avec `npm update --save` + `npm audit fix` (plages de versions remontées d
 
 Point d'attention : `@tanstack/router-plugin` a renommé son export Vite (`TanStackRouterVite` → `tanstackRouter`) ; l'ancien nom est déprécié. Mettre à jour `vite.config.ts` et laisser le plugin régénérer `src/routeTree.gen.ts`.
 
-## 4. react-hook-form → TanStack Form
+## 4. react-hook-form → TanStack Form ✅
+
+Fait (`@tanstack/react-form` 1.33, `react-hook-form` retiré) :
+
+- `hooks/useAppForm.ts` (`createFormHook`) avec les composants maison `components/Form/` : `Form` (`noValidate`, appelle `handleSubmit`), `TextField` (branché sur `Input`, affiche la première erreur), `SubmitButton` (chargement via `isSubmitting`).
+- Validation zod sur tous les formulaires, en `revalidateLogic()` : à l'envoi, puis à chaque saisie. Règles communes dans `utils/formSchemas.ts`. Le lien d'un cadeau doit être vide ou en `http(s)://` (cf. audit §2) : un lien existant sans protocole bloque l'enregistrement de la liste avec un message sur le champ.
+- `ListFormPresents` passe par `withForm` + `listFormOptions` partagées avec `ListForm`.
+- Mantine retiré au passage de ces fichiers : `SimpleGrid` / `Space` → CSS (`.form`, `.form__actions`, `login.css`), `Table` / `Text` → composant maison `components/Table` (simple, réutilisable pour `ListTable` et `ListUserForm`). Les `notifications` Mantine sont conservées (étape 5).
+- `new.tsx` : le formulaire ne contient plus que le titre, la liste est construite à l'envoi.
+- `Input` : prop `onBlur`, type `url`, `htmlFor` sur le label, style d'erreur.
+- L'UX du formulaire de cadeaux (todo) n'a pas été revue : seule la technique a changé.
 
 Paquet : `@tanstack/react-form` (v1). 7 fichiers, du plus simple au plus complexe :
 

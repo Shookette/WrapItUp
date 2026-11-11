@@ -26,3 +26,13 @@ textarea.input__field {
   outline: none;
   outline-width: 0;
 }
+
+.input--error .input__field {
+  border-color: var(--danger-color);
+}
+
+.input__error {
+  color: var(--danger-color);
+  font-size: var(--font-size-small);
+  margin: 0.2em 0 0;
+}

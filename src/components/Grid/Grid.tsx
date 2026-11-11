@@ -1,12 +1,11 @@
 import classNames from "classnames";
 import "./Grid.css";
 
-import { FC, ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
 
-type GridProps = {
+type GridProps = PropsWithChildren<{
   size?: "sm" | "md" | "lg";
-  children: ReactNode;
-};
+}>;
 
 const Grid: FC<GridProps> = ({ size = "md", children }) => {
   const className = classNames("grid", {

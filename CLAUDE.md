@@ -10,9 +10,9 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 - **React 18** + **TypeScript** + **Vite 5**
 - **TanStack Router** (routage par fichiers, plugin Vite `tanstackRouter`, épinglé en `~1.168` tant que Vite est en v5) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
 - **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
-- **react-hook-form** pour tous les formulaires (`Controller` + composants `Input` maison)
+- **TanStack Form** pour tous les formulaires (`useAppForm` + composants maison), validation par schémas **zod**
 - **Mantine 7** (en cours de suppression, voir plus bas), icônes **@tabler/icons-react**
-- **zod 4** pour valider les paramètres de recherche des routes (`validateSearch`)
+- **zod 4** pour valider les formulaires et les paramètres de recherche des routes (`validateSearch`)
 - `uuid` pour générer les identifiants, `dayjs` pour les dates, `classnames` pour les classes CSS
 
 ## Commandes
@@ -47,9 +47,11 @@ src/
   routes/               # une route = un fichier (TanStack Router)
   components/           # composants UI (maison + layouts)
   hooks/UserContext.tsx # contexte d'authentification
+  hooks/useAppForm.ts   # hook de formulaire (TanStack Form createFormHook)
   repository/           # TOUT accès à Firestore passe par ici
   interfaces/           # types métier (List, Present, Profil)
   utils/routeUtils.ts   # garde d'authentification des routes
+  utils/formSchemas.ts  # règles zod partagées (email, champ obligatoire, lien http(s))
 ```
 
 ## Routes
@@ -110,7 +112,29 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 - **Protection des routes** : `beforeLoad: ({ context, location }) => isAuthenticated(context, location)`. Le contexte du routeur contient `auth` (le `UserProvider`), injecté dans `main.tsx`.
 - **Contrôle propriétaire / invité·e** : fait dans le composant (redirection vers `/` si l'accès n'est pas autorisé).
 - **Authentification** (`hooks/UserContext.tsx`) : l'utilisateurice Firebase est mis·e en cache dans `localStorage` (clé `wrapitup.user`). L'email doit être vérifié pour que la session soit restaurée. L'inscription crée aussi un document `profils`.
-- **Formulaires** : react-hook-form + `Controller` + composant `Input` maison ; listes dynamiques avec `useFieldArray`.
+- **Formulaires** : TanStack Form via `useAppForm` (`src/hooks/useAppForm.ts`) :
+  ```tsx
+  const form = useAppForm({
+    defaultValues: { email: "" },
+    validationLogic: revalidateLogic(), // valide à l'envoi, puis à chaque saisie
+    validators: { onDynamic: z.object({ email: emailSchema }) },
+    onSubmit: async ({ value }) => { … },
+  });
+  <form.AppForm>
+    <form.Form>
+      <form.AppField name="email">
+        {(field) => <field.TextField label="Email" type="email" required />}
+      </form.AppField>
+      <form.SubmitButton>Envoyer</form.SubmitButton>
+    </form.Form>
+  </form.AppForm>
+  ```
+  - `form.Form` désactive la validation native (`noValidate`) : les messages viennent des schémas zod (règles communes dans `utils/formSchemas.ts`). `required` sur un champ n'affiche que l'astérisque.
+  - `form.SubmitButton` affiche le chargement pendant `onSubmit` (pas de `useState` de chargement).
+  - Tableaux : `<form.Field name="presents" mode="array">` + `pushFieldValue` / `removeValue`, sous-champs `presents[${i}].title`, `key` = `present.id`.
+  - Un sous-composant qui reçoit le formulaire se crée avec `withForm` et des options partagées (`formOptions`), voir `ListEdit/listFormOptions.ts`.
+  - Un schéma zod doit avoir le même type d'entrée que les valeurs du formulaire : décrire tous les champs, alignés sur `interfaces/` avec `satisfies z.ZodType<T, T>` (le build casse si l'interface change).
+- **Composants** : typer `children` avec `PropsWithChildren<…>` plutôt qu'un `children: ReactNode` à la main.
 - **Textes de l'interface en français**, en **écriture inclusive** avec le point médian (« utilisateurice », « invité·e », « supprimé•e »).
 - **Formatage** : **oxfmt** (`.oxfmtrc.json`, remplace Prettier depuis le 8 novembre 2026, sortie compatible Prettier), largeur 80, `src/routeTree.gen.ts` et `package-lock.json` ignorés. Le commit de reformatage global est listé dans `.git-blame-ignore-revs` (`git config blame.ignoreRevsFile .git-blame-ignore-revs`).
 - **Lint** : **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
@@ -120,7 +144,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 
 Objectif affiché dans `todo.md` : **supprimer Mantine**.
 
-- Les composants maison se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` : `Button`, `Input`, `Tabs`, `Banner`, `Table` (début : `Td.tsx` existe, `Table.tsx` et `Tr.tsx` sont encore vides).
+- Les composants maison se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` : `Button`, `Input`, `Tabs`, `Banner`, `Grid`, `Page`, `Center`, `Title`, `Table` (simple : `headers`, lignes en `children` avec les classes `table__row` / `table__cell`, `isEmpty` + `emptyMessage`) et `Form` (`Form`, `TextField`, `SubmitButton`, utilisés via `useAppForm`).
 - Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--danger-color`, `--padding-medium`…).
 - Variantes communes : `type: "primary" | "danger" | "success"`, `size: "small" | "medium" | "large"`.
 - Pour tout nouveau code, **privilégier les composants maison** plutôt que Mantine.
@@ -136,7 +160,7 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 3 faites ; suivant : TanStack Form). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 4 faites ; suivant : suppression de Mantine). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.

@@ -1,17 +1,14 @@
-import { useCallback, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
 import { createFileRoute } from "@tanstack/react-router";
-import { SimpleGrid, Space } from "@mantine/core";
+import { revalidateLogic } from "@tanstack/react-form";
 import { notifications } from "@mantine/notifications";
+import { z } from "zod";
 
 import { isAuthenticated } from "../utils/routeUtils";
+import { requiredString } from "../utils/formSchemas.ts";
 import { useUserContext } from "../hooks/UserContext";
-import { UpdateUser } from "../interfaces/Profil.ts";
+import { useAppForm } from "../hooks/useAppForm.ts";
 
-import Button from "../components/Button/Button.tsx";
 import PrivateLayout from "../components/PrivateLayout.tsx";
-import Input from "../components/Input/Input.tsx";
 import Page from "../components/Page/Page.tsx";
 import Title from "../components/Title/Title.tsx";
 
@@ -22,71 +19,57 @@ export const Route = createFileRoute("/account")({
   },
 });
 
+const accountSchema = z.object({
+  displayName: requiredString("Le nom et le prénom sont obligatoires"),
+});
+
 function AccountComponent() {
   const { user, updateUser } = useUserContext();
-  const [loading, setLoading] = useState(false);
 
-  const { control, handleSubmit } = useForm<UpdateUser>({
-    defaultValues: {
-      displayName: user?.displayName ?? "",
-    },
-  });
-
-  const handleOnSubmit: SubmitHandler<UpdateUser> = useCallback(
-    async (userData) => {
+  const form = useAppForm({
+    defaultValues: { displayName: user?.displayName ?? "" },
+    validationLogic: revalidateLogic(),
+    validators: { onDynamic: accountSchema },
+    onSubmit: async ({ value }) => {
       if (!user) {
         return;
       }
 
-      setLoading(true);
-      await updateUser({ displayName: userData.displayName })
-        .then(() => {
-          notifications.show({
-            color: "green",
-            position: "top-right",
-            message: `Les informations ont été modifiées`,
-          });
-        })
-        .catch(() => {
-          notifications.show({
-            color: "red",
-            position: "top-right",
-            message: `Une erreur est survenue`,
-          });
+      try {
+        await updateUser({ displayName: value.displayName.trim() });
+        notifications.show({
+          color: "green",
+          position: "top-right",
+          message: `Les informations ont été modifiées`,
         });
-      setLoading(false);
+      } catch {
+        notifications.show({
+          color: "red",
+          position: "top-right",
+          message: `Une erreur est survenue`,
+        });
+      }
     },
-    [user, updateUser],
-  );
+  });
 
   return (
     <PrivateLayout>
       <Page size="md">
         <Title>Informations personnelles</Title>
-        <form onSubmit={handleSubmit(handleOnSubmit)}>
-          <Controller
-            name="displayName"
-            control={control}
-            render={({ field: { onChange, value, name } }) => (
-              <Input
-                id="displayName"
-                label="Nom / Prénom"
-                placeholder="Nom / Prénom"
-                name={name}
-                required
-                value={value ?? ""}
-                onChange={onChange}
-              />
-            )}
-          />
-
-          <Space h="md" />
-          <SimpleGrid>
-            <Button isSubmit loading={loading}>
-              Envoyer
-            </Button>
-          </SimpleGrid>
-        </form>
+        <form.AppForm>
+          <form.Form>
+            <form.AppField name="displayName">
+              {(field) => (
+                <field.TextField
+                  label="Nom / Prénom"
+                  placeholder="Nom / Prénom"
+                  required
+                />
+              )}
+            </form.AppField>
+            <form.SubmitButton>Envoyer</form.SubmitButton>
+          </form.Form>
+        </form.AppForm>
       </Page>
     </PrivateLayout>
   );

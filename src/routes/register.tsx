@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useUserContext } from "../hooks/UserContext.tsx";
+import { revalidateLogic } from "@tanstack/react-form";
 import { useEffect } from "react";
-import { SimpleGrid, Space } from "@mantine/core";
-import Button from "../components/Button/Button.tsx";
-import Input from "../components/Input/Input.tsx";
+import { z } from "zod";
+import { useUserContext } from "../hooks/UserContext.tsx";
+import { useAppForm } from "../hooks/useAppForm.ts";
+import { emailSchema, requiredString } from "../utils/formSchemas.ts";
 import Center from "../components/Center/Center.tsx";
 import Page from "../components/Page/Page.tsx";
 import Title from "../components/Title/Title.tsx";
@@ -13,21 +13,19 @@ export const Route = createFileRoute("/register")({
   component: RegisterComponent,
 });
 
-export type FormRegister = {
-  email: string;
-  username: string;
-  password: string;
-};
+const registerSchema = z.object({
+  email: emailSchema,
+  username: requiredString("Le nom et le prénom sont obligatoires"),
+  // minimum imposé par Firebase Auth
+  password: z
+    .string()
+    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+});
 
 function RegisterComponent() {
   const { register: userRegister, user } = useUserContext();
 
   const navigate = Route.useNavigate();
-
-  const handleOnSubmit: SubmitHandler<FormRegister> = async (data) => {
-    await userRegister(data.email, data.password, data.username);
-    navigate({ to: "/login" });
-  };
 
   useEffect(() => {
     if (user) {
@@ -35,12 +33,14 @@ function RegisterComponent() {
     }
   }, [user, navigate]);
 
-  const {
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm<FormRegister>({
+  const form = useAppForm({
     defaultValues: { email: "", username: "", password: "" },
+    validationLogic: revalidateLogic(),
+    validators: { onDynamic: registerSchema },
+    onSubmit: async ({ value }) => {
+      await userRegister(value.email, value.password, value.username.trim());
+      await navigate({ to: "/login" });
+    },
   });
 
   return (
@@ -59,69 +59,40 @@ function RegisterComponent() {
 
       <Page size="md">
         <Title>Inscription</Title>
-        <Space h="md" />
-        <form
-          style={{ display: "flex", gap: "15px", flexDirection: "column" }}
-          onSubmit={handleSubmit(handleOnSubmit)}
-        >
-          <Controller
-            name="email"
-            control={control}
-            render={({ field: { onChange, value, name } }) => (
-              <Input
-                error={!!errors.email}
-                errorMessage={"L'adresse mail est obligatoire"}
-                id="email"
-                label="Email"
-                name={name}
-                placeholder="Email"
-                type="email"
-                required
-                value={value}
-                onChange={onChange}
-              />
-            )}
-          />
-          <Controller
-            name="username"
-            control={control}
-            render={({ field: { onChange, value, name } }) => (
-              <Input
-                error={!!errors.username}
-                errorMessage={"Le nom et le prénom est obligatoire"}
-                id="username"
-                label="Nom/Prénom"
-                name={name}
-                placeholder="Nom/Prénom"
-                required
-                value={value}
-                onChange={onChange}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            control={control}
-            render={({ field: { onChange, name, value } }) => (
-              <Input
-                error={!!errors.password}
-                errorMessage={"Le mot de passe est obligatoire"}
-                label="Mot de passe"
-                name={name}
-                placeholder="Mot de passe"
-                required
-                type="password"
-                value={value}
-                onChange={onChange}
-              />
-            )}
-          />
-          <SimpleGrid>
-            <Button type="success" isSubmit>
-              Inscription
-            </Button>
-          </SimpleGrid>
-        </form>
+        <form.AppForm>
+          <form.Form>
+            <form.AppField name="email">
+              {(field) => (
+                <field.TextField
+                  label="Email"
+                  placeholder="Email"
+                  required
+                  type="email"
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="username">
+              {(field) => (
+                <field.TextField
+                  label="Nom/Prénom"
+                  placeholder="Nom/Prénom"
+                  required
+                />
+              )}
+            </form.AppField>
+            <form.AppField name="password">
+              {(field) => (
+                <field.TextField
+                  label="Mot de passe"
+                  placeholder="Mot de passe"
+                  required
+                  type="password"
+                />
+              )}
+            </form.AppField>
+            <form.SubmitButton type="success">Inscription</form.SubmitButton>
+          </form.Form>
+        </form.AppForm>
       </Page>
     </Center>
   );

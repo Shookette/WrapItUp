@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { revalidateLogic } from "@tanstack/react-form";
+import { z } from "zod";
 import { useUserContext } from "../hooks/UserContext.tsx";
-import { SimpleGrid, Space } from "@mantine/core";
-import Button from "../components/Button/Button.tsx";
-import Input from "../components/Input/Input.tsx";
+import { useAppForm } from "../hooks/useAppForm.ts";
+import { emailSchema } from "../utils/formSchemas.ts";
 import Center from "../components/Center/Center.tsx";
 import Page from "../components/Page/Page.tsx";
 import Title from "../components/Title/Title.tsx";
@@ -12,24 +12,23 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
 });
 
-export type FormResetPassword = {
-  email: string;
-};
+const resetPasswordSchema = z.object({
+  email: emailSchema,
+});
 
 function ResetPasswordComponent() {
   const { resetPassword } = useUserContext();
   const navigate = Route.useNavigate();
 
-  const handleOnSubmit: SubmitHandler<FormResetPassword> = async (data) => {
-    await resetPassword(data.email);
-    navigate({ to: "/login" });
-  };
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormResetPassword>({ defaultValues: { email: "" } });
+  const form = useAppForm({
+    defaultValues: { email: "" },
+    validationLogic: revalidateLogic(),
+    validators: { onDynamic: resetPasswordSchema },
+    onSubmit: async ({ value }) => {
+      await resetPassword(value.email);
+      await navigate({ to: "/login" });
+    },
+  });
 
   return (
     <Center>
@@ -46,32 +45,23 @@ function ResetPasswordComponent() {
       </Link>
       <Page size="md">
         <Title>Réinitialiser le mot de passe</Title>
-        <Space h="md" />
-        <form className="form" onSubmit={handleSubmit(handleOnSubmit)}>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field: { onChange, value, name } }) => (
-              <Input
-                error={!!errors.email}
-                errorMessage={"L'adresse mail est obligatoire"}
-                id="email"
-                label="Email"
-                name={name}
-                placeholder="Email"
-                required
-                type="email"
-                value={value}
-                onChange={onChange}
-              />
-            )}
-          />
-          <SimpleGrid>
-            <Button type="success" isSubmit>
+        <form.AppForm>
+          <form.Form>
+            <form.AppField name="email">
+              {(field) => (
+                <field.TextField
+                  label="Email"
+                  placeholder="Email"
+                  required
+                  type="email"
+                />
+              )}
+            </form.AppField>
+            <form.SubmitButton type="success">
               Réinitialiser le mot de passe
-            </Button>
-          </SimpleGrid>
-        </form>
+            </form.SubmitButton>
+          </form.Form>
+        </form.AppForm>
       </Page>
     </Center>
   );

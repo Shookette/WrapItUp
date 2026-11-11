@@ -1,110 +1,75 @@
-import { Table, Text } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
-import {
-  Control,
-  Controller,
-  FieldArrayWithId,
-  UseFieldArrayRemove,
-} from "react-hook-form";
-import { FullList } from "../../interfaces/List.ts";
-import { FC } from "react";
+import { withForm } from "../../hooks/useAppForm.ts";
 import Button from "../Button/Button.tsx";
-import Input from "../Input/Input.tsx";
+import Table from "../Table/Table.tsx";
+import { listFormOptions } from "./listFormOptions.ts";
 
-type ListFormPresentsProps = {
-  control: Control<FullList>;
-  fields: FieldArrayWithId<FullList, "presents", "id">[];
-  remove: UseFieldArrayRemove;
-};
-
-const ListFormPresents: FC<ListFormPresentsProps> = ({
-  control,
-  fields,
-  remove,
-}) => {
-  return (
-    <Table>
-      <Table.Thead>
-        <Table.Tr key="header-list-present">
-          <Table.Th>Nom du cadeau</Table.Th>
-          <Table.Th>Description du cadeau</Table.Th>
-          <Table.Th>Lien du cadeau</Table.Th>
-          <Table.Th>Actions</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {fields.length > 0 ? (
-          fields.map((field, index) => {
-            return (
-              <Table.Tr key={field.id}>
-                <Table.Td>
-                  <Controller
-                    name={`presents.${index}.title`}
-                    control={control}
-                    render={({ field: { onChange, value, name } }) => (
-                      <Input
+const ListFormPresents = withForm({
+  ...listFormOptions,
+  render: function ListFormPresents({ form }) {
+    return (
+      <form.Field name="presents" mode="array">
+        {(presentsField) => (
+          <Table
+            emptyMessage="Aucun cadeau"
+            headers={[
+              "Nom du cadeau",
+              "Description du cadeau",
+              "Lien du cadeau",
+              "Actions",
+            ]}
+            isEmpty={presentsField.state.value.length === 0}
+          >
+            {presentsField.state.value.map((present, index) => (
+              <tr className="table__row" key={present.id}>
+                <td className="table__cell">
+                  <form.AppField name={`presents[${index}].title`}>
+                    {(field) => (
+                      <field.TextField
                         id={`title-${index}`}
-                        name={name}
                         placeholder="Titre"
                         required
-                        value={value}
-                        onChange={onChange}
                       />
                     )}
-                  />
-                </Table.Td>
-                <Table.Td>
-                  <Controller
-                    name={`presents.${index}.description`}
-                    control={control}
-                    render={({ field: { onChange, value, name } }) => (
-                      <Input
+                  </form.AppField>
+                </td>
+                <td className="table__cell">
+                  <form.AppField name={`presents[${index}].description`}>
+                    {(field) => (
+                      <field.TextField
                         id={`description-${index}`}
-                        name={name}
                         placeholder="Description"
                         type="textarea"
-                        value={value}
-                        onChange={onChange}
                       />
                     )}
-                  />
-                </Table.Td>
-                <Table.Td>
-                  <Controller
-                    name={`presents.${index}.url`}
-                    control={control}
-                    render={({ field: { onChange, value, name } }) => (
-                      <Input
+                  </form.AppField>
+                </td>
+                <td className="table__cell">
+                  <form.AppField name={`presents[${index}].url`}>
+                    {(field) => (
+                      <field.TextField
                         id={`url-${index}`}
-                        placeholder="Lien"
-                        name={name}
-                        value={value}
-                        onChange={onChange}
+                        placeholder="https://…"
+                        type="url"
                       />
                     )}
-                  />
-                </Table.Td>
-                <Table.Td>
+                  </form.AppField>
+                </td>
+                <td className="table__cell">
                   <Button
                     icon={<IconTrash size={16} />}
                     size="small"
                     type="danger"
-                    onClick={() => remove(index)}
+                    onClick={() => presentsField.removeValue(index)}
                   />
-                </Table.Td>
-              </Table.Tr>
-            );
-          })
-        ) : (
-          <Table.Tr key="row-without-present">
-            <Table.Td colSpan={4}>
-              <Text ta="center">Aucun cadeau</Text>
-            </Table.Td>
-          </Table.Tr>
+                </td>
+              </tr>
+            ))}
+          </Table>
         )}
-      </Table.Tbody>
-    </Table>
-  );
-};
+      </form.Field>
+    );
+  },
+});
 
 export default ListFormPresents;
