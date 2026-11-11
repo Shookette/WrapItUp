@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getMyLists } from "#repository/ListRepository.ts";
-import { isAuthenticated } from "#utils/routeUtils.ts";
+import { getMyLists } from "#/repository/ListRepository.ts";
+import { isAuthenticated } from "#/utils/routeUtils.ts";
 import { useCallback } from "react";
-import { FullList } from "#interfaces/List.ts";
-import { useUserContext } from "#hooks/UserContext.tsx";
-import ListTableComponent from "#components/ListTable.tsx";
+import { FullList } from "#/interfaces/List.ts";
+import { useUserContext } from "#/hooks/UserContext.tsx";
+import ListTableComponent from "#/components/ListTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
-import PrivateLayout from "#components/PrivateLayout.tsx";
-import Button from "#components/Button/Button.tsx";
-import Page from "#components/Page/Page.tsx";
-import Title from "#components/Title/Title.tsx";
+import PrivateLayout from "#/components/PrivateLayout.tsx";
+import Button from "#/components/Button/Button.tsx";
+import Page from "#/components/Page/Page.tsx";
+import Title from "#/components/Title/Title.tsx";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,

@@ -1,12 +1,12 @@
 import { formOptions, revalidateLogic } from "@tanstack/react-form";
 import { z } from "zod";
-import { AllowedUser, FullList } from "#interfaces/List.ts";
-import { Present } from "#interfaces/Present.ts";
+import { AllowedUser, FullList } from "#/interfaces/List.ts";
+import { Present } from "#/interfaces/Present.ts";
 import {
   listTitleSchema,
   optionalUrlSchema,
   requiredString,
-} from "#utils/formSchemas.ts";
+} from "#/utils/formSchemas.ts";
 
 // Schémas alignés sur `interfaces/` : `satisfies` fait échouer le build si
 // une interface change sans que le schéma suive. Seuls les champs saisis

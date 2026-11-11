@@ -4,12 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "imports": {
-    "#assets/*": "./src/assets/*",
-    "#components/*": "./src/components/*",
-    "#hooks/*": "./src/hooks/*",
-    "#interfaces/*": "./src/interfaces/*",
-    "#repository/*": "./src/repository/*",
-    "#utils/*": "./src/utils/*"
+    "#/*": "./src/*"
   },
   "scripts": {
     "dev": "vite",

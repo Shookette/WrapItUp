@@ -197,7 +197,7 @@ Fait :
 
 - `uuid` supprimé, remplacé par `crypto.randomUUID()` (3 usages). Disponible dans tous les navigateurs récents, en contexte sécurisé (https ou localhost), ce qui est le cas de Firebase Hosting.
 - TypeScript 5.9 → **7.0** (compilateur natif) : aucun changement de code, aucun conflit de peer (le plugin TanStack Router fonctionne). Vérifié que `tsc` signale toujours les erreurs, y compris le garde-fou `satisfies` des schémas zod.
-- Bonus : TypeScript 7 résout l'alias unique `#/*` → `src/*` (testé avec Vite). Les alias par dossier restent en place, à remplacer si on le souhaite.
+- Bonus : TypeScript 7 résout l'alias unique `#/*` → `src/*`. Adopté ensuite (PR de sécurité des règles Firestore) à la place des alias par dossier.
 
 Plan initial, pour mémoire :
 

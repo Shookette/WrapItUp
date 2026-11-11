@@ -21,8 +21,8 @@ import {
 } from "firebase/auth";
 
 import { FirebaseError } from "firebase/app";
-import { setProfil } from "#repository/ProfilRepository.ts";
-import { UpdateUser } from "#interfaces/Profil.ts";
+import { setProfil } from "#/repository/ProfilRepository.ts";
+import { UpdateUser } from "#/interfaces/Profil.ts";
 const FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL =
   "Firebase: Error (auth/invalid-credential).";
 

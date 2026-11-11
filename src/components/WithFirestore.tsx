@@ -1,4 +1,4 @@
-import initFirebase from "../firebaseLoader";
+import initFirebase from "#/firebaseLoader.ts";
 import { FC, ReactNode } from "react";
 
 interface Props {

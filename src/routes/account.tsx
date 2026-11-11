@@ -2,15 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { revalidateLogic } from "@tanstack/react-form";
 import { z } from "zod";
 
-import { isAuthenticated } from "#utils/routeUtils.ts";
-import { usernameSchema } from "#utils/formSchemas.ts";
-import { useUserContext } from "#hooks/UserContext.tsx";
-import { useAppForm } from "#hooks/useAppForm.ts";
-import { useToast } from "#components/Toast/toastContext.ts";
+import { isAuthenticated } from "#/utils/routeUtils.ts";
+import { usernameSchema } from "#/utils/formSchemas.ts";
+import { useUserContext } from "#/hooks/UserContext.tsx";
+import { useAppForm } from "#/hooks/useAppForm.ts";
+import { useToast } from "#/components/Toast/toastContext.ts";
 
-import PrivateLayout from "#components/PrivateLayout.tsx";
-import Page from "#components/Page/Page.tsx";
-import Title from "#components/Title/Title.tsx";
+import PrivateLayout from "#/components/PrivateLayout.tsx";
+import Page from "#/components/Page/Page.tsx";
+import Title from "#/components/Title/Title.tsx";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
