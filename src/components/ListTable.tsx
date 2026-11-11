@@ -1,7 +1,8 @@
-import { FC, useMemo } from "react";
-import { ActionIcon, Table, Text } from "@mantine/core";
-import { FullList } from "../interfaces/List.ts";
+import { FC } from "react";
 import { IconTrash } from "@tabler/icons-react";
+import { FullList } from "../interfaces/List.ts";
+import Button from "./Button/Button.tsx";
+import Table from "./Table/Table.tsx";
 
 type Props = {
   lists: Array<FullList>;
@@ -17,62 +18,54 @@ const ListTableComponent: FC<Props> = ({
   showAuthor = false,
   onRedirect,
   onRemoveAddedList,
-}) => {
-  const rows = useMemo(
-    () =>
-      lists.map((list) => (
-        <Table.Tr key={list.id}>
-          <Table.Td onClick={() => onRedirect(list)}>{list.title}</Table.Td>
-          <Table.Td onClick={() => onRedirect(list)}>{list.createdAt}</Table.Td>
-          {showAuthor && (
-            <Table.Td onClick={() => onRedirect(list)}>
-              {list.username ?? "-"}
-            </Table.Td>
-          )}
-          {showAuthor && (
-            <Table.Td>
-              <ActionIcon
-                loading={loading}
-                variant="filled"
-                aria-label="Supprimer"
-                color="red"
-                onClick={() => onRemoveAddedList?.(list)}
-              >
-                <IconTrash
-                  style={{ width: "70%", height: "70%" }}
-                  stroke={1.5}
-                />
-              </ActionIcon>
-            </Table.Td>
-          )}
-        </Table.Tr>
-      )),
-    [lists, loading, onRedirect, onRemoveAddedList, showAuthor],
-  );
-
-  return (
-    <Table stickyHeader highlightOnHover striped>
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th>Nom</Table.Th>
-          <Table.Th>Date de création</Table.Th>
-          {showAuthor && <Table.Th>Auteur</Table.Th>}
-          {showAuthor && <Table.Th>Action</Table.Th>}
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {rows.length > 0 ? (
-          rows
-        ) : (
-          <Table.Tr>
-            <Table.Td colSpan={showAuthor ? 4 : 2}>
-              <Text ta="center">Aucune liste</Text>
-            </Table.Td>
-          </Table.Tr>
+}) => (
+  <Table
+    emptyMessage="Aucune liste"
+    headers={
+      showAuthor
+        ? ["Nom", "Date de création", "Auteur", "Action"]
+        : ["Nom", "Date de création"]
+    }
+    highlightOnHover
+    striped
+  >
+    {lists.map((list) => (
+      <tr className="table__row" key={list.id}>
+        <td
+          className="table__cell table__cell--clickable"
+          onClick={() => onRedirect(list)}
+        >
+          {list.title}
+        </td>
+        <td
+          className="table__cell table__cell--clickable"
+          onClick={() => onRedirect(list)}
+        >
+          {list.createdAt}
+        </td>
+        {showAuthor && (
+          <td
+            className="table__cell table__cell--clickable"
+            onClick={() => onRedirect(list)}
+          >
+            {list.username ?? "-"}
+          </td>
         )}
-      </Table.Tbody>
-    </Table>
-  );
-};
+        {showAuthor && (
+          <td className="table__cell">
+            <Button
+              ariaLabel="Supprimer"
+              icon={<IconTrash size={16} stroke={1.5} />}
+              loading={loading}
+              size="small"
+              type="danger"
+              onClick={() => onRemoveAddedList?.(list)}
+            />
+          </td>
+        )}
+      </tr>
+    ))}
+  </Table>
+);
 
 export default ListTableComponent;

@@ -1,0 +1,21 @@
+.header {
+  --header-height: 100px;
+
+  align-items: center;
+  background-color: var(--header-color);
+  color: var(--white);
+  display: flex;
+  gap: var(--padding-large);
+  height: var(--header-height);
+}
+
+.header__logo {
+  height: var(--header-height);
+  object-fit: contain;
+  width: auto;
+}
+
+.header__title {
+  font-size: var(--font-size-extra-large);
+  margin: 0;
+}

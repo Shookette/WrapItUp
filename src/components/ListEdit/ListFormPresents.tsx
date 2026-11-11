@@ -18,7 +18,6 @@ const ListFormPresents = withForm({
               "Lien du cadeau",
               "Actions",
             ]}
-            isEmpty={presentsField.state.value.length === 0}
           >
             {presentsField.state.value.map((present, index) => (
               <tr className="table__row" key={present.id}>

@@ -2,3 +2,14 @@
   margin-top: 0;
   margin-bottom: var(--padding-medium);
 }
+
+.title--with-actions {
+  align-items: center;
+  display: flex;
+  gap: var(--padding-medium);
+  justify-content: space-between;
+}
+
+.title__text {
+  margin: 0;
+}

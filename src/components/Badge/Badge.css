@@ -1,0 +1,22 @@
+.badge {
+  border-radius: var(--border-radius-round);
+  color: var(--white);
+  font-size: var(--font-size-extra-small);
+  font-weight: bold;
+  letter-spacing: 0.03em;
+  padding: var(--padding-extra-small) var(--padding-small);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badge__type--primary {
+  background-color: var(--primary-color);
+}
+
+.badge__type--danger {
+  background-color: var(--danger-color);
+}
+
+.badge__type--success {
+  background-color: var(--success-color);
+}

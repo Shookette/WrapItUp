@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { revalidateLogic } from "@tanstack/react-form";
-import { notifications } from "@mantine/notifications";
 import { z } from "zod";
 
 import { isAuthenticated } from "../utils/routeUtils";
 import { requiredString } from "../utils/formSchemas.ts";
 import { useUserContext } from "../hooks/UserContext";
 import { useAppForm } from "../hooks/useAppForm.ts";
+import { useToast } from "../components/Toast/toastContext.ts";
 
 import PrivateLayout from "../components/PrivateLayout.tsx";
 import Page from "../components/Page/Page.tsx";
@@ -25,6 +25,7 @@ const accountSchema = z.object({
 
 function AccountComponent() {
   const { user, updateUser } = useUserContext();
+  const toast = useToast();
 
   const form = useAppForm({
     defaultValues: { displayName: user?.displayName ?? "" },
@@ -37,15 +38,13 @@ function AccountComponent() {
 
       try {
         await updateUser({ displayName: value.displayName.trim() });
-        notifications.show({
-          color: "green",
-          position: "top-right",
+        toast.show({
+          type: "success",
           message: `Les informations ont été modifiées`,
         });
       } catch {
-        notifications.show({
-          color: "red",
-          position: "top-right",
+        toast.show({
+          type: "danger",
           message: `Une erreur est survenue`,
         });
       }

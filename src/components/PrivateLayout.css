@@ -1,0 +1,25 @@
+.private-layout__nav {
+  --nav-height: 40px;
+
+  align-items: center;
+  background-color: var(--nav-color);
+  display: flex;
+  gap: var(--padding-large);
+  height: var(--nav-height);
+  padding: 0 var(--padding-small);
+}
+
+.private-layout__link {
+  color: var(--nav-link-color);
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.private-layout__link--active {
+  text-decoration-thickness: 3px;
+}
+
+.private-layout__menu {
+  margin-left: auto;
+}

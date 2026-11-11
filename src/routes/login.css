@@ -1,5 +1,5 @@
 .login__forgotten-password {
-  font-size: 0.8em;
+  font-size: var(--font-size-small);
   margin-left: auto;
   text-decoration: none;
 }

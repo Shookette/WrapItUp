@@ -11,7 +11,7 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 - **TanStack Router** (routage par fichiers, plugin Vite `tanstackRouter`, épinglé en `~1.168` tant que Vite est en v5) — `src/routeTree.gen.ts` est **généré automatiquement, ne jamais le modifier à la main**
 - **Firebase 11** : Auth (email / mot de passe), Firestore, Hosting
 - **TanStack Form** pour tous les formulaires (`useAppForm` + composants maison), validation par schémas **zod**
-- **Mantine 7** (en cours de suppression, voir plus bas), icônes **@tabler/icons-react**
+- Composants et CSS **maison** (voir « Composants et style »), icônes **@tabler/icons-react**
 - **zod 4** pour valider les formulaires et les paramètres de recherche des routes (`validateSearch`)
 - `uuid` pour générer les identifiants, `dayjs` pour les dates, `classnames` pour les classes CSS
 
@@ -41,7 +41,7 @@ Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && np
 
 ```
 src/
-  main.tsx              # point d'entrée : providers (Mantine, Firebase, UserProvider) + routeur
+  main.tsx              # point d'entrée : providers (Toast, Firebase, UserProvider) + routeur
   firebaseLoader.ts     # initialisation Firebase
   theme.css             # variables CSS globales (couleurs, tailles, espacements)
   routes/               # une route = un fichier (TanStack Router)
@@ -52,6 +52,7 @@ src/
   interfaces/           # types métier (List, Present, Profil)
   utils/routeUtils.ts   # garde d'authentification des routes
   utils/formSchemas.ts  # règles zod partagées (email, champ obligatoire, lien http(s))
+  utils/url.ts          # isHttpUrl : vérifier un lien avant de l'afficher
 ```
 
 ## Routes
@@ -140,15 +141,21 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 - **Lint** : **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
 - **Nommage** : les noms d'entités suivent le code existant (`Profil` et non `Profile`, `Present` pour un cadeau).
 
-## Migration hors de Mantine (en cours)
+## Composants et style
 
-Objectif affiché dans `todo.md` : **supprimer Mantine**.
+Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d'upgrade). Tout est fait maison.
 
-- Les composants maison se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` : `Button`, `Input`, `Tabs`, `Banner`, `Grid`, `Page`, `Center`, `Title`, `Table` (simple : `headers`, lignes en `children` avec les classes `table__row` / `table__cell`, `isEmpty` + `emptyMessage`) et `Form` (`Form`, `TextField`, `SubmitButton`, utilisés via `useAppForm`).
-- Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--danger-color`, `--padding-medium`…).
+- Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
+  - mise en page : `Page` (carte blanche centrale, `size`), `Center`, `Grid`, `Card`, `Title` (prop `actions` pour un bouton à droite), `Header` (bandeau du haut) ;
+  - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
+  - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
+  - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
+  - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).
+- Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--padding-medium`, `--font-size-small`, `--shadow-large`…) : pas de valeur d'espacement, de taille de texte, d'arrondi ou d'ombre en dur. Une dimension propre à un composant devient une variable locale sur son bloc (`.header { --header-height: 100px; }`). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
+- Le CSS propre à une route va dans un fichier à côté (`routes/login.css`, `routes/list.css`).
 - Variantes communes : `type: "primary" | "danger" | "success"`, `size: "small" | "medium" | "large"`.
-- Pour tout nouveau code, **privilégier les composants maison** plutôt que Mantine.
-- **À préciser** : par quoi remplacer `notifications`, `Menu`, `ActionIcon` et les primitives de mise en page (`Container`, `Paper`, `Flex`, `SimpleGrid`, `Space`…) ?
+- `Button` est en `type="button"` par défaut : seul `isSubmit` envoie un formulaire.
+- Un lien saisi par un·e utilisateurice ne s'affiche qu'après `isHttpUrl()` (`utils/url.ts`), avec `rel="noopener noreferrer"`.
 
 ## Points d'attention connus
 
@@ -160,7 +167,7 @@ Objectif affiché dans `todo.md` : **supprimer Mantine**.
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
-- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 4 faites ; suivant : suppression de Mantine). Inclut la migration react-hook-form → TanStack Form et la suppression de Mantine.
+- `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (étapes 1 à 5 faites ; suivant : React 19).
 - `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
@@ -168,6 +175,5 @@ Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilis
 Petites tâches, voir `todo.md`. À ce jour :
 
 - Améliorer les pages hors `PrivateLayout` avec le nouveau composant `Page` (CSS)
-- Supprimer Mantine (étape 5 du plan d'upgrade)
 - Revoir l'UX du formulaire d'ajout de cadeaux (à faire avec l'étape 4 du plan d'upgrade)
 - Corriger le bug quand on veut rejoindre une liste sans être connecté·e

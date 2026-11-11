@@ -1,9 +1,11 @@
-import { FullList } from "../../interfaces/List.ts";
+import "./ListUserForm.css";
+
 import { FC, useMemo } from "react";
-import { ActionIcon, Table, Text } from "@mantine/core";
 import { IconLink, IconTrash } from "@tabler/icons-react";
-import { notifications } from "@mantine/notifications";
+import { FullList } from "../../interfaces/List.ts";
+import { useToast } from "../Toast/toastContext.ts";
 import Button from "../Button/Button.tsx";
+import Table from "../Table/Table.tsx";
 
 type ListUserFormProps = {
   list: FullList;
@@ -16,13 +18,13 @@ const ListUserForm: FC<ListUserFormProps> = ({
   handleOnRemove,
   loading,
 }) => {
+  const toast = useToast();
   const allowedUsers = useMemo(() => list.allowedUsers ?? [], [list]);
 
   async function copyLink() {
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
     await navigator.clipboard.writeText(`${baseUrl}/invite/${list.id}`);
-    notifications.show({
-      position: "top-right",
+    toast.show({
       title: "Ajouter un•e utilisateurice",
       message:
         "Le lien d'ajout d'un•e nouvel•le utilisateurice à été copié dans votre presse papiers",
@@ -30,7 +32,7 @@ const ListUserForm: FC<ListUserFormProps> = ({
   }
 
   return (
-    <div>
+    <div className="list-user-form">
       <Button
         icon={<IconLink />}
         position="right"
@@ -41,42 +43,25 @@ const ListUserForm: FC<ListUserFormProps> = ({
         Copier le lien de l'invitation
       </Button>
 
-      <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Utilisateurices</Table.Th>
-            <Table.Th>Actions</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {allowedUsers.length > 0 ? (
-            allowedUsers.map((user) => (
-              <Table.Tr key={user.userUID}>
-                <Table.Td>{user.username}</Table.Td>
-                <Table.Td>
-                  <ActionIcon
-                    loading={loading}
-                    variant="filled"
-                    aria-label="Supprimer"
-                    color="red"
-                    onClick={() => handleOnRemove(user.userUID)}
-                  >
-                    <IconTrash
-                      style={{ width: "70%", height: "70%" }}
-                      stroke={1.5}
-                    />
-                  </ActionIcon>
-                </Table.Td>
-              </Table.Tr>
-            ))
-          ) : (
-            <Table.Tr>
-              <Table.Td colSpan={2}>
-                <Text ta="center">Aucun•e utilisateurice</Text>
-              </Table.Td>
-            </Table.Tr>
-          )}
-        </Table.Tbody>
+      <Table
+        emptyMessage="Aucun•e utilisateurice"
+        headers={["Utilisateurices", "Actions"]}
+      >
+        {allowedUsers.map((user) => (
+          <tr className="table__row" key={user.userUID}>
+            <td className="table__cell">{user.username}</td>
+            <td className="table__cell">
+              <Button
+                ariaLabel="Supprimer"
+                icon={<IconTrash size={16} stroke={1.5} />}
+                loading={loading}
+                size="small"
+                type="danger"
+                onClick={() => handleOnRemove(user.userUID)}
+              />
+            </td>
+          </tr>
+        ))}
       </Table>
     </div>
   );

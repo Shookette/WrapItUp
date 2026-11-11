@@ -15,11 +15,23 @@
 
 .table__header,
 .table__cell {
-  border-bottom: 1px solid var(--input-color);
+  border-bottom: 1px solid var(--border-color);
   padding: var(--padding-small);
   vertical-align: top;
 }
 
 .table__cell--empty {
   text-align: center;
+}
+
+.table__cell--clickable {
+  cursor: pointer;
+}
+
+.table--striped tbody .table__row:nth-child(odd) {
+  background-color: var(--striped-color);
+}
+
+.table--hoverable tbody .table__row:hover {
+  background-color: var(--hover-color);
 }
