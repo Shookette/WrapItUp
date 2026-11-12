@@ -125,7 +125,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 - **Chargement des données** : via le `loader` de la route ; après une écriture, rafraîchir avec `router.invalidate()`.
 - **Protection des routes** : `beforeLoad: ({ context, location }) => isAuthenticated(context, location)`. Le contexte du routeur contient `auth` (le `UserProvider`), injecté dans `main.tsx`.
 - **Contrôle propriétaire / invité·e** : fait dans le composant (redirection vers `/` si l'accès n'est pas autorisé).
-- **Authentification** (`hooks/UserContext.tsx`) : l'utilisateurice Firebase est mis·e en cache dans `localStorage` (clé `wrapitup.user`). L'email doit être vérifié pour que la session soit restaurée. L'inscription crée aussi un document `profils`.
+- **Authentification** (`hooks/UserContext.tsx`) : la session est celle que Firebase persiste lui-même (IndexedDB), rien n'est copié dans `localStorage`. Le `UserProvider` ne rend rien tant que Firebase n'a pas restauré la session (premier `onAuthStateChanged`), pour que les gardes des routes voient le bon état. Un email **non vérifié** n'ouvre pas de session : `login` déconnecte et renvoie `EMAIL_NOT_VERIFIED_ERROR` (la page de connexion propose de renvoyer l'email), et les règles Firestore l'imposent aussi. L'inscription crée le document `profils` (seule écriture permise avant vérification), envoie l'email de vérification puis déconnecte.
 - **Formulaires** : TanStack Form via `useAppForm` (`src/hooks/useAppForm.ts`) :
   ```tsx
   const form = useAppForm({
@@ -173,7 +173,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 ## Points d'attention connus
 
-- **Sécurité Firestore** (`firestore.rules`) : listes lisibles par id par toute personne connectée (lien d'invitation), requêtes limitées à ses listes ; seul·e le ou la propriétaire modifie ou supprime ; un·e invité·e peut seulement réserver (`presents`), rejoindre (s'ajouter) ou quitter (se retirer) ; profils modifiables par leur seul·e titulaire (champ `userUID`). Toute nouvelle écriture doit passer ces règles : ajouter le cas dans les tests.
+- **Sécurité Firestore** (`firestore.rules`) : tout exige un email vérifié (`email_verified`), sauf la création de son profil à l'inscription ; listes lisibles par id par toute personne connectée (lien d'invitation), requêtes limitées à ses listes ; seul·e le ou la propriétaire modifie ou supprime ; un·e invité·e peut seulement réserver (`presents`), rejoindre (s'ajouter) ou quitter (se retirer) ; profils modifiables par leur seul·e titulaire (champ `userUID`). Toute nouvelle écriture doit passer ces règles : ajouter le cas dans les tests.
 - **Limites restantes** : le secret des réservations n'est garanti que par l'interface (réservations imbriquées dans la liste, cf. `docs/security-audit.md` §1.3), et un·e invité·e peut réécrire le contenu des cadeaux.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
 - Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
@@ -183,7 +183,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 
 - `docs/upgrade-plan.md` : **plan d'upgrade des dépendances**, une étape = une PR (toutes les étapes sont faites).
-- `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 jetons dans `localStorage`, email non vérifié au login, dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
+- `docs/security-audit.md` : **audit de sécurité** du 8 novembre 2026, priorisé (🔴 règles Firestore ouvertes, XSS via l'URL d'un cadeau ; 🟠 dépendances vulnérables, réservations concurrentes ; 🟡 config Firebase, en-têtes HTTP, CI…).
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
 

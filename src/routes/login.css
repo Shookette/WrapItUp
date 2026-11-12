@@ -8,3 +8,8 @@
   display: grid;
   margin-top: var(--padding-large);
 }
+
+.login__resend {
+  display: grid;
+  margin-bottom: var(--padding-medium);
+}
