@@ -22,7 +22,9 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
-      - run: npm ci && npm run format:check && npm run lint && npm run test:rules && npm run build
+      # build en mode preview : clé API « Dev / previews » (.env), le domaine
+      # du canal de preview n'étant pas autorisé sur la clé de production
+      - run: npm ci && npm run format:check && npm run lint && npm run test:rules && npm run build:preview
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
