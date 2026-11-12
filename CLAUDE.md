@@ -41,7 +41,13 @@ Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && np
   - `.env.production` (`npm run build`, production) : « Browser key », restreinte aux API Identity Toolkit, Token Service, Cloud Firestore **et** aux domaines de production ;
   - `.env` (`npm run dev` et `npm run build:preview`, utilisé par la CI des PR) : clé « Dev / previews », restreinte aux mêmes API mais **sans restriction de site** (localhost et canaux de preview, dont le domaine change à chaque PR).
   - Un nouveau domaine de production doit être ajouté aux restrictions de la « Browser key » (console Google Cloud → Identifiants), sinon la connexion y échoue (`API_KEY_HTTP_REFERRER_BLOCKED`).
-  - La liste des domaines autorisés n'est pas secrète (ils sont publics) et ne protège que contre une utilisation de la clé depuis un autre site : un script peut falsifier le référent. La vraie protection des données reste les règles Firestore (et App Check, à venir).
+  - La liste des domaines autorisés n'est pas secrète (ils sont publics) et ne protège que contre une utilisation de la clé depuis un autre site : un script peut falsifier le référent. La vraie protection des données reste les règles Firestore et App Check.
+  - API autorisées sur les deux clés : Identity Toolkit, Token Service, Cloud Firestore, **Firebase App Check**.
+- **App Check** (initialisé dans `src/firebaseLoader.ts`) :
+  - production : reCAPTCHA Enterprise, clé de site `VITE_RECAPTCHA_SITE_KEY` (`.env`, publique), domaines de production autorisés sur cette clé ;
+  - `npm run dev` et previews : **mode debug**. Le SDK génère un jeton par navigateur et l'affiche dans la console (« Firebase App Check debug token: … ») ; l'enregistrer dans la console Firebase (App Check → Applications → menu ⋮ → Gérer les jetons de débogage). En local, un jeton fixe peut être mis dans `.env.local` (`VITE_APPCHECK_DEBUG_TOKEN=…`, non versionné) ;
+  - **jamais de jeton de debug dans un fichier versionné ou dans la CI** : le dépôt et les liens de preview sont publics, ce serait un contournement d'App Check ouvert à tous ;
+  - tant que l'application forcée n'est pas activée (console Firebase → App Check → API), un jeton manquant ou refusé ne bloque rien : seules les métriques le montrent.
 - Les règles Firestore (`firestore.rules`) sont **testées** par la CI mais **pas déployées** : après merge, `firebase deploy --only firestore:rules`.
 
 ## Arborescence

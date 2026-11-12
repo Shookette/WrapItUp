@@ -1,11 +1,8 @@
 import initFirebase from "#/firebaseLoader.ts";
-import { FC, ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
 
-interface Props {
-  children: ReactNode;
-}
-
-const WithFirestore: FC<Props> = ({ children }) => {
+const WithFirestore: FC<PropsWithChildren> = ({ children }) => {
+  // Idempotent : seul le premier appel initialise Firebase et App Check.
   initFirebase();
 
   return <>{children}</>;
