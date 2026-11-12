@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:preview": "tsc && vite build --mode preview",
     "lint": "oxlint --deny-warnings src",
     "preview": "vite preview",
     "format": "oxfmt",

@@ -166,9 +166,9 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 
 ## 🟡 7. Configuration Firebase / Google Cloud
 
-- [ ] Restreindre la **clé API** (console Google Cloud → Identifiants) :
-  - référents HTTP : `wrap-it-up-2d42a.web.app/*`, `wrap-it-up-2d42a.firebaseapp.com/*`, `localhost`, canaux de preview ;
-  - API autorisées : Identity Toolkit, Token Service, Firestore.
+- [x] Restreindre la **clé API** (console Google Cloud → Identifiants), fait le 12/11/2026 :
+  - clé de production (« Browser key ») : référents `wrap-it-up.shoo.ovh/*`, `wrap-it-up-2d42a.web.app/*`, `wrap-it-up-2d42a.firebaseapp.com/*` ; API Identity Toolkit, Token Service, Firestore. Vérifié : un autre référent ou l'absence de référent est refusé (`API_KEY_HTTP_REFERRER_BLOCKED`) ;
+  - Google n'accepte ni joker de port pour `localhost` ni joker au milieu d'un domaine (`wrap-it-up-2d42a--*.web.app`) : une seconde clé « Dev / previews », limitée aux mêmes API mais sans restriction de site, sert à `npm run dev` et aux canaux de preview (`.env`, `npm run build:preview`).
 - [ ] Activer **Firebase App Check** (reCAPTCHA Enterprise) et l'imposer sur Firestore.
 - [ ] Firebase Auth :
   - [ ] activer la protection contre l'énumération des emails ;

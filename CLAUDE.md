@@ -19,7 +19,8 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 
 ```bash
 npm run dev           # serveur de développement Vite
-npm run build         # tsc + vite build (sortie dans dist/)
+npm run build         # tsc + vite build (sortie dans dist/), clé API de production
+npm run build:preview # idem en mode preview (clé « Dev / previews »), utilisé par la CI des PR
 npm run lint          # oxlint sur src/, 0 warning toléré (--deny-warnings)
 npm run format        # oxfmt : formate tout le projet
 npm run format:check  # oxfmt --check : vérifie sans modifier
@@ -35,7 +36,12 @@ Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && np
 
 - **Push sur `main` → déploiement automatique en production** sur Firebase Hosting (`.github/workflows/firebase-hosting-merge.yml`).
 - Chaque **pull request** déploie un canal de prévisualisation (`firebase-hosting-pull-request.yml`).
-- Projet Firebase : `wrap-it-up-2d42a`. La config client est dans `src/firebaseLoader.ts` (clé API publique par nature côté web).
+- Projet Firebase : `wrap-it-up-2d42a`. Domaines de production : `wrap-it-up.shoo.ovh` (domaine personnalisé), `wrap-it-up-2d42a.web.app`, `wrap-it-up-2d42a.firebaseapp.com`.
+- **Config client Firebase** : variables `VITE_FIREBASE_*` lues par `src/firebaseLoader.ts`, versionnées (rien de secret, tout finit dans le JS du navigateur). Deux clés API :
+  - `.env.production` (`npm run build`, production) : « Browser key », restreinte aux API Identity Toolkit, Token Service, Cloud Firestore **et** aux domaines de production ;
+  - `.env` (`npm run dev` et `npm run build:preview`, utilisé par la CI des PR) : clé « Dev / previews », restreinte aux mêmes API mais **sans restriction de site** (localhost et canaux de preview, dont le domaine change à chaque PR).
+  - Un nouveau domaine de production doit être ajouté aux restrictions de la « Browser key » (console Google Cloud → Identifiants), sinon la connexion y échoue (`API_KEY_HTTP_REFERRER_BLOCKED`).
+  - La liste des domaines autorisés n'est pas secrète (ils sont publics) et ne protège que contre une utilisation de la clé depuis un autre site : un script peut falsifier le référent. La vraie protection des données reste les règles Firestore (et App Check, à venir).
 - Les règles Firestore (`firestore.rules`) sont **testées** par la CI mais **pas déployées** : après merge, `firebase deploy --only firestore:rules`.
 
 ## Arborescence
@@ -43,7 +49,7 @@ Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && np
 ```
 src/
   main.tsx              # point d'entrée : providers (Toast, Firebase, UserProvider) + routeur
-  firebaseLoader.ts     # initialisation Firebase
+  firebaseLoader.ts     # initialisation Firebase (config lue dans .env / .env.production)
   theme.css             # variables CSS globales (couleurs, tailles, espacements)
   routes/               # une route = un fichier (TanStack Router)
   components/           # composants UI (maison + layouts)
