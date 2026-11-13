@@ -46,10 +46,15 @@ const baseList = {
 
 let env: RulesTestEnvironment;
 
-const db = (uid?: string) =>
+// Par défaut, une personne connectée a vérifié son email.
+const db = (uid?: string, { emailVerified = true } = {}) =>
   uid
-    ? env.authenticatedContext(uid).firestore()
+    ? env
+        .authenticatedContext(uid, { email_verified: emailVerified })
+        .firestore()
     : env.unauthenticatedContext().firestore();
+
+const unverifiedDb = (uid: string) => db(uid, { emailVerified: false });
 
 before(async () => {
   env = await initializeTestEnvironment({
@@ -312,6 +317,62 @@ describe("profils", () => {
     await assertSucceeds(
       updateDoc(doc(db(OWNER), "profils", "profil-owner"), {
         username: "Nouveau nom",
+      }),
+    );
+  });
+});
+
+describe("email non vérifié", () => {
+  test("lire une liste par id : refusé", async () => {
+    await assertFails(getDoc(doc(unverifiedDb(GUEST), "lists", LIST_ID)));
+  });
+
+  test("« Mes listes » : refusé", async () => {
+    const q = query(
+      collection(unverifiedDb(OWNER), "lists"),
+      where("userUID", "==", OWNER),
+    );
+    await assertFails(getDocs(q));
+  });
+
+  test("créer une liste : refusé", async () => {
+    await assertFails(
+      setDoc(doc(unverifiedDb(STRANGER), "lists", "list-2"), {
+        ...baseList,
+        id: "list-2",
+        userUID: STRANGER,
+      }),
+    );
+  });
+
+  test("rejoindre une liste : refusé", async () => {
+    await assertFails(
+      updateDoc(doc(unverifiedDb(STRANGER), "lists", LIST_ID), {
+        allowedUsers: [GUEST, STRANGER],
+      }),
+    );
+  });
+
+  test("lire les profils : refusé", async () => {
+    await assertFails(getDocs(collection(unverifiedDb(STRANGER), "profils")));
+  });
+
+  test("créer son profil à l'inscription : autorisé", async () => {
+    await assertSucceeds(
+      setDoc(doc(unverifiedDb(STRANGER), "profils", "profil-stranger"), {
+        id: "profil-stranger",
+        userUID: STRANGER,
+        username: "Moi",
+      }),
+    );
+  });
+
+  test("créer le profil de quelqu'un d'autre : refusé", async () => {
+    await assertFails(
+      setDoc(doc(unverifiedDb(STRANGER), "profils", "faux"), {
+        id: "faux",
+        userUID: OWNER,
+        username: "Usurpation",
       }),
     );
   });

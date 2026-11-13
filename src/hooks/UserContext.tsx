@@ -26,9 +26,13 @@ import { UpdateUser } from "#/interfaces/Profil.ts";
 const FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL =
   "Firebase: Error (auth/invalid-credential).";
 
+export const EMAIL_NOT_VERIFIED_ERROR =
+  "Votre email n'est pas encore vérifié : cliquez sur le lien reçu par email, puis reconnectez-vous.";
+
 type UserProvider = {
   user: User | null;
   login: (email: string, password: string) => Promise<null | string>;
+  resendVerificationEmail: (email: string, password: string) => Promise<void>;
   register: (
     email: string,
     password: string,
@@ -45,35 +49,21 @@ type hookUserContext = () => UserProvider;
 
 const UserContext = createContext<UserProvider | null>(null);
 
-const key = "wrapitup.user";
-
-function getStoredUser() {
-  const storedUser = localStorage.getItem(key);
-  if (!storedUser) {
-    return null;
-  }
-  return JSON.parse(storedUser) as User;
-}
-
-function setStoredUser(user: User | null) {
-  if (user) {
-    localStorage.setItem(key, JSON.stringify(user));
-  } else {
-    localStorage.removeItem(key);
-  }
-}
+// Ancien cache de session (contenait les jetons Firebase) : on le supprime
+// chez celles et ceux qui l'ont encore. Firebase persiste déjà la session.
+localStorage.removeItem("wrapitup.user");
 
 const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(getStoredUser());
+  const [user, setUser] = useState<User | null>(null);
+  // Vrai tant que Firebase n'a pas restauré (ou non) la session.
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth();
   const isAuthenticated = !!user;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.emailVerified) {
-        setUser(user);
-        setStoredUser(user);
-      }
+      setUser(user?.emailVerified ? user : null);
+      setIsLoading(false);
     });
     return unsubscribe;
   }, [auth]);
@@ -88,8 +78,11 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
           password,
         );
         const user = userCredential.user;
+        if (!user.emailVerified) {
+          await signOut(auth);
+          return EMAIL_NOT_VERIFIED_ERROR;
+        }
         setUser(user);
-        setStoredUser(user);
       } catch (error: unknown) {
         if (error instanceof FirebaseError) {
           if (error.message === FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL) {
@@ -101,6 +94,18 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       return errorMessage;
+    },
+    [auth],
+  );
+
+  const resendVerificationEmail = useCallback(
+    async (email: string, password: string) => {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      try {
+        await sendEmailVerification(user);
+      } finally {
+        await signOut(auth);
+      }
     },
     [auth],
   );
@@ -121,6 +126,8 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
           id: crypto.randomUUID(),
         });
         await sendEmailVerification(userCredential.user);
+        // L'inscription connecte automatiquement : on attend la vérification.
+        await signOut(auth);
       } catch (error: unknown) {
         if (error instanceof FirebaseError) {
           console.error(`erreur lors de l'inscription: ${error.message}`);
@@ -153,18 +160,12 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       }
 
       await updateProfile(auth.currentUser, { displayName: data.displayName });
-
-      setStoredUser({
-        ...user,
-        displayName: data.displayName,
-      });
     },
     [user],
   );
 
   const logout = useCallback(async () => {
     await signOut(auth);
-    setStoredUser(null);
     setUser(null);
   }, [auth]);
 
@@ -177,6 +178,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     user,
     isAuthenticated,
     login,
+    resendVerificationEmail,
     register,
     logout,
     resetPassword,
@@ -186,7 +188,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <UserContext.Provider value={userProviderValue}>
-      {children}
+      {isLoading ? null : children}
     </UserContext.Provider>
   );
 };

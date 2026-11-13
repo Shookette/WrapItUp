@@ -109,7 +109,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 
 - [x] Valider le protocole à l'affichage : n'afficher le lien que si `new URL(url).protocol` vaut `http:` ou `https:` (`utils/url.ts`, `isHttpUrl`).
 - [x] Valider aussi à l'enregistrement (`ListEdit/listFormOptions.ts`, schéma zod : vide ou `http(s)://`). Insuffisant seul : les règles Firestore étant ouvertes, l'affichage doit aussi valider.
-- [ ] Valider dans les règles Firestore (`url.matches('^https?://.*')`).
+- [ ] Valider dans les règles Firestore (`url.matches('^https?://.*')`). Impossible tant que les cadeaux sont imbriqués dans un tableau (pas de boucle dans les règles) : à faire avec la sous-collection (§1.3).
 - [x] Ajouter `rel="noopener noreferrer"` sur les liens externes.
 
 ---
@@ -123,10 +123,10 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 - n'est pas vidée par `deleteCurrentUser` ;
 - n'est pas invalidée quand Firebase termine la session (`onAuthStateChanged(null)` est ignoré).
 
-- [ ] Ne plus stocker l'objet `User` complet. Au mieux `{ uid, displayName, email }`.
-- [ ] Mieux : supprimer ce cache et attendre le premier `onAuthStateChanged` (état « chargement ») avant de rendre le routeur. Firebase persiste déjà la session (IndexedDB).
-- [ ] Gérer `onAuthStateChanged(null)` → `setUser(null)`.
-- [ ] Vider le cache dans `deleteCurrentUser`.
+- [x] Ne plus stocker l'objet `User` complet. Au mieux `{ uid, displayName, email }`.
+- [x] Mieux : supprimer ce cache et attendre le premier `onAuthStateChanged` (état « chargement ») avant de rendre le routeur. Firebase persiste déjà la session (IndexedDB).
+- [x] Gérer `onAuthStateChanged(null)` → `setUser(null)`.
+- [x] Vider le cache dans `deleteCurrentUser`.
 
 ---
 
@@ -136,8 +136,8 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 
 `login()` fait `setUser(user)` **sans tester `emailVerified`**. Seule la restauration de session vérifie. On peut donc utiliser l'app avec un email non vérifié (donc celui de quelqu'un d'autre).
 
-- [ ] Tester `user.emailVerified` dans `login`, sinon `signOut` + message (« vérifiez votre email », avec bouton de renvoi).
-- [ ] Imposer `request.auth.token.email_verified == true` dans les règles (sinon le contrôle reste contournable).
+- [x] Tester `user.emailVerified` dans `login`, sinon `signOut` + message (« vérifiez votre email », avec bouton de renvoi).
+- [x] Imposer `request.auth.token.email_verified == true` dans les règles (sinon le contrôle reste contournable).
 
 ---
 

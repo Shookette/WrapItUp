@@ -12,8 +12,11 @@ rules_version = '2';
 //   c'est le principe du lien d'invitation (`/invite/$listId`).
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Connecté·e avec un email vérifié : un email non vérifié peut être
+    // celui de quelqu'un d'autre (audit §4).
     function signedIn() {
-      return request.auth != null;
+      return request.auth != null
+        && request.auth.token.email_verified == true;
     }
 
     function uid() {
@@ -102,7 +105,9 @@ service cloud.firestore {
       }
 
       allow read: if signedIn();
-      allow create: if signedIn() && isValidProfil(request.resource.data);
+      // Le profil est créé à l'inscription, avant la vérification de l'email.
+      allow create: if request.auth != null
+        && isValidProfil(request.resource.data);
       allow update: if signedIn()
         && resource.data.userUID == uid()
         && isValidProfil(request.resource.data);
