@@ -3,6 +3,7 @@ import { revalidateLogic } from "@tanstack/react-form";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { IconExclamationCircle } from "@tabler/icons-react";
+import { FirebaseError } from "firebase/app";
 import {
   EMAIL_NOT_VERIFIED_ERROR,
   useUserContext,
@@ -30,6 +31,13 @@ const loginSchema = z.object({
   email: emailSchema,
   password: requiredString("Le mot de passe est obligatoire"),
 });
+
+// Codes d'erreur Firebase Auth du renvoi de l'email de vérification.
+const resendErrorMessages: Record<string, string> = {
+  "auth/too-many-requests": `Un email de vérification vient déjà d'être envoyé : attendez quelques minutes avant d'en redemander un`,
+  "auth/invalid-credential": `L'email ou le mot de passe est incorrect`,
+  default: `L'email n'a pas pu être envoyé, réessayez dans quelques minutes`,
+};
 
 function LoginComponent() {
   const { login, resendVerificationEmail, user } = useUserContext();
@@ -64,10 +72,12 @@ function LoginComponent() {
         type: "success",
         message: `Un nouvel email de vérification a été envoyé à ${email}`,
       });
-    } catch {
+    } catch (error: unknown) {
+      const code = error instanceof FirebaseError ? error.code : null;
+      console.error("renvoi de l'email de vérification :", error);
       toast.show({
         type: "danger",
-        message: `L'email n'a pas pu être envoyé, réessayez dans quelques minutes`,
+        message: resendErrorMessages[code ?? ""] ?? resendErrorMessages.default,
       });
     } finally {
       setIsResending(false);
