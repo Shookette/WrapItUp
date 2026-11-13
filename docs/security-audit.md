@@ -182,11 +182,12 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 
 ## 🟡 8. Authentification et parcours utilisateurice
 
-- [ ] **Paramètre `?redirect=`** (`login.tsx`) passé tel quel à `navigate({ to: redirect })`. Valider qu'il commence par `/` et pas par `//` (prévention d'une redirection ouverte — non vérifié si TanStack Router l'accepte, mais autant fermer la porte).
-- [ ] **Inscription** (`register`) : si `setProfil` échoue après `createUserWithEmailAndPassword`, le compte existe sans profil, l'erreur est juste loguée. Afficher l'erreur et/ou réessayer.
-- [ ] `register.tsx` redirige vers `/login` même en cas d'échec : remonter l'erreur à l'écran.
-- [ ] **Suppression de compte (RGPD)** : `deleteCurrentUser` existe mais n'est appelé nulle part. Ajouter le bouton dans `/account`, et supprimer aussi les listes et le profil (et retirer l'uid des `allowedUsers` des autres listes). Une Cloud Function `auth.user().onDelete` est la solution la plus fiable.
-- [ ] Mettre `lang="fr"` dans `index.html` (accessibilité, pas sécurité).
+- [x] **Paramètre `?redirect=`** (`login.tsx`) passé tel quel à `navigate({ to: redirect })`. Valider qu'il commence par `/` et pas par `//` (prévention d'une redirection ouverte — non vérifié si TanStack Router l'accepte, mais autant fermer la porte).
+- [x] **Inscription** (`register`) : si `setProfil` échoue après `createUserWithEmailAndPassword`, le compte existe sans profil, l'erreur est juste loguée. Afficher l'erreur et/ou réessayer. → le compte est annulé (`deleteUser`) et l'erreur affichée.
+- [x] `register.tsx` redirige vers `/login` même en cas d'échec : remonter l'erreur à l'écran.
+- [x] **Suppression de compte (RGPD)** : `deleteCurrentUser` existe mais n'est appelé nulle part. Ajouter le bouton dans `/account`, et supprimer aussi les listes et le profil (et retirer l'uid des `allowedUsers` des autres listes). Une Cloud Function `auth.user().onDelete` est la solution la plus fiable.
+  - Fait côté client (`AccountRepository.deleteAccountData`, section « Supprimer mon compte » de `/account`, mot de passe redemandé) : listes supprimées, réservations annulées, retrait des listes des autres, profil supprimé, puis compte. Si une étape échoue, le compte n'est pas supprimé et on peut réessayer. Une Cloud Function resterait plus robuste (suppression depuis la console Firebase, coupure en cours de route).
+- [x] Mettre `lang="fr"` dans `index.html` (accessibilité, pas sécurité).
 
 ---
 

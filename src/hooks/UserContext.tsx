@@ -11,6 +11,8 @@ import {
   User,
   createUserWithEmailAndPassword,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   getAuth,
   onAuthStateChanged,
   sendEmailVerification,
@@ -22,9 +24,20 @@ import {
 
 import { FirebaseError } from "firebase/app";
 import { setProfil } from "#/repository/ProfilRepository.ts";
+import { deleteAccountData } from "#/repository/AccountRepository.ts";
 import { UpdateUser } from "#/interfaces/Profil.ts";
 const FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL =
   "Firebase: Error (auth/invalid-credential).";
+
+// Codes d'erreur Firebase Auth de l'inscription.
+const REGISTER_ERRORS: Record<string, string> = {
+  "auth/email-already-in-use": "Un compte existe déjà avec cet email",
+  "auth/invalid-email": "L'email n'est pas valide",
+  "auth/weak-password": "Le mot de passe est trop faible",
+  "auth/too-many-requests":
+    "Trop de tentatives : réessayez dans quelques minutes",
+  default: "Une erreur est survenue lors de l'inscription, veuillez réessayer",
+};
 
 export const EMAIL_NOT_VERIFIED_ERROR =
   "Votre email n'est pas encore vérifié : cliquez sur le lien reçu par email, puis reconnectez-vous.";
@@ -33,15 +46,17 @@ type UserProvider = {
   user: User | null;
   login: (email: string, password: string) => Promise<null | string>;
   resendVerificationEmail: (email: string, password: string) => Promise<void>;
+  /** Renvoie un message d'erreur, ou `null` si l'inscription a réussi. */
   register: (
     email: string,
     password: string,
     userName: string,
-  ) => Promise<void>;
+  ) => Promise<null | string>;
   resetPassword: (email: string) => Promise<void>;
   updateUser: (data: UpdateUser) => Promise<void>;
   logout: () => Promise<void>;
-  deleteCurrentUser: (user: User) => Promise<void>;
+  /** Supprime le compte et toutes ses données, après ressaisie du mot de passe. */
+  deleteAccount: (password: string) => Promise<void>;
   isAuthenticated: boolean;
 };
 
@@ -112,27 +127,46 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const register = useCallback(
     async (email: string, password: string, userName: string) => {
+      let user: User;
       try {
-        const userCredential = await createUserWithEmailAndPassword(
+        ({ user } = await createUserWithEmailAndPassword(
           auth,
           email,
           password,
-        );
-        const user = userCredential.user;
+        ));
+      } catch (error: unknown) {
+        console.error("erreur lors de l'inscription :", error);
+        const code = error instanceof FirebaseError ? error.code : "";
+        return REGISTER_ERRORS[code] ?? REGISTER_ERRORS.default;
+      }
+
+      try {
         await updateProfile(user, { displayName: userName });
         await setProfil({
           userUID: user.uid,
           username: userName,
           id: crypto.randomUUID(),
         });
-        await sendEmailVerification(userCredential.user);
-        // L'inscription connecte automatiquement : on attend la vérification.
-        await signOut(auth);
       } catch (error: unknown) {
-        if (error instanceof FirebaseError) {
-          console.error(`erreur lors de l'inscription: ${error.message}`);
-        }
+        // Sans profil, le compte est inutilisable : on l'annule pour que
+        // l'inscription puisse être refaite avec le même email.
+        console.error("erreur lors de la création du profil :", error);
+        await deleteUser(user).catch(() => signOut(auth));
+        return REGISTER_ERRORS.default;
       }
+
+      try {
+        await sendEmailVerification(user);
+      } catch (error: unknown) {
+        // Le compte existe : l'email pourra être renvoyé depuis la connexion.
+        console.error(
+          "erreur lors de l'envoi de l'email de vérification :",
+          error,
+        );
+      }
+      // L'inscription connecte automatiquement : on attend la vérification.
+      await signOut(auth);
+      return null;
     },
     [auth],
   );
@@ -169,10 +203,23 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     setUser(null);
   }, [auth]);
 
-  const deleteCurrentUser = useCallback(async (user: User) => {
-    await deleteUser(user);
-    return setUser(null);
-  }, []);
+  const deleteAccount = useCallback(
+    async (password: string) => {
+      const currentUser = auth.currentUser;
+      if (!currentUser?.email) {
+        return;
+      }
+      // Firebase exige une connexion récente pour supprimer un compte.
+      await reauthenticateWithCredential(
+        currentUser,
+        EmailAuthProvider.credential(currentUser.email, password),
+      );
+      await deleteAccountData(currentUser.uid);
+      await deleteUser(currentUser);
+      setUser(null);
+    },
+    [auth],
+  );
 
   const userProviderValue: UserProvider = {
     user,
@@ -183,7 +230,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     logout,
     resetPassword,
     updateUser,
-    deleteCurrentUser,
+    deleteAccount,
   };
 
   return (
