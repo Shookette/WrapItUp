@@ -19,7 +19,14 @@ import { useToast } from "#/components/Toast/toastContext.ts";
 import "./login.css";
 
 const loginSearchSchema = z.object({
-  redirect: z.optional(z.string()),
+  // Chemin interne uniquement : `//site.com` ou `/\site.com` seraient
+  // compris comme un autre site (redirection ouverte, audit §8).
+  // Une valeur invalide est ignorée (redirection vers l'accueil).
+  redirect: z
+    .string()
+    .regex(/^\/(?![/\\])/)
+    .optional()
+    .catch(undefined),
 });
 
 export const Route = createFileRoute("/login")({

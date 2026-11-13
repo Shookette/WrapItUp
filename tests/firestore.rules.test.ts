@@ -9,6 +9,7 @@ import {
   type RulesTestEnvironment,
 } from "@firebase/rules-unit-testing";
 import {
+  arrayRemove,
   collection,
   deleteDoc,
   doc,
@@ -313,11 +314,40 @@ describe("profils", () => {
     );
   });
 
+  test("supprimer le profil de quelqu'un d'autre : refusé", async () => {
+    await assertFails(deleteDoc(doc(db(STRANGER), "profils", "profil-owner")));
+  });
+
+  test("supprimer son propre profil (suppression du compte) : autorisé", async () => {
+    await assertSucceeds(deleteDoc(doc(db(OWNER), "profils", "profil-owner")));
+  });
+
   test("modifier son propre profil : autorisé", async () => {
     await assertSucceeds(
       updateDoc(doc(db(OWNER), "profils", "profil-owner"), {
         username: "Nouveau nom",
       }),
+    );
+  });
+});
+
+describe("suppression du compte d'un·e invité·e", () => {
+  test("annuler ses réservations puis quitter la liste : autorisé", async () => {
+    await env.withSecurityRulesDisabled(async (context) => {
+      await updateDoc(doc(context.firestore(), "lists", LIST_ID), {
+        presents: [
+          present("p1", { status: "reserved", reservedBy: GUEST }),
+          present("p2"),
+        ],
+      });
+    });
+    await assertSucceeds(
+      updateDoc(listRef(GUEST), {
+        presents: [present("p1", { reservedBy: "" }), present("p2")],
+      }),
+    );
+    await assertSucceeds(
+      updateDoc(listRef(GUEST), { allowedUsers: arrayRemove(GUEST) }),
     );
   });
 });

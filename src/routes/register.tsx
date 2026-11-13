@@ -1,13 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { revalidateLogic } from "@tanstack/react-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
+import { IconExclamationCircle } from "@tabler/icons-react";
 import { useUserContext } from "#/hooks/UserContext.tsx";
 import { useAppForm } from "#/hooks/useAppForm.ts";
 import { emailSchema, usernameSchema } from "#/utils/formSchemas.ts";
+import Banner from "#/components/Banner/Banner.tsx";
 import Center from "#/components/Center/Center.tsx";
 import Page from "#/components/Page/Page.tsx";
 import Title from "#/components/Title/Title.tsx";
+import { useToast } from "#/components/Toast/toastContext.ts";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
@@ -24,6 +27,8 @@ const registerSchema = z.object({
 
 function RegisterComponent() {
   const { register: userRegister, user } = useUserContext();
+  const [error, setError] = useState<null | string>(null);
+  const toast = useToast();
 
   const navigate = Route.useNavigate();
 
@@ -38,7 +43,19 @@ function RegisterComponent() {
     validationLogic: revalidateLogic(),
     validators: { onDynamic: registerSchema },
     onSubmit: async ({ value }) => {
-      await userRegister(value.email, value.password, value.username.trim());
+      const registerError = await userRegister(
+        value.email,
+        value.password,
+        value.username.trim(),
+      );
+      setError(registerError);
+      if (registerError) {
+        return;
+      }
+      toast.show({
+        type: "success",
+        message: `Un email de vérification a été envoyé à ${value.email} : cliquez sur le lien qu'il contient avant de vous connecter`,
+      });
       await navigate({ to: "/login" });
     },
   });
@@ -59,6 +76,11 @@ function RegisterComponent() {
 
       <Page size="md">
         <Title>Inscription</Title>
+        {error && (
+          <Banner iconPrefix={<IconExclamationCircle />} type="danger">
+            {error}
+          </Banner>
+        )}
         <form.AppForm>
           <form.Form>
             <form.AppField name="email">
