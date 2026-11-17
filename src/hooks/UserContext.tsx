@@ -39,6 +39,19 @@ const REGISTER_ERRORS: Record<string, string> = {
   default: "Une erreur est survenue lors de l'inscription, veuillez réessayer",
 };
 
+// Codes d'erreur Firebase Auth de la réinitialisation du mot de passe.
+// Avec la protection contre l'énumération des emails, un email inconnu
+// ne renvoie pas d'erreur : aucun mail n'est envoyé.
+const RESET_PASSWORD_ERRORS: Record<string, string> = {
+  "auth/invalid-email": "L'email n'est pas valide",
+  "auth/too-many-requests":
+    "Trop de demandes : réessayez dans quelques minutes",
+  "auth/network-request-failed":
+    "Problème de connexion réseau, veuillez réessayer",
+  default:
+    "L'email de réinitialisation n'a pas pu être envoyé, veuillez réessayer",
+};
+
 export const EMAIL_NOT_VERIFIED_ERROR =
   "Votre email n'est pas encore vérifié : cliquez sur le lien reçu par email, puis reconnectez-vous.";
 
@@ -52,7 +65,8 @@ type UserProvider = {
     password: string,
     userName: string,
   ) => Promise<null | string>;
-  resetPassword: (email: string) => Promise<void>;
+  /** Renvoie un message d'erreur, ou `null` si la demande a été acceptée. */
+  resetPassword: (email: string) => Promise<null | string>;
   updateUser: (data: UpdateUser) => Promise<void>;
   logout: () => Promise<void>;
   /** Supprime le compte et toutes ses données, après ressaisie du mot de passe. */
@@ -172,15 +186,17 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 
   const resetPassword = useCallback(
-    async (email: string): Promise<void> => {
+    async (email: string) => {
       try {
         await sendPasswordResetEmail(auth, email);
+        return null;
       } catch (error: unknown) {
-        if (error instanceof FirebaseError) {
-          console.error(
-            `erreur lors de la réinitialisation du mot de passe: ${error.message}`,
-          );
-        }
+        console.error(
+          "erreur lors de la réinitialisation du mot de passe :",
+          error,
+        );
+        const code = error instanceof FirebaseError ? error.code : "";
+        return RESET_PASSWORD_ERRORS[code] ?? RESET_PASSWORD_ERRORS.default;
       }
     },
     [auth],
