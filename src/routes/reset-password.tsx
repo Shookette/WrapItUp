@@ -7,6 +7,7 @@ import { emailSchema } from "#/utils/formSchemas.ts";
 import Center from "#/components/Center/Center.tsx";
 import Page from "#/components/Page/Page.tsx";
 import Title from "#/components/Title/Title.tsx";
+import { useToast } from "#/components/Toast/toastContext.ts";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
@@ -19,13 +20,25 @@ const resetPasswordSchema = z.object({
 function ResetPasswordComponent() {
   const { resetPassword } = useUserContext();
   const navigate = Route.useNavigate();
+  const toast = useToast();
 
   const form = useAppForm({
     defaultValues: { email: "" },
     validationLogic: revalidateLogic(),
     validators: { onDynamic: resetPasswordSchema },
     onSubmit: async ({ value }) => {
-      await resetPassword(value.email);
+      const error = await resetPassword(value.email);
+      if (error) {
+        toast.show({ type: "danger", message: error });
+        return;
+      }
+      // Firebase ne dit pas si le compte existe (protection contre
+      // l'énumération des emails) : le message reste conditionnel.
+      toast.show({
+        type: "success",
+        title: "Email envoyé",
+        message: `Si un compte existe pour ${value.email}, un lien de réinitialisation vient d'y être envoyé. Pensez à vérifier vos spams.`,
+      });
       await navigate({ to: "/login" });
     },
   });
