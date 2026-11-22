@@ -1,27 +1,44 @@
 :root {
-  --green: #078080;
-  --success-color: #2cb67d;
-  --success-background-color: #2cb67dff;
-  --primary-color: #3da9fc;
-  --danger-color: #f45d48;
-  --danger-background-color: #f45d4866;
-  --input-color: #d3d3d3;
-  --placeholder-color: #a9a9a9;
+  --background-color: #fff8f5;
   --white: #ffffff;
-  --text-color: #000000;
-  --dimmed-color: #868e96;
-  --border-color: #dee2e6;
-  --hover-color: #f1f3f5;
-  --striped-color: #f8f9fa;
+  --text-color: #1e1a1d;
+  --dimmed-color: #6a6168;
+  --border-color: #d9cbc6;
+  --divider-color: #f3eae6;
+  --segmented-color: #f3e8e4;
+  --hover-color: #f8efeb;
+  --striped-color: #fcf4f1;
+
+  --primary-color: #c8302f;
+  --primary-hover-color: #a3201f;
+  --primary-soft-color: #fde7e5;
+  --link-color: #b4262b;
+
+  --success-color: #06676a;
+  --success-soft-color: #ddf1ef;
+  --info-color: #24427f;
+  --info-soft-color: #e7eefb;
+  --warning-color: #8a5a00;
+  --warning-soft-color: #fff0d6;
+  --danger-color: #b4262b;
+  --danger-soft-color: #fff6f5;
+  --neutral-soft-color: #ede6e3;
+
   --header-color: #fa5252;
   --nav-color: #ff8787;
   --nav-link-color: #37b24d;
 
+  --font-family:
+    "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --font-family-title: "Bricolage Grotesque Variable", var(--font-family);
   --font-size-extra-small: 0.7rem;
   --font-size-small: 0.9rem;
   --font-size-medium: 1rem;
   --font-size-large: 1.2rem;
   --font-size-extra-large: 1.625rem;
+  --font-size-title: 1.875rem;
+  --font-size-title-large: 2.25rem;
 
   --padding-extra-small: 0.25rem;
   --padding-small: 0.5rem;
@@ -29,14 +46,22 @@
   --padding-large: 2rem;
   --padding-extra-large: 4rem;
 
-  --border-radius-small: 6px;
-  --border-radius: 10px;
+  --border-width: 1.5px;
+  --border-radius-small: 10px;
+  --border-radius: 14px;
   --border-radius-large: 20px;
+  --border-radius-sheet: 24px;
   --border-radius-round: 999px;
 
-  --shadow-small: rgba(0, 0, 0, 0.05) 0 1px 3px;
-  --shadow-medium: rgba(0, 0, 0, 0.15) 0 4px 12px;
-  --shadow-large: rgba(0, 0, 0, 0.2) 0 0 10px;
+  --shadow-small: 0 1px 3px rgba(30, 26, 29, 0.08);
+  --shadow-medium: 0 6px 24px rgba(30, 26, 29, 0.1);
+  --shadow-large: 0 12px 40px rgba(30, 26, 29, 0.14);
+  --shadow-sheet: 0 -8px 30px rgba(30, 26, 29, 0.18);
+  --overlay-color: rgba(30, 26, 29, 0.45);
+
+  --touch-target: 44px;
+  --control-height: 52px;
+  --control-height-desktop: 48px;
 }
 
 *,
@@ -54,17 +79,21 @@ select {
 
 body {
   margin: 0;
-  background-color: var(--white);
+  background-color: var(--background-color);
   color: var(--text-color);
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: var(--font-family);
   font-size: var(--font-size-medium);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1,
+h2 {
+  font-family: var(--font-family-title);
+  line-height: 1.2;
+}
+
 a {
-  color: var(--primary-color);
+  color: var(--link-color);
 }

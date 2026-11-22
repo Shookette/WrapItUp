@@ -9,7 +9,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | #   | Étape                                                   | Risque      | État       |
 | --- | ------------------------------------------------------- | ----------- | ---------- |
 | 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait    |
-| 1   | Thème : variables, polices, contrastes                  | faible      | ⬜ à faire |
+| 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait    |
 | 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ⬜ à faire |
 | 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ⬜ à faire |
 | 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ⬜ à faire |
@@ -82,8 +82,8 @@ npm i @fontsource-variable/inter @fontsource-variable/bricolage-grotesque
 
 ```ts
 // main.tsx, avant theme.css
-import "@fontsource-variable/inter";
-import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/inter/index.css";
+import "@fontsource-variable/bricolage-grotesque/index.css";
 ```
 
 Noms des familles : `"Inter Variable"` et `"Bricolage Grotesque Variable"`. Les deux paquets sont en version 5.3.0 au 13 novembre 2026.
@@ -137,7 +137,8 @@ Valeurs reprises des maquettes. Les commentaires du bloc ci-dessous documentent 
   /* Ombres (teintées avec la couleur du texte) */
   --shadow-small: 0 1px 3px rgba(30, 26, 29, 0.08);
   --shadow-medium: 0 6px 24px rgba(30, 26, 29, 0.1);
-  --shadow-large: 0 -8px 30px rgba(30, 26, 29, 0.18);
+  --shadow-large: 0 12px 40px rgba(30, 26, 29, 0.14); /* Page, Toast */
+  --shadow-sheet: 0 -8px 30px rgba(30, 26, 29, 0.18); /* panneau du bas */
   --overlay-color: rgba(30, 26, 29, 0.45);
 
   /* Tailles des contrôles */
@@ -147,9 +148,26 @@ Valeurs reprises des maquettes. Les commentaires du bloc ci-dessous documentent 
 }
 ```
 
-- [ ] Mettre à jour `theme.css`, `body { background-color: var(--background-color); font-family: var(--font-family); }`, `h1, h2 { font-family: var(--font-family-title); }`, `a { color: var(--link-color); }`.
-- [ ] Supprimer `--green`, `--header-color`, `--nav-color`, `--nav-link-color` à l'étape 9, quand plus rien ne les utilise.
-- [ ] **Point à trancher** : la couleur principale et `danger` sont toutes deux rouges. Dans les maquettes, une action dangereuse (supprimer la liste, quitter) se distingue par un **bouton à contour** ou un texte rouge plutôt que par une autre teinte. Il faut l'appliquer partout, sinon « Supprimer » et « Ajouter » se ressemblent.
+- [x] Mettre à jour `theme.css`, `body { background-color: var(--background-color); font-family: var(--font-family); }`, `h1, h2 { font-family: var(--font-family-title); }`, `a { color: var(--link-color); }`.
+- [x] `--input-color`, `--placeholder-color`, `--green` et les anciens fonds de `Banner` remplacés (`--border-color`, `--dimmed-color`, `--success-soft-color`, `--danger-soft-color`) ; `--border-width` (1,5 px) ajoutée.
+- [ ] Supprimer `--header-color`, `--nav-color`, `--nav-link-color` à l'étape 9, quand plus rien ne les utilise.
+
+### Actions dangereuses (tranché le 22 novembre 2026)
+
+La couleur principale et `danger` sont toutes deux rouges. Règle : **le rouge plein est réservé à l'action principale, une action dangereuse n'est jamais pleine.**
+
+| Variante               | Apparence                                                   | Exemples                                       |
+| ---------------------- | ----------------------------------------------------------- | ---------------------------------------------- |
+| `primary`              | fond rouge plein, texte blanc, une seule par écran          | Ajouter un cadeau, Réserver, Se connecter      |
+| `danger`               | fond blanc, bordure et texte rouges, icône à gauche         | Supprimer la liste, Supprimer mon compte       |
+| bouton icône dangereux | rond, transparent, icône grise, rouge au survol et au focus | corbeille d'un cadeau, ✕ retirer un·e invité·e |
+
+- Le libellé dit l'action (« Supprimer la liste » plutôt que « Supprimer ») et porte une icône (`IconTrash`, `IconX`, `IconLogout2`) : la différence ne repose pas que sur la couleur.
+- Dans un dialog de confirmation, le bouton qui confirme peut être plein : c'est la seule action, la question est juste au-dessus.
+- Bandeaux et toasts d'erreur : fond `--danger-soft-color`, texte `--danger-color`, icône. L'onglet « Danger zone » : texte rouge.
+- Un état n'est pas une action : le bouton rouge d'un cadeau réservé (`list.$listId.tsx`) devient un badge à l'étape 7.
+- [x] `button__type--danger` en contour (étape 1).
+- [ ] Boutons icônes discrets (étapes 3 et 5), badges de réservation (étape 7).
 
 Contrastes vérifiés : blanc sur `#C8302F` : 5,4:1 ; `#6A6168` sur blanc : 6:1 (5,7:1 sur le fond `#FFF8F5`) ; `#06676A` sur `#DDF1EF` : 5,7:1.
 

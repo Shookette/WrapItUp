@@ -1,10 +1,10 @@
 .button {
   align-items: center;
   border-radius: var(--border-radius);
-  border: none;
+  border: var(--border-width) solid transparent;
   cursor: pointer;
   display: flex;
-  font-weight: bold;
+  font-weight: 600;
   gap: 0.5rem;
   justify-content: center;
   padding: var(--padding-small) var(--padding-medium);
@@ -22,19 +22,37 @@
   }
 }
 
+.button:disabled {
+  cursor: progress;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
 .button__type--primary {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--white);
+}
+
+.button__type--primary:hover {
+  background-color: var(--primary-hover-color);
 }
 
 .button__type--danger {
-  background-color: var(--danger-color);
-  color: white;
+  background-color: var(--white);
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.button__type--danger:hover {
+  background-color: var(--danger-soft-color);
 }
 
 .button__type--success {
   background-color: var(--success-color);
-  color: white;
+  color: var(--white);
 }
 
 .button__size--small {
