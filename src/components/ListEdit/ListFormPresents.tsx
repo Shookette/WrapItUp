@@ -56,7 +56,8 @@ const ListFormPresents = withForm({
                 </td>
                 <td className="table__cell">
                   <Button
-                    icon={<IconTrash size={16} />}
+                    ariaLabel="Supprimer le cadeau"
+                    icon={<IconTrash size={20} />}
                     size="small"
                     type="danger"
                     onClick={() => presentsField.removeValue(index)}

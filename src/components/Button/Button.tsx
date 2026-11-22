@@ -1,49 +1,48 @@
 import "./Button.css";
 
 import { FC, PropsWithChildren, ReactNode } from "react";
-import classNames from "classnames";
 import { IconLoader2 } from "@tabler/icons-react";
+import { buttonClassNames, ButtonStyleOptions } from "./buttonClassNames.ts";
 
-type ButtonProps = PropsWithChildren<{
-  ariaLabel?: string;
-  icon?: ReactNode;
-  isSubmit?: boolean;
-  loading?: boolean;
-  position?: "left" | "right";
-  size?: "small" | "medium" | "large";
-  type?: "primary" | "secondary" | "danger" | "success";
-  onClick?: () => void;
-}>;
+type ButtonProps = PropsWithChildren<
+  Omit<ButtonStyleOptions, "iconOnly"> & {
+    ariaLabel?: string;
+    icon?: ReactNode;
+    isSubmit?: boolean;
+    loading?: boolean;
+    onClick?: () => void;
+  }
+>;
 
 const Button: FC<ButtonProps> = ({
   ariaLabel,
   children,
+  fullWidth,
   icon,
   isSubmit = false,
   loading = false,
   position,
-  size = "medium",
-  type = "primary",
+  size,
+  type,
   onClick,
-}) => {
-  const className = classNames("button", {
-    [`button__type--${type}`]: true,
-    [`button__size--${size}`]: true,
-    [`button__position--${position}`]: !!position,
-  });
-
-  return (
-    <button
-      aria-label={ariaLabel}
-      className={className}
-      disabled={loading}
-      type={isSubmit ? "submit" : "button"}
-      onClick={onClick}
-    >
-      {loading ? <IconLoader2 className="button__loader" /> : icon}
-      {children}
-    </button>
-  );
-};
+}) => (
+  <button
+    aria-busy={loading || undefined}
+    aria-label={ariaLabel}
+    className={buttonClassNames({
+      fullWidth,
+      iconOnly: !!icon && !children,
+      position,
+      size,
+      type,
+    })}
+    disabled={loading}
+    type={isSubmit ? "submit" : "button"}
+    onClick={onClick}
+  >
+    {loading ? <IconLoader2 aria-hidden className="button__loader" /> : icon}
+    {children}
+  </button>
+);
 
 export default Button;

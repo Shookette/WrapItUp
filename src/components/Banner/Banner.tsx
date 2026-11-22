@@ -7,7 +7,7 @@ type BannerProps = {
   children: ReactNode;
   iconPrefix?: ReactNode;
   iconSuffix?: ReactNode;
-  type?: "danger" | "success";
+  type?: "danger" | "info" | "success" | "warning";
 };
 
 const Banner: FC<BannerProps> = ({

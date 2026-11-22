@@ -1,18 +1,37 @@
 .button {
+  --button-height: var(--control-height);
+
   align-items: center;
-  border-radius: var(--border-radius);
   border: var(--border-width) solid transparent;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
+  font-size: var(--font-size-medium);
   font-weight: 600;
-  gap: 0.5rem;
+  gap: var(--padding-small);
   justify-content: center;
+  line-height: 1.2;
+  min-height: var(--button-height);
   padding: var(--padding-small) var(--padding-medium);
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.button:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }
 
 .button__loader {
-  -webkit-animation: spin 1s linear infinite;
-  -moz-animation: spin 1s linear infinite;
   animation: spin 1s linear infinite;
 }
 
@@ -20,15 +39,6 @@
   100% {
     transform: rotate(360deg);
   }
-}
-
-.button:disabled {
-  cursor: progress;
-}
-
-.button:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
 }
 
 .button__type--primary {
@@ -65,16 +75,54 @@
   color: var(--white);
 }
 
-.button__size--small {
-  font-size: var(--font-size-small);
+.button__type--success:hover {
+  background-color: var(--text-color);
 }
 
-.button__size--medium {
-  font-size: var(--font-size-medium);
+.button__size--small {
+  --button-height: var(--touch-target);
+
+  font-size: var(--font-size-small);
+  padding-inline: var(--padding-medium);
 }
 
 .button__size--large {
   font-size: var(--font-size-large);
+  padding-inline: var(--padding-large);
+}
+
+.button--full-width {
+  width: 100%;
+}
+
+.button--icon {
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: var(--border-radius-round);
+  color: var(--dimmed-color);
+  height: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0;
+  width: var(--touch-target);
+}
+
+.button--icon:hover {
+  background-color: var(--hover-color);
+  color: var(--text-color);
+}
+
+.button--icon.button__type--primary {
+  color: var(--primary-color);
+}
+
+.button--icon.button__type--primary:hover {
+  background-color: var(--primary-soft-color);
+}
+
+.button--icon.button__type--danger:hover,
+.button--icon.button__type--danger:focus-visible {
+  background-color: var(--danger-soft-color);
+  color: var(--danger-color);
 }
 
 .button__position--left {
@@ -83,4 +131,14 @@
 
 .button__position--right {
   margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .button {
+    --button-height: var(--control-height-desktop);
+  }
+
+  .button__size--small {
+    --button-height: var(--touch-target);
+  }
 }

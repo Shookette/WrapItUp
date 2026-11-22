@@ -55,7 +55,7 @@ const ListTableComponent: FC<Props> = ({
           <td className="table__cell">
             <Button
               ariaLabel="Supprimer"
-              icon={<IconTrash size={16} stroke={1.5} />}
+              icon={<IconTrash size={20} stroke={1.75} />}
               loading={loading}
               size="small"
               type="danger"
