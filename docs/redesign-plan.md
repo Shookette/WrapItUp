@@ -11,7 +11,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait    |
 | 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait    |
 | 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait    |
-| 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ⬜ à faire |
+| 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait    |
 | 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ⬜ à faire |
 | 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ⬜ à faire |
 | 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ⬜ à faire |
@@ -192,17 +192,17 @@ Cible :
 
 ## 3. Composants de base
 
-- [ ] **Button** : hauteur `--control-height` (`--control-height-desktop` au-dessus de 768 px), `border-radius: var(--border-radius)`, `font-weight: 600`. Ajouter :
-  - une variante `secondary` (fond blanc, bordure `--border-color`) pour Annuler, Partager, Vider ;
-  - `fullWidth` ;
-  - un style partagé avec les liens (`<Link className="button …">`), puisque beaucoup de « boutons » des maquettes naviguent.
-- [ ] **Bouton icône** : 44×44, rond, transparent ; c'est le cas `icon` seul + `ariaLabel` déjà prévu.
-- [ ] **Tabs → contrôle segmenté** : fond `--segmented-color`, onglet actif blanc avec `--shadow-small`. Passer les `span` en `<button role="tab" aria-selected>` dans un `role="tablist"`, flèches gauche/droite au clavier. Option : un `danger` sur l'onglet pour l'afficher en rouge. Sur mobile, libellé court « Danger » : prop `shortTitle` ou masquage CSS d'une partie du texte.
-- [ ] **Champs** (`TextField`, `Input`) : hauteur `--control-height`, bordure 1,5 px `--border-color`, focus en `--primary-color` avec un halo léger, état erreur (`aria-invalid`) bordure `--danger-color` + fond `--danger-soft-color`, message sous le champ avec `IconAlertCircle` et lié par `aria-describedby`.
-- [ ] **Banner** : variante `info` (fond `--info-soft-color`, `IconLock` pour « C'est un secret »).
-- [ ] **Badge** : arrondi `--border-radius-round`, variantes `success` (réservé par vous), `neutral` (déjà réservé), `success` discret (« Ajouté »).
-- [ ] **ListItem / carte de liste** (nouveau) : icône sur fond doux 48×48, titre + sous-titre, chevron ; c'est un `<Link>` entier.
+- [x] **Button** : hauteur `--control-height` (`--control-height-desktop` au-dessus de 768 px), `small` à 44 px, `border-radius: var(--border-radius)`, `font-weight: 600`, survol et focus visibles, `aria-busy` pendant le chargement. Variante `secondary` (étape 2), prop `fullWidth`. Les classes sont construites par `buttonClassNames()` (`Button/buttonClassNames.ts`), à réutiliser sur un `<Link className={buttonClassNames({ … })}>`.
+- [x] **Bouton icône** (`icon` seul + `ariaLabel`) : 44×44, rond, transparent, icône grise ; en `danger`, rouge au survol et au focus. Corbeille d'un cadeau et ✕ « Retirer … » d'un·e invité·e passés dans ce style (le bouton corbeille des cadeaux n'avait pas d'`aria-label`).
+- [x] **Tabs → contrôle segmenté** : `role="tablist"`, `<button role="tab" aria-selected>`, panneau `role="tabpanel"`, flèches gauche / droite, Début / Fin. Props `label` (nom du groupe), `danger` (onglet en rouge) et `shortTitle` (libellé sur mobile : « Danger »). Onglet « Utilisateurices » renommé « Invité·es ».
+- [x] **Champs** (`Input`, `TextField`) : hauteur `--control-height`, texte à 16 px, bordure 1,5 px, focus rouge avec halo, erreur (`aria-invalid`) en bordure et fond rouges, message avec `IconAlertCircle` lié par `aria-describedby` (avec la description). Prop `autoComplete` ajoutée (servira à l'étape 8).
+- [x] **Banner** : fonds doux, variantes `info` (« C'est un secret ») et `warning` en plus de `success` / `danger`.
+- [x] **Badge** : fonds doux, casse normale, prop `icon`, variante `neutral` (« Déjà réservé »).
+- [x] **Card** : arrondi `--border-radius-large`, bordure `--divider-color`.
+- [ ] **ListItem / carte de liste** (nouveau) : icône sur fond doux 48×48, titre + sous-titre, chevron ; c'est un `<Link>` entier. **Déplacé à l'étape 4**, où il est utilisé.
 - [ ] **Table** : n'est plus utilisée pour les cadeaux (voir étape 6). Remplacée par une liste `<ul>` en cartes ; supprimer le composant à l'étape 9 s'il ne sert plus ailleurs.
+
+Contrastes des fonds doux vérifiés (≥ 4,5:1) : `--primary-color` sur `--primary-soft-color` 4,5:1, `--dimmed-color` sur `--neutral-soft-color` 4,8:1 et sur `--segmented-color` 5:1, `--warning-color` 5,3:1, `--danger-color` 6:1, `--info-color` 8,3:1.
 
 ### Icônes
 

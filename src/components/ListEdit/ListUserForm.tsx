@@ -1,7 +1,7 @@
 import "./ListUserForm.css";
 
 import { FC, useMemo } from "react";
-import { IconLink, IconTrash } from "@tabler/icons-react";
+import { IconLink, IconX } from "@tabler/icons-react";
 import { FullList } from "#/interfaces/List.ts";
 import { useToast } from "#/components/Toast/toastContext.ts";
 import Button from "#/components/Button/Button.tsx";
@@ -52,8 +52,8 @@ const ListUserForm: FC<ListUserFormProps> = ({
             <td className="table__cell">{user.username}</td>
             <td className="table__cell">
               <Button
-                ariaLabel="Supprimer"
-                icon={<IconTrash size={16} stroke={1.5} />}
+                ariaLabel={`Retirer ${user.username}`}
+                icon={<IconX size={20} stroke={1.75} />}
                 loading={loading}
                 size="small"
                 type="danger"

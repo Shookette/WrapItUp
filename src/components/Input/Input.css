@@ -1,6 +1,11 @@
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-extra-small);
+}
+
 .input__label {
-  display: block;
-  padding-left: 0.1em;
+  font-weight: 600;
 }
 
 .input__label-asterix {
@@ -8,14 +13,22 @@
 }
 
 .input__field {
+  background-color: var(--white);
   border: var(--border-width) solid var(--border-color);
-  border-radius: 5px;
-  padding: 0.3em 0.7em;
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  font-size: var(--font-size-medium);
+  min-height: var(--control-height);
+  padding: var(--padding-small) var(--padding-medium);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   width: 100%;
 }
 
 textarea.input__field {
-  resize: none;
+  min-height: calc(3 * var(--control-height));
+  resize: vertical;
 }
 
 .input__field::placeholder {
@@ -23,22 +36,42 @@ textarea.input__field {
 }
 
 .input__field:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-soft-color);
   outline: none;
-  outline-width: 0;
 }
 
 .input--error .input__field {
+  background-color: var(--danger-soft-color);
   border-color: var(--danger-color);
+}
+
+.input--error .input__field:focus {
+  box-shadow: 0 0 0 3px var(--primary-soft-color);
 }
 
 .input__description {
   color: var(--dimmed-color);
   font-size: var(--font-size-small);
-  margin: var(--padding-extra-small) 0 0;
+  margin: 0;
 }
 
 .input__error {
+  align-items: center;
   color: var(--danger-color);
+  display: flex;
   font-size: var(--font-size-small);
-  margin: var(--padding-extra-small) 0 0;
+  font-weight: 500;
+  gap: var(--padding-extra-small);
+  margin: 0;
+}
+
+.input__error svg {
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .input__field {
+    min-height: var(--control-height-desktop);
+  }
 }

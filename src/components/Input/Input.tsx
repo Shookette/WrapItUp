@@ -2,8 +2,10 @@ import "./Input.css";
 
 import { ChangeEvent, FC, useMemo } from "react";
 import classNames from "classnames";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 type InputProps = {
+  autoComplete?: string;
   description?: string;
   error?: boolean;
   errorMessage?: string;
@@ -19,6 +21,7 @@ type InputProps = {
 };
 
 const Input: FC<InputProps> = ({
+  autoComplete,
   description,
   error = false,
   errorMessage,
@@ -34,9 +37,12 @@ const Input: FC<InputProps> = ({
 }) => {
   const className = classNames("input", { "input--error": error });
   const descriptionId = description && id ? `${id}-description` : undefined;
+  const errorId = error && id ? `${id}-error` : undefined;
+  const describedBy = [descriptionId, errorId].filter(Boolean).join(" ");
 
   const commonProps = useMemo(
     () => ({
+      autoComplete,
       className: "input__field",
       id,
       name,
@@ -44,19 +50,20 @@ const Input: FC<InputProps> = ({
       required,
       value,
       "aria-invalid": error || undefined,
-      "aria-describedby": descriptionId,
+      "aria-describedby": describedBy || undefined,
       onBlur,
       onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         onChange(e.target.value),
     }),
     [
+      autoComplete,
       id,
       name,
       placeholder,
       required,
       value,
       error,
-      descriptionId,
+      describedBy,
       onBlur,
       onChange,
     ],
@@ -81,9 +88,12 @@ const Input: FC<InputProps> = ({
     }
 
     return (
-      <p className="input__error">{errorMessage ?? "Champ obligatoire"}</p>
+      <p className="input__error" id={errorId}>
+        <IconAlertCircle aria-hidden size={16} />
+        {errorMessage ?? "Champ obligatoire"}
+      </p>
     );
-  }, [error, errorMessage]);
+  }, [error, errorId, errorMessage]);
 
   return (
     <div className={className}>

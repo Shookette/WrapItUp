@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { createFileRoute, Navigate, useRouter } from "@tanstack/react-router";
-import { IconExclamationCircle, IconGift, IconUser } from "@tabler/icons-react";
+import {
+  IconExclamationCircle,
+  IconGift,
+  IconTrash,
+  IconUser,
+} from "@tabler/icons-react";
 
 import {
   deleteList,
@@ -79,18 +84,24 @@ function EditComponent() {
       ),
       icon: <IconUser size={20} />,
       key: "users",
-      title: "Utilisateurices",
+      title: "Invité·es",
     },
     {
       children: (
         <div>
-          <Button type="danger" onClick={() => handleDeleteList()}>
+          <Button
+            icon={<IconTrash size={20} />}
+            type="danger"
+            onClick={() => handleDeleteList()}
+          >
             Supprimer la liste
           </Button>
         </div>
       ),
+      danger: true,
       icon: <IconExclamationCircle size={20} />,
       key: "danger",
+      shortTitle: "Danger",
       title: "Danger zone",
     },
   ];
@@ -100,7 +111,7 @@ function EditComponent() {
       <Page size="lg">
         <Title>Modifier votre liste de cadeau</Title>
 
-        <Tabs tabs={tabs} />
+        <Tabs label="Modifier la liste" tabs={tabs} />
       </Page>
     </PrivateLayout>
   );

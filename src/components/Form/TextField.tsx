@@ -3,6 +3,7 @@ import Input from "#/components/Input/Input.tsx";
 import { useFieldContext } from "./formContext.ts";
 
 type TextFieldProps = {
+  autoComplete?: string;
   description?: string;
   id?: string;
   label?: string;

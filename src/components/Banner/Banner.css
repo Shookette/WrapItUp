@@ -1,37 +1,38 @@
 .banner {
-  border: var(--border-width) solid var(--border-color);
+  align-items: flex-start;
   border-radius: var(--border-radius);
   display: flex;
-  margin-bottom: 1em;
-  padding: var(--padding-small);
+  gap: var(--padding-small);
+  margin-bottom: var(--padding-medium);
+  padding: var(--padding-medium);
+}
+
+.banner svg {
+  flex-shrink: 0;
 }
 
 .banner__text {
-  margin: 0 auto 0 1em;
+  flex: 1;
+  margin: 0;
 }
 
 .banner__type--success {
   background-color: var(--success-soft-color);
-  border-color: var(--success-color);
-}
-
-.banner__type--success {
   color: var(--success-color);
 }
 
-.banner__type--success svg {
-  stroke: var(--success-color);
+.banner__type--info {
+  background-color: var(--info-soft-color);
+  color: var(--info-color);
+}
+
+.banner__type--warning {
+  background-color: var(--warning-soft-color);
+  color: var(--warning-color);
 }
 
 .banner__type--danger {
   background-color: var(--danger-soft-color);
-  border-color: var(--danger-color);
-}
-
-.banner__type--danger {
+  border: var(--border-width) solid var(--danger-color);
   color: var(--danger-color);
-}
-
-.banner__type--danger svg {
-  stroke: var(--danger-color);
 }

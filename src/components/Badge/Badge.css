@@ -1,22 +1,30 @@
 .badge {
+  align-items: center;
   border-radius: var(--border-radius-round);
-  color: var(--white);
-  font-size: var(--font-size-extra-small);
-  font-weight: bold;
-  letter-spacing: 0.03em;
+  display: inline-flex;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  gap: var(--padding-extra-small);
   padding: var(--padding-extra-small) var(--padding-small);
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .badge__type--primary {
-  background-color: var(--primary-color);
+  background-color: var(--primary-soft-color);
+  color: var(--primary-color);
 }
 
 .badge__type--danger {
-  background-color: var(--danger-color);
+  background-color: var(--danger-soft-color);
+  color: var(--danger-color);
 }
 
 .badge__type--success {
-  background-color: var(--success-color);
+  background-color: var(--success-soft-color);
+  color: var(--success-color);
+}
+
+.badge__type--neutral {
+  background-color: var(--neutral-soft-color);
+  color: var(--dimmed-color);
 }

@@ -1,9 +1,10 @@
 import { FC, PropsWithChildren } from "react";
 import Button from "#/components/Button/Button.tsx";
+import { ButtonType } from "#/components/Button/buttonClassNames.ts";
 import { useFormContext } from "./formContext.ts";
 
 type SubmitButtonProps = PropsWithChildren<{
-  type?: "primary" | "danger" | "success";
+  type?: ButtonType;
 }>;
 
 const SubmitButton: FC<SubmitButtonProps> = ({ children, type }) => {
