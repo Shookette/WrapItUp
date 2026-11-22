@@ -29,8 +29,8 @@
 
 .tabs__tab:focus-visible,
 .tabs__panel:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
 }
 
 .tabs__tab--active {

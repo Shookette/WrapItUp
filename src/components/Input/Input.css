@@ -37,7 +37,7 @@ textarea.input__field {
 
 .input__field:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--primary-soft-color);
+  box-shadow: var(--focus-halo);
   outline: none;
 }
 
@@ -47,7 +47,7 @@ textarea.input__field {
 }
 
 .input--error .input__field:focus {
-  box-shadow: 0 0 0 3px var(--primary-soft-color);
+  box-shadow: var(--focus-halo);
 }
 
 .input__description {

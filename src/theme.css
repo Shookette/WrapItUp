@@ -59,6 +59,10 @@
   --shadow-sheet: 0 -8px 30px rgba(30, 26, 29, 0.18);
   --overlay-color: rgba(30, 26, 29, 0.45);
 
+  --focus-outline: 2px solid var(--primary-color);
+  --focus-outline-offset: 2px;
+  --focus-halo: 0 0 0 3px var(--primary-soft-color);
+
   --touch-target: 44px;
   --control-height: 52px;
   --control-height-desktop: 48px;
