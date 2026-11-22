@@ -14,6 +14,7 @@ import {
   getDoc,
   getDocs,
   query,
+  runTransaction,
   setDoc,
   updateDoc,
   where,
@@ -168,6 +169,49 @@ describe("lists : modification par le ou la propriétaire", () => {
 
   test("retirer un·e invité·e : autorisé", async () => {
     await assertSucceeds(updateDoc(listRef(OWNER), { allowedUsers: [] }));
+  });
+
+  test("ajouter un cadeau seul, sans toucher au reste : autorisé", async () => {
+    await assertSucceeds(
+      updateDoc(listRef(OWNER), {
+        presents: [present("p1"), present("p2"), present("p3")],
+      }),
+    );
+  });
+
+  test("modifier un cadeau réservé en gardant sa réservation : autorisé", async () => {
+    await assertSucceeds(
+      updateDoc(listRef(OWNER), {
+        presents: [
+          present("p1", {
+            title: "Nouveau titre",
+            status: "reserved",
+            reservedBy: GUEST,
+          }),
+          present("p2"),
+        ],
+      }),
+    );
+  });
+
+  test("modifier par une transaction (lecture puis écriture) : autorisé", async () => {
+    const ownerDb = db(OWNER);
+    const ref = doc(ownerDb, "lists", LIST_ID);
+    await assertSucceeds(
+      runTransaction(ownerDb, async (transaction) => {
+        const snapshot = await transaction.get(ref);
+        transaction.set(ref, {
+          ...snapshot.data(),
+          presents: [present("p1"), present("p3")],
+        });
+      }),
+    );
+  });
+
+  test("supprimer un cadeau : autorisé", async () => {
+    await assertSucceeds(
+      updateDoc(listRef(OWNER), { presents: [present("p2")] }),
+    );
   });
 
   test("donner la liste à quelqu'un d'autre : refusé", async () => {

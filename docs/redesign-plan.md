@@ -14,7 +14,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait    |
 | 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait    |
 | 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait    |
-| 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ⬜ à faire |
+| 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ✅ fait    |
 | 7   | Consultation et réservation (invité·e)                  | moyen       | ⬜ à faire |
 | 8   | Invitation et pages d'authentification                  | faible      | ⬜ à faire |
 | 9   | Nettoyage (anciens composants, variables, assets)       | faible      | ⬜ à faire |
@@ -243,7 +243,7 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 - [x] En-tête : retour, titre de la liste (« 12 cadeaux · 4 invité·es »), bouton crayon « Renommer la liste » qui ouvre un dialog avec le champ titre. Le champ titre a quitté le formulaire des cadeaux.
 - [x] Onglets segmentés Cadeaux / Invité·es / Danger zone, onglet gardé dans l'URL (`?tab=users`, `?tab=danger` ; rien pour Cadeaux), `Tabs` contrôlable (`activeKey`, `onChange`).
 - [x] Nouveau composant `Dialog` (`<dialog>` natif, panneau du bas sur mobile, centré sur bureau, bouton ✕) ; `ConfirmProvider` s'appuie dessus. Il servira au formulaire de cadeau de l'étape 6.
-- [ ] **Cadeaux** : encart « C'est un secret », liste de cadeaux en lecture seule, ⋮ / crayon + corbeille, barre d'action « Partager » + « Ajouter un cadeau » sur mobile : **reporté à l'étape 6**, puisqu'il faut le formulaire d'un cadeau pour modifier. En attendant, le tableau de champs reste, mais n'enregistre plus que les cadeaux : il réécrivait aussi le titre et les invité·es tels qu'au chargement de la page (un·e invité·e retiré·e entre-temps revenait).
+- [x] **Cadeaux** : encart « C'est un secret », liste de cadeaux en lecture seule, ⋮ / crayon + corbeille, barre d'action « Partager » + « Ajouter un cadeau » sur mobile : **fait à l'étape 6**, puisqu'il faut le formulaire d'un cadeau pour modifier. En attendant, le tableau de champs reste, mais n'enregistre plus que les cadeaux : il réécrivait aussi le titre et les invité·es tels qu'au chargement de la page (un·e invité·e retiré·e entre-temps revenait).
 - [x] **Invité·es** : bloc vert « Inviter des proches » avec le lien `/invite/$listId` affiché, « Copier le lien » (toast de succès ou d'erreur) et « Partager » (`navigator.share`, seulement s'il existe) ; liste des invité·es avec initiale dans une pastille, ✕ « Retirer … » avec confirmation et chargement sur la seule ligne concernée.
 - [x] **Danger zone** : texte d'explication, bouton à contour rouge, confirmation (étape 4), toast « Liste supprimée ».
 
@@ -253,28 +253,14 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 **Cible** : la liste est en lecture seule, et on ajoute ou modifie **un cadeau à la fois** dans un formulaire séparé, qui enregistre tout de suite.
 
-- [ ] Nouveau formulaire `PresentForm` (`useAppForm`, champs `title` obligatoire, `description`, `url` avec la règle http(s) de `utils/formSchemas.ts`), utilisé pour l'ajout **et** la modification (`defaultValues` = le cadeau ou un cadeau vide).
-- [ ] Enregistrement : construire la nouvelle liste (`presents` + le cadeau, ou cadeau remplacé par `id`), `setList()`, toast, `router.invalidate()`. Mêmes écritures qu'aujourd'hui (on réécrit toute la liste), donc **pas de changement de règles Firestore** ; vérifier quand même que les tests couvrent l'ajout et la modification d'un cadeau par la ou le propriétaire.
-- [ ] Attention aux champs du cadeau à ne **pas** écraser en modification : `status`, `reservedBy` (réservation en cours), `listUID`. Repartir du cadeau existant et ne remplacer que `title`, `description`, `url`.
-- [ ] **Mobile** : panneau qui monte du bas (« bottom sheet »). Le plus simple et le plus accessible : un `<dialog>` natif ouvert avec `showModal()` (piège le focus, Échap ferme, le reste de la page devient inerte), stylé en bas d'écran :
-  ```css
-  .sheet {
-    margin: auto 0 0;
-    width: 100%;
-    max-width: none;
-    border: 0;
-    border-radius: var(--border-radius-sheet) var(--border-radius-sheet) 0 0;
-    padding-bottom: calc(var(--padding-large) + env(safe-area-inset-bottom));
-  }
-  .sheet::backdrop {
-    background: var(--overlay-color);
-  }
-  ```
-  Bouton « Fermer » (✕) en haut à droite, « Annuler » + « Ajouter le cadeau » en bas.
-- [ ] **Bureau ≥ 768 px** : le même `PresentForm` dans une carte à droite de la liste, toujours visible (`flex-wrap: wrap`, liste `flex: 999 1 520px`, formulaire `flex: 1 1 340px` : il passe dessous sur un écran étroit). Après un ajout, le formulaire se vide et reste ouvert ; le cadeau ajouté porte un badge « Ajouté » quelques secondes.
-- [ ] Choisir mobile ou bureau en JS (le formulaire est dans un `<dialog>` d'un côté, dans la page de l'autre) : petit hook `useMediaQuery("(min-width: 768px)")` basé sur `matchMedia` + `useSyncExternalStore`. La modification d'un cadeau passe par le `<dialog>` sur les deux tailles.
-- [ ] Supprimer : confirmation, puis même principe (liste sans le cadeau, `setList()`). Si le cadeau est réservé, la ou le propriétaire ne le sait pas (secret) : le message reste neutre.
-- [ ] Une fois terminé, `presents` n'est plus dans le formulaire de la liste : simplifier `listFormOptions.ts` et `ListForm.tsx` (le titre seul, via le dialog « Renommer »).
+- [x] `PresentForm` (`useAppForm`, titre obligatoire, description, lien http(s) ; schémas `presentTitleSchema` / `presentDescriptionSchema` / `optionalUrlSchema`), pour l'ajout **et** la modification.
+- [x] Calculs purs et testés dans `utils/presents.ts` : `addPresent` (cadeau disponible ajouté à la fin), `updatePresent` (ne remplace que `title`, `description`, `url` : garde `status`, `reservedBy`, `listUID`), `removePresent`, `urlHost` (domaine affiché sous le cadeau).
+- [x] Enregistrement par `updateList()` : **transaction** Firestore qui relit la liste avant d'écrire, pour ne pas écraser une réservation faite entre-temps (même chose pour renommer et retirer un·e invité·e). Tests des règles ajoutés : ajout seul, modification d'un cadeau réservé en gardant la réservation, suppression, écriture par transaction.
+- [x] **Mobile** : `Dialog` en panneau du bas (« Nouveau cadeau » / « Modifier le cadeau »), Annuler + Ajouter le cadeau / Enregistrer ; barre d'action collée en bas « Partager » (ouvre l'onglet Invité·es) + « Ajouter un cadeau ».
+- [x] **Bureau** : carte « Ajouter un cadeau » à droite de la liste, toujours visible ; après un ajout le formulaire se vide, la ligne ajoutée porte un badge « Ajouté » 4 secondes. « Vider » remet le formulaire à zéro.
+- [x] Choix mobile / bureau en JS par `useIsDesktop()` (`hooks/useMediaQuery.ts`, `matchMedia` + `useSyncExternalStore`, même condition que `--desktop`). La modification passe par le `Dialog` sur les deux tailles.
+- [x] Liste des cadeaux en lecture seule (`ListPresents`) : encart « C'est un secret », « N cadeaux », titre, description sur une ligne, domaine du lien ; ⋮ (Modifier, Supprimer) sur mobile, crayon et corbeille sur bureau. Suppression avec confirmation, message neutre (secret des réservations).
+- [x] `ListForm`, `ListFormPresents`, `listFormOptions.ts` et le composant `Table` supprimés.
 
 ## 7. Consultation et réservation (`/list/$listId`)
 
@@ -297,7 +283,7 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 ## 9. Nettoyage
 
-- [ ] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles (`Table`, `Grid`, `Center`, `Page` selon ce qui reste).
+- [ ] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles (`Grid`, `Center`, `Page` selon ce qui reste ; `Table` supprimé à l'étape 6).
 - [ ] Supprimer les variables de couleur de l'ancien thème.
 - [ ] Mettre à jour `CLAUDE.md` (section « Composants et style ») et cocher `todo.md`.
 - [ ] Lighthouse mobile sur la preview : accessibilité ≥ 95, pas de zone tactile trop petite.

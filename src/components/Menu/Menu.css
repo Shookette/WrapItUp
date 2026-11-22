@@ -19,6 +19,23 @@
   width: var(--menu-trigger-size);
 }
 
+.menu__trigger--ghost {
+  background-color: transparent;
+  color: var(--dimmed-color);
+}
+
+.menu__trigger--ghost:hover,
+.menu__trigger--ghost[aria-expanded="true"] {
+  background-color: var(--hover-color);
+  color: var(--text-color);
+}
+
+.menu__trigger:focus-visible,
+.menu__item:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
 .menu__dropdown {
   background-color: var(--white);
   border: 1px solid var(--border-color);
@@ -53,4 +70,8 @@
 .menu__item:hover,
 .menu__item:focus-visible {
   background-color: var(--hover-color);
+}
+
+.menu__item--danger {
+  color: var(--danger-color);
 }

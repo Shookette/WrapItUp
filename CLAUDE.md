@@ -34,7 +34,7 @@ npm run test:unit     # tests unitaires des fonctions pures (src/**/*.test.ts)
 Tests :
 
 - **règles Firestore** (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test ;
-- **fonctions utilitaires et pures** (`src/utils/`, schémas zod…) : un fichier `<nom>.test.ts` à côté (`node --test`, `node:assert/strict`, typé par `tsconfig.test.json`, exclu du build), **obligatoire pour toute nouvelle fonction pure** ou modification de l'une d'elles ;
+- **fonctions utilitaires et pures** (`src/utils/`, schémas zod…) : un fichier `<nom>.test.ts` à côté (`node --test`, `node:assert/strict`, typé par `tsconfig.test.json`, exclu du build). Node exécute le TypeScript en retirant les types : un import de type seul s'écrit `import type { … }`, dans le test comme dans le fichier testé, **obligatoire pour toute nouvelle fonction pure** ou modification de l'une d'elles ;
 - les composants React ne sont pas testés.
 
 Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:unit`, `npm run test:rules` et `npm run build`.
@@ -115,6 +115,7 @@ Identifiant du document = `list.id` (uuid).
 - En base, `allowedUsers` est un tableau d'uids. Côté app, on manipule un `FullList` où `allowedUsers` est enrichi en `{ userUID, username }` ; `setList()` refait la conversion avant l'écriture.
 - `username` (nom du ou de la propriétaire) est ajouté à la lecture par le repository et ne fait pas partie du modèle de base.
 - Une réservation = modifier `status` (`"available"` / `"reserved"`) et `reservedBy` (uid) du cadeau, puis réécrire **toute la liste** avec `setList()`.
+- Les écritures du ou de la propriétaire sur une liste existante (cadeaux, titre, retrait d'un·e invité·e) passent par `updateList(id, change)` : une **transaction** Firestore qui relit la liste puis applique `change`, pour ne pas écraser une réservation faite entre-temps par un·e invité·e. `setList()` (réécriture à partir de la liste chargée par la page) reste pour la création et les écritures des invité·es.
 
 ### Collection `profils`
 
@@ -159,8 +160,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
   ```
   - `form.Form` désactive la validation native (`noValidate`) : les messages viennent des schémas zod (règles communes dans `utils/formSchemas.ts`). `required` sur un champ n'affiche que l'astérisque.
   - `form.SubmitButton` affiche le chargement pendant `onSubmit` (pas de `useState` de chargement).
-  - Tableaux : `<form.Field name="presents" mode="array">` + `pushFieldValue` / `removeValue`, sous-champs `presents[${i}].title`, `key` = `present.id`.
-  - Un sous-composant qui reçoit le formulaire se crée avec `withForm` et des options partagées (`formOptions`), voir `ListEdit/listFormOptions.ts`.
+  - Un cadeau se crée ou se modifie **un à la fois** avec `PresentForm` (dans un `Dialog`, ou dans la carte « Ajouter un cadeau » sur bureau) ; les calculs sur la liste de cadeaux sont des fonctions pures de `utils/presents.ts` (`addPresent`, `updatePresent` qui garde `status` / `reservedBy`, `removePresent`).
   - Un schéma zod doit avoir le même type d'entrée que les valeurs du formulaire : décrire tous les champs, alignés sur `interfaces/` avec `satisfies z.ZodType<T, T>` (le build casse si l'interface change).
 - **Imports** : alias natif unique `#/*` → `src/*` (champ `imports` de `package.json`, résolu par TypeScript 7 et Vite sans configuration) : `#/components/Button/Button.tsx`, `#/hooks/UserContext.tsx`, `#/main.tsx`. Toujours **avec l'extension**, l'alias ne la devine pas. Les imports dans le même dossier restent relatifs (`./Button.css`).
 - **Composants** : typer `children` avec `PropsWithChildren<…>` plutôt qu'un `children: ReactNode` à la main.
@@ -178,7 +178,6 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
   - mise en page : `Page` (carte blanche centrale, `size`), `Center`, `Grid`, `Card`, `Title` (prop `actions` pour un bouton à droite), `Header` (bandeau du haut) ;
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
   - `Tile` : pastille colorée (icône ou initiale) : `tone` (`primary`, `success`, `info`, `warning`) ou `toneFrom={id}` pour une couleur stable tirée d'un identifiant, `shape` (`round`, `square`), `size` (40 / 48 / 64 px). Toute pastille passe par lui ;
-  - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
   - `Dialog` : fenêtre modale (`<dialog>` natif, `open`, `title`, `description?`, `actions?`, `onClose`), panneau du bas sur mobile ;
   - `Confirm` : fenêtre de confirmation (bâtie sur `Dialog`). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
@@ -217,5 +216,4 @@ Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilis
 Petites tâches, voir `todo.md`. À ce jour :
 
 - Améliorer les pages hors `PrivateLayout` avec le nouveau composant `Page` (CSS)
-- Revoir l'UX du formulaire d'ajout de cadeaux (à faire avec l'étape 4 du plan d'upgrade)
 - Corriger le bug quand on veut rejoindre une liste sans être connecté·e

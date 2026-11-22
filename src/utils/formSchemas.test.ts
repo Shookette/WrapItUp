@@ -6,6 +6,9 @@ import {
   listTitleSchema,
   newPasswordSchema,
   optionalUrlSchema,
+  PRESENT_DESCRIPTION_MAX,
+  presentDescriptionSchema,
+  presentTitleSchema,
 } from "./formSchemas.ts";
 
 const firstError = (result: { error?: { issues: { message: string }[] } }) =>
@@ -78,6 +81,29 @@ describe("newPasswordSchema", () => {
     assert.match(
       firstError(newPasswordSchema.safeParse("Cadeau2026x")) ?? "",
       /caractère spécial/,
+    );
+  });
+});
+
+describe("presentTitleSchema", () => {
+  it("exige un titre qui ne soit pas fait que d'espaces", () => {
+    assert.equal(presentTitleSchema.safeParse("Livre").success, true);
+    assert.equal(
+      firstError(presentTitleSchema.safeParse("  ")),
+      "Le titre est obligatoire",
+    );
+  });
+});
+
+describe("presentDescriptionSchema", () => {
+  it("accepte une description absente ou vide, et limite sa longueur", () => {
+    assert.equal(presentDescriptionSchema.safeParse(undefined).success, true);
+    assert.equal(presentDescriptionSchema.safeParse("").success, true);
+    assert.equal(
+      presentDescriptionSchema.safeParse(
+        "a".repeat(PRESENT_DESCRIPTION_MAX + 1),
+      ).success,
+      false,
     );
   });
 });

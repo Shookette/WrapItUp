@@ -16,6 +16,18 @@ export const usernameSchema = requiredString(
   "Le nom et le prénom sont obligatoires",
 ).max(USERNAME_MAX, `${USERNAME_MAX} caractères maximum`);
 
+export const PRESENT_TITLE_MAX = 200;
+export const PRESENT_DESCRIPTION_MAX = 1000;
+
+export const presentTitleSchema = requiredString(
+  "Le titre est obligatoire",
+).max(PRESENT_TITLE_MAX, `${PRESENT_TITLE_MAX} caractères maximum`);
+
+export const presentDescriptionSchema = z
+  .string()
+  .max(PRESENT_DESCRIPTION_MAX, `${PRESENT_DESCRIPTION_MAX} caractères maximum`)
+  .optional();
+
 export const optionalUrlSchema = z
   .union([
     z.literal(""),

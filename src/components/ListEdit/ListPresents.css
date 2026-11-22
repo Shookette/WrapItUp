@@ -1,0 +1,92 @@
+.list-presents {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.list-presents__title {
+  color: var(--dimmed-color);
+  font-family: var(--font-family);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 0 0 var(--padding-small);
+  text-transform: uppercase;
+}
+
+.list-presents__items {
+  background-color: var(--white);
+  border: 1px solid var(--divider-color);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-small);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-presents__item {
+  align-items: center;
+  border-bottom: 1px solid var(--divider-color);
+  display: flex;
+  gap: var(--padding-small);
+  padding: var(--padding-small) var(--padding-small) var(--padding-small)
+    var(--padding-medium);
+  transition: background-color 0.3s;
+}
+
+.list-presents__item:last-child {
+  border-bottom: none;
+}
+
+.list-presents__item--added {
+  background-color: var(--success-soft-color);
+}
+
+.list-presents__text {
+  flex: 1;
+  min-width: 0;
+  padding-block: var(--padding-extra-small);
+}
+
+.list-presents__name {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--padding-small);
+}
+
+.list-presents__present-title {
+  font-weight: 600;
+}
+
+.list-presents__description {
+  color: var(--dimmed-color);
+  font-size: var(--font-size-small);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-presents__link {
+  align-items: center;
+  display: inline-flex;
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  gap: var(--padding-extra-small);
+  margin-top: var(--padding-extra-small);
+}
+
+.list-presents__actions {
+  display: none;
+}
+
+@media (--desktop) {
+  .list-presents__menu {
+    display: none;
+  }
+
+  .list-presents__actions {
+    display: flex;
+  }
+}
