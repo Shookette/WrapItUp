@@ -12,7 +12,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait    |
 | 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait    |
 | 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait    |
-| 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ⬜ à faire |
+| 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait    |
 | 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ⬜ à faire |
 | 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ⬜ à faire |
 | 7   | Consultation et réservation (invité·e)                  | moyen       | ⬜ à faire |
@@ -199,7 +199,7 @@ Cible :
 - [x] **Banner** : fonds doux, variantes `info` (« C'est un secret ») et `warning` en plus de `success` / `danger`.
 - [x] **Badge** : fonds doux, casse normale, prop `icon`, variante `neutral` (« Déjà réservé »).
 - [x] **Card** : arrondi `--border-radius-large`, bordure `--divider-color`.
-- [ ] **ListItem / carte de liste** (nouveau) : icône sur fond doux 48×48, titre + sous-titre, chevron ; c'est un `<Link>` entier. **Déplacé à l'étape 4**, où il est utilisé.
+- [x] **ListItem / carte de liste** (nouveau, fait à l'étape 4) : icône sur fond doux 48×48, titre + sous-titre, chevron ; c'est un `<Link>` entier, avec une `action` facultative à côté (un bouton ne peut pas être dans un lien).
 - [ ] **Table** : n'est plus utilisée pour les cadeaux (voir étape 6). Remplacée par une liste `<ul>` en cartes ; supprimer le composant à l'étape 9 s'il ne sert plus ailleurs.
 
 Contrastes des fonds doux vérifiés (≥ 4,5:1) : `--primary-color` sur `--primary-soft-color` 4,5:1, `--dimmed-color` sur `--neutral-soft-color` 4,8:1 et sur `--segmented-color` 5:1, `--warning-color` 5,3:1, `--danger-color` 6:1, `--info-color` 8,3:1.
@@ -230,10 +230,11 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 ## 4. « Mes listes » et « Listes de cadeaux »
 
-- [ ] `/` : titre + compteur (« 3 listes · 27 cadeaux », calculé depuis `presents.length`), liste de `ListItem` (« 12 cadeaux · 4 invité·es » depuis `allowedUsers.length`).
-- [ ] Mobile : bouton flottant « Nouvelle liste » (`position: fixed`, au-dessus de la barre du bas). Bureau : bouton à droite du titre, cartes en grille `repeat(auto-fill, minmax(min(100%, 300px), 1fr))`.
-- [ ] `/lists` : même composant, sous-titre « Liste de Camille » (le `username` déjà ajouté par le repository).
-- [ ] État vide : un texte et le bouton de création (remplace `emptyMessage` de `Table`).
+- [x] `/` : titre + compteur (« 3 listes · 27 cadeaux »), `ListItem` (« 12 cadeaux · 4 invité·es »), pluriels par `utils/plural.ts`.
+- [x] Mobile : bouton flottant « Nouvelle liste » au-dessus de la barre du bas. Bureau : bouton à droite du titre, cartes en grille `repeat(auto-fill, minmax(min(100%, 300px), 1fr))`.
+- [x] `/lists` : titre « Invitations » (comme la navigation), sous-titre « Liste de Camille · 12 cadeaux ». Bouton « Quitter la liste » sur chaque carte, avec confirmation (`window.confirm`) et toasts de succès / d'erreur (avant : corbeille sans confirmation).
+- [x] État vide (composant `EmptyState`) : un texte, et le bouton de création sur « Mes listes ». `Title` a maintenant `variant="page"` (`h1`, grande taille) et `subtitle`.
+- [x] `ListTable` supprimé.
 - [ ] `/new` : peut rester une page avec un seul champ ; ou devenir le même panneau que l'étape 6 (bonus).
 
 ## 5. Édition (`/edit/$listId`)
@@ -248,7 +249,7 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
   - « Copier » : `navigator.clipboard.writeText(url)` puis un toast « Lien copié » ;
   - « Partager » : `navigator.share({ title, url })` si `navigator.share` existe (mobile), sinon ne pas afficher le bouton ;
   - liste des invité·es avec initiale dans une pastille, bouton ✕ « Retirer Léa » (confirmer avant, l'action est immédiate).
-- [ ] **Danger zone** : bouton à contour rouge, confirmation (comme aujourd'hui).
+- [ ] **Danger zone** : bouton à contour rouge, **ajouter une confirmation** (il n'y en a aucune aujourd'hui : un clic supprime la liste).
 
 ## 6. Ajout et modification d'un cadeau ⚠️ change le fonctionnement
 

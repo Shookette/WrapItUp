@@ -1,0 +1,106 @@
+.list-items {
+  --list-item-min-width: 300px;
+
+  display: grid;
+  gap: var(--padding-small);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-item {
+  --list-item-icon-size: 48px;
+
+  align-items: center;
+  background-color: var(--white);
+  border: 1px solid var(--divider-color);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-small);
+  display: flex;
+  padding-right: var(--padding-small);
+  transition: box-shadow 0.15s;
+}
+
+.list-item:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+.list-item:focus-within {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.list-item__link {
+  align-items: center;
+  color: var(--text-color);
+  display: flex;
+  flex: 1;
+  gap: var(--padding-medium);
+  min-width: 0;
+  padding: var(--padding-medium);
+  padding-right: var(--padding-small);
+  text-decoration: none;
+}
+
+.list-item__link:focus-visible {
+  outline: none;
+}
+
+.list-item__icon {
+  align-items: center;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-shrink: 0;
+  height: var(--list-item-icon-size);
+  justify-content: center;
+  width: var(--list-item-icon-size);
+}
+
+.list-item__icon--primary {
+  background-color: var(--primary-soft-color);
+  color: var(--primary-color);
+}
+
+.list-item__icon--success {
+  background-color: var(--success-soft-color);
+  color: var(--success-color);
+}
+
+.list-item__icon--warning {
+  background-color: var(--warning-soft-color);
+  color: var(--warning-color);
+}
+
+.list-item__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.list-item__title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-item__subtitle {
+  color: var(--dimmed-color);
+  font-size: var(--font-size-small);
+}
+
+.list-item__chevron {
+  color: var(--dimmed-color);
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .list-items {
+    gap: var(--padding-medium);
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, var(--list-item-min-width)), 1fr)
+    );
+  }
+}

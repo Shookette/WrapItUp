@@ -1,0 +1,24 @@
+.my-lists__new--desktop {
+  display: none;
+}
+
+.my-lists__fab {
+  bottom: calc(
+    var(--bottom-nav-height) + var(--padding-medium) +
+      env(safe-area-inset-bottom)
+  );
+  box-shadow: var(--shadow-medium);
+  position: fixed;
+  right: var(--padding-medium);
+  z-index: 5;
+}
+
+@media (min-width: 768px) {
+  .my-lists__new--desktop {
+    display: inline-flex;
+  }
+
+  .my-lists__fab {
+    display: none;
+  }
+}
