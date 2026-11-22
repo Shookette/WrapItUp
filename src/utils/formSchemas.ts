@@ -29,3 +29,30 @@ export const optionalUrlSchema = z
     }),
   ])
   .optional();
+
+// Politique de mot de passe de Firebase Auth (console → Authentication →
+// Paramètres → Politique de mot de passe, mode « Exiger ») : à garder alignée.
+export const PASSWORD_MIN = 10;
+export const PASSWORD_MAX = 4096;
+// Caractères spéciaux acceptés par Firebase (`allowedNonAlphanumericCharacters`
+// de la politique) : `=`, `+`, l'espace ou les accents ne comptent pas.
+const PASSWORD_SPECIAL_CHARACTERS = /[\^$*.[\]{}()?"!@#%&/\\,><':;|_~`-]/;
+
+/** Règles affichées sous le champ du nouveau mot de passe. */
+export const PASSWORD_RULES = `Au moins ${PASSWORD_MIN} caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial (! ? @ # % & * - _ …)`;
+
+/** Nouveau mot de passe (inscription) : mêmes contraintes que Firebase. */
+export const newPasswordSchema = z
+  .string()
+  .min(
+    PASSWORD_MIN,
+    `Le mot de passe doit contenir au moins ${PASSWORD_MIN} caractères`,
+  )
+  .max(PASSWORD_MAX, `${PASSWORD_MAX} caractères maximum`)
+  .regex(/[a-z]/, "Le mot de passe doit contenir une minuscule")
+  .regex(/[A-Z]/, "Le mot de passe doit contenir une majuscule")
+  .regex(/[0-9]/, "Le mot de passe doit contenir un chiffre")
+  .regex(
+    PASSWORD_SPECIAL_CHARACTERS,
+    "Le mot de passe doit contenir un caractère spécial parmi ^ $ * . [ ] { } ( ) ? \" ! @ # % & / \\ , > < ' : ; | _ ~ ` -",
+  );

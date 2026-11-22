@@ -4,6 +4,8 @@ import { ChangeEvent, FC, useMemo } from "react";
 import classNames from "classnames";
 
 type InputProps = {
+  /** Texte d'aide affiché sous le champ (règles de saisie…). */
+  description?: string;
   error?: boolean;
   errorMessage?: string;
   id?: string;
@@ -18,6 +20,7 @@ type InputProps = {
 };
 
 const Input: FC<InputProps> = ({
+  description,
   error = false,
   errorMessage,
   id,
@@ -31,6 +34,7 @@ const Input: FC<InputProps> = ({
   onChange,
 }) => {
   const className = classNames("input", { "input--error": error });
+  const descriptionId = description && id ? `${id}-description` : undefined;
 
   const commonProps = useMemo(
     () => ({
@@ -41,11 +45,22 @@ const Input: FC<InputProps> = ({
       required,
       value,
       "aria-invalid": error || undefined,
+      "aria-describedby": descriptionId,
       onBlur,
       onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         onChange(e.target.value),
     }),
-    [id, name, placeholder, required, value, error, onBlur, onChange],
+    [
+      id,
+      name,
+      placeholder,
+      required,
+      value,
+      error,
+      descriptionId,
+      onBlur,
+      onChange,
+    ],
   );
 
   const labelElement = useMemo(() => {
@@ -79,6 +94,12 @@ const Input: FC<InputProps> = ({
         <textarea {...commonProps} />
       ) : (
         <input {...commonProps} type={type} />
+      )}
+
+      {description && (
+        <p className="input__description" id={descriptionId}>
+          {description}
+        </p>
       )}
 
       {errorElement}
