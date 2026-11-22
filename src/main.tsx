@@ -5,13 +5,11 @@ import WithFirestore from "#/components/WithFirestore.tsx";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import UserProvider, { useUserContext } from "#/hooks/UserContext.tsx";
 
-// Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import ToastProvider from "#/components/Toast/ToastProvider.tsx";
 
 import "./theme.css";
 
-// Create a new router instance
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
@@ -21,7 +19,6 @@ const router = createRouter({
   },
 });
 
-// Register the router instance for type safety
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
@@ -38,10 +35,9 @@ const InnerApp = () => {
     return { auth };
   }, [auth]);
 
-  // Volontaire : on relance les loaders quand l'authentification change.
   useEffect(() => {
     router.invalidate();
-    // oxlint-disable-next-line react/exhaustive-effect-dependencies
+    // oxlint-disable-next-line react/exhaustive-effect-dependencies -- #27
   }, [context]);
 
   return <RouterProvider router={router} context={context} />;

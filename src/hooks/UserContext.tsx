@@ -29,7 +29,6 @@ import { UpdateUser } from "#/interfaces/Profil.ts";
 const FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL =
   "Firebase: Error (auth/invalid-credential).";
 
-// Codes d'erreur Firebase Auth de l'inscription.
 const REGISTER_ERRORS: Record<string, string> = {
   "auth/email-already-in-use": "Un compte existe déjà avec cet email",
   "auth/invalid-email": "L'email n'est pas valide",
@@ -41,9 +40,6 @@ const REGISTER_ERRORS: Record<string, string> = {
   default: "Une erreur est survenue lors de l'inscription, veuillez réessayer",
 };
 
-// Codes d'erreur Firebase Auth de la réinitialisation du mot de passe.
-// Avec la protection contre l'énumération des emails, un email inconnu
-// ne renvoie pas d'erreur : aucun mail n'est envoyé.
 const RESET_PASSWORD_ERRORS: Record<string, string> = {
   "auth/invalid-email": "L'email n'est pas valide",
   "auth/too-many-requests":
@@ -64,17 +60,14 @@ type UserProvider = {
   user: User | null;
   login: (email: string, password: string) => Promise<null | string>;
   resendVerificationEmail: (email: string, password: string) => Promise<void>;
-  /** Renvoie un message d'erreur, ou `null` si l'inscription a réussi. */
   register: (
     email: string,
     password: string,
     userName: string,
   ) => Promise<null | string>;
-  /** Renvoie un message d'erreur, ou `null` si la demande a été acceptée. */
   resetPassword: (email: string) => Promise<null | string>;
   updateUser: (data: UpdateUser) => Promise<void>;
   logout: () => Promise<void>;
-  /** Supprime le compte et toutes ses données, après ressaisie du mot de passe. */
   deleteAccount: (password: string) => Promise<void>;
   isAuthenticated: boolean;
 };
@@ -83,13 +76,10 @@ type hookUserContext = () => UserProvider;
 
 const UserContext = createContext<UserProvider | null>(null);
 
-// Ancien cache de session (contenait les jetons Firebase) : on le supprime
-// chez celles et ceux qui l'ont encore. Firebase persiste déjà la session.
 localStorage.removeItem("wrapitup.user");
 
 const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  // Vrai tant que Firebase n'a pas restauré (ou non) la session.
   const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth();
   const isAuthenticated = !!user;
@@ -124,8 +114,6 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
           } else if (
             error.code === "auth/password-does-not-meet-requirements"
           ) {
-            // Compte créé avant la politique de mot de passe : Firebase refuse
-            // la connexion tant que le mot de passe n'est pas changé.
             errorMessage = PASSWORD_OUTDATED_ERROR;
           } else {
             errorMessage = `Une erreur est survenue lors de la connexion, veuillez réessayer`;
@@ -173,8 +161,6 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
           id: crypto.randomUUID(),
         });
       } catch (error: unknown) {
-        // Sans profil, le compte est inutilisable : on l'annule pour que
-        // l'inscription puisse être refaite avec le même email.
         console.error("erreur lors de la création du profil :", error);
         await deleteUser(user).catch(() => signOut(auth));
         return REGISTER_ERRORS.default;
@@ -183,13 +169,11 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       try {
         await sendEmailVerification(user);
       } catch (error: unknown) {
-        // Le compte existe : l'email pourra être renvoyé depuis la connexion.
         console.error(
           "erreur lors de l'envoi de l'email de vérification :",
           error,
         );
       }
-      // L'inscription connecte automatiquement : on attend la vérification.
       await signOut(auth);
       return null;
     },
@@ -236,7 +220,6 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       if (!currentUser?.email) {
         return;
       }
-      // Firebase exige une connexion récente pour supprimer un compte.
       await reauthenticateWithCredential(
         currentUser,
         EmailAuthProvider.credential(currentUser.email, password),
@@ -267,8 +250,7 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-// Le hook partage le fichier du provider : seul le rechargement à chaud (HMR) est concerné.
-// oxlint-disable-next-line react/only-export-components
+// oxlint-disable-next-line react/only-export-components -- #26
 export const useUserContext: hookUserContext = () => {
   const userContext = useContext(UserContext);
 

@@ -4,7 +4,6 @@ import { ChangeEvent, FC, useMemo } from "react";
 import classNames from "classnames";
 
 type InputProps = {
-  /** Texte d'aide affiché sous le champ (règles de saisie…). */
   description?: string;
   error?: boolean;
   errorMessage?: string;

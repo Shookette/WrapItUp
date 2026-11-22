@@ -3,7 +3,6 @@ import "./Title.css";
 import { FC, PropsWithChildren, ReactNode } from "react";
 
 type TitleProps = PropsWithChildren<{
-  /** Éléments alignés à droite du titre (ex. un bouton). */
   actions?: ReactNode;
 }>;
 

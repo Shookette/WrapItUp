@@ -1,5 +1,3 @@
-// Tests des règles Firestore (firestore.rules) dans l'émulateur.
-// Lancer avec `npm run test:rules` (démarre l'émulateur, puis node --test).
 import { after, before, beforeEach, describe, test } from "node:test";
 import { readFileSync } from "node:fs";
 import {
@@ -47,7 +45,6 @@ const baseList = {
 
 let env: RulesTestEnvironment;
 
-// Par défaut, une personne connectée a vérifié son email.
 const db = (uid?: string, { emailVerified = true } = {}) =>
   uid
     ? env
@@ -121,15 +118,15 @@ describe("lists : lecture", () => {
   });
 });
 
-describe("lists : création", () => {
-  const newList = (uid: string) => ({
-    ...baseList,
-    id: "list-2",
-    userUID: uid,
-    presents: [],
-    allowedUsers: [],
-  });
+const newList = (uid: string) => ({
+  ...baseList,
+  id: "list-2",
+  userUID: uid,
+  presents: [],
+  allowedUsers: [],
+});
 
+describe("lists : création", () => {
   test("créer sa propre liste : autorisé", async () => {
     await assertSucceeds(
       setDoc(doc(db(STRANGER), "lists", "list-2"), newList(STRANGER)),

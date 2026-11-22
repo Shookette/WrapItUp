@@ -1,13 +1,10 @@
 import { z } from "zod";
 
-/** Règles de validation partagées par les formulaires (TanStack Form + zod). */
-
 export const emailSchema = z.email("L'adresse email est invalide");
 
 export const requiredString = (message: string) =>
   z.string().trim().min(1, message);
 
-// Longueurs maximales, alignées sur firestore.rules.
 export const LIST_TITLE_MAX = 200;
 export const USERNAME_MAX = 100;
 
@@ -19,7 +16,6 @@ export const usernameSchema = requiredString(
   "Le nom et le prénom sont obligatoires",
 ).max(USERNAME_MAX, `${USERNAME_MAX} caractères maximum`);
 
-/** Lien optionnel : vide, ou URL en http(s) (bloque `javascript:`…). */
 export const optionalUrlSchema = z
   .union([
     z.literal(""),
@@ -30,18 +26,12 @@ export const optionalUrlSchema = z
   ])
   .optional();
 
-// Politique de mot de passe de Firebase Auth (console → Authentication →
-// Paramètres → Politique de mot de passe, mode « Exiger ») : à garder alignée.
 export const PASSWORD_MIN = 10;
 export const PASSWORD_MAX = 4096;
-// Caractères spéciaux acceptés par Firebase (`allowedNonAlphanumericCharacters`
-// de la politique) : `=`, `+`, l'espace ou les accents ne comptent pas.
 const PASSWORD_SPECIAL_CHARACTERS = /[\^$*.[\]{}()?"!@#%&/\\,><':;|_~`-]/;
 
-/** Règles affichées sous le champ du nouveau mot de passe. */
 export const PASSWORD_RULES = `Au moins ${PASSWORD_MIN} caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial (! ? @ # % & * - _ …)`;
 
-/** Nouveau mot de passe (inscription) : mêmes contraintes que Firebase. */
 export const newPasswordSchema = z
   .string()
   .min(

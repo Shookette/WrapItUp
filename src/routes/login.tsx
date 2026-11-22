@@ -19,9 +19,6 @@ import { useToast } from "#/components/Toast/toastContext.ts";
 import "./login.css";
 
 const loginSearchSchema = z.object({
-  // Chemin interne uniquement : `//site.com` ou `/\site.com` seraient
-  // compris comme un autre site (redirection ouverte, audit §8).
-  // Une valeur invalide est ignorée (redirection vers l'accueil).
   redirect: z
     .string()
     .regex(/^\/(?![/\\])/)
@@ -39,7 +36,6 @@ const loginSchema = z.object({
   password: requiredString("Le mot de passe est obligatoire"),
 });
 
-// Codes d'erreur Firebase Auth du renvoi de l'email de vérification.
 const resendErrorMessages: Record<string, string> = {
   "auth/too-many-requests": `Un email de vérification vient déjà d'être envoyé : attendez quelques minutes avant d'en redemander un`,
   "auth/invalid-credential": `L'email ou le mot de passe est incorrect`,

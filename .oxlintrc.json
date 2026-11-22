@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "unicorn", "oxc", "react", "import", "promise"],
+  "jsPlugins": ["./lint/plugin.ts"],
   "env": {
     "browser": true,
     "es2024": true
@@ -44,7 +45,13 @@
       }
     ],
     "no-shadow": "off",
-    "promise/always-return": "off"
+    "promise/always-return": "off",
+    "wrap-it-up/no-comments": [
+      "error",
+      {
+        "allowed": {}
+      }
+    ]
   },
   "overrides": [
     {
@@ -57,6 +64,12 @@
       "files": ["src/routes/**"],
       "rules": {
         "react/only-export-components": "off"
+      }
+    },
+    {
+      "files": ["tests/**", "lint/**", "vite.config.ts"],
+      "env": {
+        "node": true
       }
     }
   ]
