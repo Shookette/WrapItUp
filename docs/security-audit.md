@@ -160,6 +160,8 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx` → `setList`). Deux invité·es qui réservent en même temps, ou un·e invité·e qui réserve pendant que le propriétaire édite → la dernière écriture écrase l'autre. Deux personnes peuvent croire avoir réservé le même cadeau.
 
 - [ ] Court terme : `runTransaction` (relire, vérifier que le cadeau est libre, écrire).
+  - [x] Écritures du ou de la propriétaire (cadeaux, titre, retrait d'un·e invité·e) : `updateList()` relit la liste dans une transaction avant d'écrire (refonte, étape 6). Une édition ne peut plus écraser une réservation.
+  - [ ] Réservation et annulation par un·e invité·e (`list.$listId.tsx`) : à faire avec l'étape 7 de la refonte, en vérifiant dans la transaction que le cadeau est encore libre.
 - [ ] Long terme : documents de réservation séparés (cf. §1.3), avec règle « création uniquement si le document n'existe pas ».
 
 ---

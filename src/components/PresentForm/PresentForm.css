@@ -1,0 +1,9 @@
+.present-form__actions {
+  display: flex;
+  gap: var(--padding-small);
+  margin-top: var(--padding-small);
+}
+
+.present-form__submit {
+  flex: 1;
+}

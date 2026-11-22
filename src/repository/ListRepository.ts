@@ -9,6 +9,8 @@ import {
   deleteDoc,
   query,
   where,
+  getFirestore,
+  runTransaction,
 } from "firebase/firestore";
 import {
   getCollectionRef,
@@ -104,8 +106,23 @@ const setList = async (list: FullList): Promise<void> => {
   await setDoc<DocumentData, DocumentData>(listDocument, newList);
 };
 
+const updateList = async (
+  id: string,
+  change: (list: List) => List,
+): Promise<void> => {
+  const listDocument = getDocRef(COLLECTION_REF, id);
+  await runTransaction(getFirestore(), async (transaction) => {
+    const snapshot = await transaction.get(listDocument);
+    if (!snapshot.exists()) {
+      throw new Error("La liste n'existe plus");
+    }
+    const { username: _username, ...current } = snapshot.data() as List;
+    transaction.set(listDocument, change(current));
+  });
+};
+
 const deleteList = async (id: string): Promise<void> => {
   return await deleteDoc(getDocRef(COLLECTION_REF, id));
 };
 
-export { getLists, getMyLists, getListByID, setList, deleteList };
+export { getLists, getMyLists, getListByID, setList, updateList, deleteList };

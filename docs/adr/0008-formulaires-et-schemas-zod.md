@@ -1,7 +1,7 @@
 # 8. Formulaires validés par des schémas zod alignés sur les interfaces
 
 - Statut : acceptée
-- Source : `src/components/Form/Form.tsx`, `src/components/ListEdit/listFormOptions.ts`
+- Source : `src/components/Form/Form.tsx`, `src/components/PresentForm/PresentForm.tsx` (`satisfies z.ZodType<PresentDraft, PresentDraft>`)
 
 ## Contexte
 

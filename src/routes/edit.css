@@ -1,7 +1,11 @@
 .edit-danger {
+  background-color: var(--white);
+  border: 1px solid var(--divider-color);
+  border-radius: var(--border-radius-large);
   display: flex;
   flex-direction: column;
   gap: var(--padding-small);
+  padding: var(--padding-medium);
 }
 
 .edit-danger__title {
@@ -13,4 +17,69 @@
 .edit-danger__text {
   color: var(--dimmed-color);
   margin: 0 0 var(--padding-small);
+}
+
+.edit-presents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--padding-large);
+  align-items: flex-start;
+}
+
+.edit-presents > .list-presents {
+  flex: 999 1 520px;
+}
+
+.add-present {
+  --add-present-min-width: 340px;
+
+  background-color: var(--white);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-medium);
+  display: flex;
+  flex: 1 1 var(--add-present-min-width);
+  flex-direction: column;
+  gap: var(--padding-medium);
+  min-width: 0;
+  padding: var(--padding-large);
+}
+
+.add-present__header {
+  align-items: center;
+  display: flex;
+  gap: var(--padding-small);
+}
+
+.add-present__title {
+  font-size: var(--font-size-extra-large);
+  margin: 0;
+}
+
+.add-present__hint {
+  border-top: 1px solid var(--divider-color);
+  color: var(--dimmed-color);
+  font-size: var(--font-size-small);
+  margin: 0;
+  padding-top: var(--padding-medium);
+}
+
+.edit-actions {
+  background-color: var(--background-color);
+  border-top: 1px solid var(--divider-color);
+  bottom: 0;
+  display: flex;
+  gap: var(--padding-small);
+  left: 0;
+  padding: var(--padding-small) var(--padding-medium)
+    calc(var(--padding-medium) + env(safe-area-inset-bottom));
+  position: fixed;
+  right: 0;
+  z-index: 5;
+}
+
+.private-layout__main:has(.edit-actions) {
+  padding-bottom: calc(
+    var(--control-height) + var(--padding-large) + var(--padding-medium) +
+      env(safe-area-inset-bottom)
+  );
 }

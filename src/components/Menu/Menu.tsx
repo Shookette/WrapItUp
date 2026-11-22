@@ -1,8 +1,10 @@
 import "./Menu.css";
 
 import { FC, ReactNode, useEffect, useRef, useState } from "react";
+import classNames from "classnames";
 
 export type MenuItem = {
+  danger?: boolean;
   icon?: ReactNode;
   key: string;
   label: string;
@@ -13,9 +15,10 @@ type MenuProps = {
   icon: ReactNode;
   items: MenuItem[];
   label: string;
+  variant?: "filled" | "ghost";
 };
 
-const Menu: FC<MenuProps> = ({ icon, items, label }) => {
+const Menu: FC<MenuProps> = ({ icon, items, label, variant = "filled" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +53,7 @@ const Menu: FC<MenuProps> = ({ icon, items, label }) => {
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-label={label}
-        className="menu__trigger"
+        className={classNames("menu__trigger", `menu__trigger--${variant}`)}
         type="button"
         onClick={() => setIsOpen((open) => !open)}
       >
@@ -62,7 +65,9 @@ const Menu: FC<MenuProps> = ({ icon, items, label }) => {
           {items.map((item) => (
             <li key={item.key} role="none">
               <button
-                className="menu__item"
+                className={classNames("menu__item", {
+                  "menu__item--danger": item.danger,
+                })}
                 role="menuitem"
                 type="button"
                 onClick={() => {
