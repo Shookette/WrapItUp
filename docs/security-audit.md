@@ -201,6 +201,7 @@ Fait le 22/11/2026 (en-têtes sur toutes les pages, previews comprises) :
 
 - [ ] `Content-Security-Policy` (limite fortement l'impact d'une XSS).
   - [x] Politique stricte en **`Content-Security-Policy-Report-Only`** : `'self'` + reCAPTCHA (`www.google.com/recaptcha/`, `www.gstatic.com/recaptcha/`, cadre `recaptcha.google.com`) + API appelées par le SDK (`identitytoolkit`, `securetoken`, `firestore`, `content-firebaseappcheck`.googleapis.com), `style-src 'self'`, `object-src 'none'`, `base-uri` et `form-action 'self'`.
+  - [x] Ajouts après un passage Lighthouse en production (22/11/2026) : iframe de Firebase Auth (`frame-src https://wrap-it-up-2d42a.firebaseapp.com`, `script-src https://apis.google.com` qu'elle charge) et requêtes de reCAPTCHA Enterprise (`connect-src https://www.google.com/recaptcha/`). Changer l'`authDomain` (`VITE_FIREBASE_AUTH_DOMAIN`) oblige à changer `frame-src`.
   - [ ] Vérifier la console du navigateur en production (reCAPTCHA n'est actif qu'en prod, les previews sont en mode debug d'App Check) : aucun message « Content-Security-Policy-Report-Only » sur la connexion, les listes, l'édition, la réservation.
   - [ ] Passer l'en-tête en `Content-Security-Policy` (renommer la clé dans `firebase.json`).
 - [x] `X-Frame-Options: DENY` (`frame-ancestors` est ignoré en Report-Only : à ajouter à la CSP au passage en mode bloquant).
