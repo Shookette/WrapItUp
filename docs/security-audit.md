@@ -171,10 +171,10 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 - [x] Restreindre la **clé API** (console Google Cloud → Identifiants), fait le 12/11/2026 :
   - clé de production (« Browser key ») : référents `wrap-it-up.shoo.ovh/*`, `wrap-it-up-2d42a.web.app/*`, `wrap-it-up-2d42a.firebaseapp.com/*` ; API Identity Toolkit, Token Service, Firestore. Vérifié : un autre référent ou l'absence de référent est refusé (`API_KEY_HTTP_REFERRER_BLOCKED`) ;
   - Google n'accepte ni joker de port pour `localhost` ni joker au milieu d'un domaine (`wrap-it-up-2d42a--*.web.app`) : une seconde clé « Dev / previews », limitée aux mêmes API mais sans restriction de site, sert à `npm run dev` et aux canaux de preview (`.env`, `npm run build:preview`).
-- [ ] Activer **Firebase App Check** (reCAPTCHA Enterprise) et l'imposer sur Firestore.
+- [x] Activer **Firebase App Check** (reCAPTCHA Enterprise) et l'imposer sur Firestore.
   - [x] Intégration côté client (`firebaseLoader.ts`) : reCAPTCHA Enterprise en production, mode debug en local et sur les previews (jetons enregistrés à la main, jamais versionnés : dépôt public).
-  - [ ] Surveiller les métriques quelques jours (100 % des requêtes légitimes vérifiées), puis activer l'application forcée sur Cloud Firestore et Authentication.
-  - [ ] Penser aux domaines reCAPTCHA (`www.google.com/recaptcha`, `www.gstatic.com/recaptcha`) et App Check (`content-firebaseappcheck.googleapis.com`) dans la future CSP (§9).
+  - [x] Surveiller les métriques quelques jours (100 % des requêtes légitimes vérifiées), puis activer l'application forcée sur Cloud Firestore et Authentication. Application forcée activée le 22/11/2026 sur les deux API.
+  - [x] Penser aux domaines reCAPTCHA (`www.google.com/recaptcha`, `www.gstatic.com/recaptcha`) et App Check (`content-firebaseappcheck.googleapis.com`) dans la future CSP (§9).
 - [x] Firebase Auth (console, 22/11/2026) :
   - [x] activer la protection contre l'énumération des emails (déjà active) ;
   - [x] définir une politique de mot de passe : mode « Exiger », 10 caractères minimum, majuscule, minuscule, chiffre et caractère spécial. Reprise dans le schéma zod de l'inscription (`newPasswordSchema`, `utils/formSchemas.ts`) ; un compte plus ancien au mot de passe non conforme est invité à le réinitialiser à la connexion ;
@@ -199,12 +199,12 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 
 Fait le 22/11/2026 (en-têtes sur toutes les pages, previews comprises) :
 
-- [ ] `Content-Security-Policy` (limite fortement l'impact d'une XSS).
+- [x] `Content-Security-Policy` (limite fortement l'impact d'une XSS).
   - [x] Politique stricte en **`Content-Security-Policy-Report-Only`** : `'self'` + reCAPTCHA (`www.google.com/recaptcha/`, `www.gstatic.com/recaptcha/`, cadre `recaptcha.google.com`) + API appelées par le SDK (`identitytoolkit`, `securetoken`, `firestore`, `content-firebaseappcheck`.googleapis.com), `style-src 'self'`, `object-src 'none'`, `base-uri` et `form-action 'self'`.
   - [x] Ajouts après un passage Lighthouse en production (22/11/2026) : iframe de Firebase Auth (`frame-src https://wrap-it-up-2d42a.firebaseapp.com`, `script-src https://apis.google.com` qu'elle charge) et requêtes de reCAPTCHA Enterprise (`connect-src https://www.google.com/recaptcha/`). Changer l'`authDomain` (`VITE_FIREBASE_AUTH_DOMAIN`) oblige à changer `frame-src`.
   - [ ] Vérifier la console du navigateur en production (reCAPTCHA n'est actif qu'en prod, les previews sont en mode debug d'App Check) : aucun message « Content-Security-Policy-Report-Only » sur la connexion, les listes, l'édition, la réservation.
-  - [ ] Passer l'en-tête en `Content-Security-Policy` (renommer la clé dans `firebase.json`).
-- [x] `X-Frame-Options: DENY` (`frame-ancestors` est ignoré en Report-Only : à ajouter à la CSP au passage en mode bloquant).
+  - [x] Passer l'en-tête en `Content-Security-Policy` (renommer la clé dans `firebase.json`), avec `frame-ancestors 'none'`.
+- [x] `X-Frame-Options: DENY`, gardé pour les navigateurs anciens en plus de `frame-ancestors 'none'`.
 - [x] `X-Content-Type-Options: nosniff`
 - [x] `Referrer-Policy: strict-origin-when-cross-origin`
 - [x] `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()`

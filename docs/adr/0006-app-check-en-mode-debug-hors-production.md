@@ -15,4 +15,4 @@ App Check utilise reCAPTCHA Enterprise, dont la clé de site n'autorise que les 
 
 ## Conséquences
 
-Chaque navigateur de développement et chaque testeur·se de preview doit faire enregistrer son jeton tant que l'application forcée d'App Check est activée.
+L'application forcée d'App Check est activée sur Cloud Firestore et Authentication depuis le 22 novembre 2026 : un navigateur de développement ou de preview sans jeton enregistré ne peut ni se connecter ni lire de données. Chaque testeur·se de preview doit faire enregistrer son jeton.
