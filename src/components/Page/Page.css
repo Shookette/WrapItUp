@@ -18,7 +18,7 @@
   max-width: var(--page-width-md);
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .page {
     padding: var(--padding-large);
   }

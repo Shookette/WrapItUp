@@ -1,15 +1,34 @@
 .title {
-  margin-top: 0;
-  margin-bottom: var(--padding-medium);
-}
-
-.title--with-actions {
   align-items: center;
   display: flex;
   gap: var(--padding-medium);
   justify-content: space-between;
+  margin-bottom: var(--padding-medium);
+}
+
+.title__heading {
+  min-width: 0;
 }
 
 .title__text {
   margin: 0;
+}
+
+.title--page .title__text {
+  font-size: var(--font-size-title);
+}
+
+.title__subtitle {
+  color: var(--dimmed-color);
+  margin: var(--padding-extra-small) 0 0;
+}
+
+.title__actions {
+  flex-shrink: 0;
+}
+
+@media (--desktop) {
+  .title--page .title__text {
+    font-size: var(--font-size-title-large);
+  }
 }

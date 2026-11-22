@@ -15,6 +15,7 @@ import {
 import { useUserContext } from "#/hooks/UserContext.tsx";
 import { isAuthenticated } from "#/utils/routeUtils.ts";
 import { useToast } from "#/components/Toast/toastContext.ts";
+import { useConfirm } from "#/components/Confirm/confirmContext.ts";
 
 import ListForm from "#/components/ListEdit/ListForm.tsx";
 import ListUserForm from "#/components/ListEdit/ListUserForm.tsx";
@@ -39,6 +40,7 @@ function EditComponent() {
 
   const { user } = useUserContext();
   const toast = useToast();
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(false);
 
   if (!list || list.userUID !== user?.uid) {
@@ -46,6 +48,16 @@ function EditComponent() {
   }
 
   const handleDeleteList = async () => {
+    const confirmed = await confirm({
+      title: `Supprimer « ${list.title} » ?`,
+      message:
+        "La liste, ses cadeaux et leurs réservations seront supprimés pour tout le monde. Cette action est définitive.",
+      confirmLabel: "Supprimer la liste",
+    });
+    if (!confirmed) {
+      return;
+    }
+
     await deleteList(list.id);
     return navigate({ to: "/" });
   };

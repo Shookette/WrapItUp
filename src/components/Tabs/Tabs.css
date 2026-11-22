@@ -52,7 +52,7 @@
   display: none;
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .tabs__list {
     align-self: flex-start;
     display: inline-flex;

@@ -1,15 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import "./index.css";
+
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { IconList, IconPlus } from "@tabler/icons-react";
 import { getMyLists } from "#/repository/ListRepository.ts";
 import { isAuthenticated } from "#/utils/routeUtils.ts";
-import { useCallback } from "react";
-import { FullList } from "#/interfaces/List.ts";
-import { useUserContext } from "#/hooks/UserContext.tsx";
-import ListTableComponent from "#/components/ListTable.tsx";
-import { IconPlus } from "@tabler/icons-react";
+import { plural } from "#/utils/plural.ts";
 import PrivateLayout from "#/components/PrivateLayout.tsx";
-import Button from "#/components/Button/Button.tsx";
-import Page from "#/components/Page/Page.tsx";
 import Title from "#/components/Title/Title.tsx";
+import ListItem, { ListItems } from "#/components/ListItem/ListItem.tsx";
+import EmptyState from "#/components/EmptyState/EmptyState.tsx";
+import { buttonClassNames } from "#/components/Button/buttonClassNames.ts";
 
 export const Route = createFileRoute("/")({
   component: IndexComponent,
@@ -27,44 +27,66 @@ export const Route = createFileRoute("/")({
   },
 });
 
+const newListLink = (
+  <Link className={buttonClassNames()} to="/new">
+    <IconPlus aria-hidden size={20} />
+    Nouvelle liste
+  </Link>
+);
+
 function IndexComponent() {
   const lists = Route.useLoaderData();
-  const navigate = Route.useNavigate();
-  const { user } = useUserContext();
-
-  const redirectTo = useCallback(
-    (list: FullList) => {
-      if (list.userUID === user?.uid) {
-        return navigate({
-          to: "/edit/$listId",
-          params: { listId: list.id },
-        });
-      }
-
-      return navigate({ to: "/list/$listId", params: { listId: list.id } });
-    },
-    [navigate, user?.uid],
+  const presentCount = lists.reduce(
+    (count, list) => count + (list.presents?.length ?? 0),
+    0,
   );
 
   return (
     <PrivateLayout>
-      <Page size="lg">
-        <Title
-          actions={
-            <Button
-              icon={<IconPlus size={24} />}
-              type="success"
-              onClick={() => navigate({ to: "/new" })}
-            >
-              Ajouter
-            </Button>
-          }
-        >
-          Mes listes
-        </Title>
+      <Title
+        actions={
+          lists.length > 0 && (
+            <div className="my-lists__new--desktop">{newListLink}</div>
+          )
+        }
+        subtitle={
+          lists.length > 0 &&
+          `${plural(lists.length, "liste", "listes")} · ${plural(presentCount, "cadeau", "cadeaux")}`
+        }
+        variant="page"
+      >
+        Mes listes
+      </Title>
 
-        <ListTableComponent lists={lists} onRedirect={redirectTo} />
-      </Page>
+      {lists.length === 0 ? (
+        <EmptyState
+          action={newListLink}
+          icon={<IconList size={32} stroke={1.75} />}
+          title="Pas encore de liste"
+        >
+          Créez votre première liste de cadeaux, puis partagez-la avec vos
+          proches.
+        </EmptyState>
+      ) : (
+        <>
+          <ListItems>
+            {lists.map((list) => (
+              <ListItem
+                key={list.id}
+                listId={list.id}
+                subtitle={`${plural(list.presents?.length ?? 0, "cadeau", "cadeaux")} · ${plural(list.allowedUsers.length, "invité·e", "invité·es")}`}
+                title={list.title}
+                to="/edit/$listId"
+              />
+            ))}
+          </ListItems>
+
+          <Link className={`${buttonClassNames()} my-lists__fab`} to="/new">
+            <IconPlus aria-hidden size={20} />
+            Nouvelle liste
+          </Link>
+        </>
+      )}
     </PrivateLayout>
   );
 }
