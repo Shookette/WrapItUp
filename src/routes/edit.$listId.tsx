@@ -62,7 +62,7 @@ function EditComponent() {
     router.invalidate();
     toast.show({
       type: "success",
-      message: `L'utilisateurice a été supprimé•e`,
+      message: "L'invité·e a été retiré·e de la liste",
     });
     setLoading(false);
   };

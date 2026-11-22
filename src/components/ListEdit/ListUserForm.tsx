@@ -25,9 +25,9 @@ const ListUserForm: FC<ListUserFormProps> = ({
     const baseUrl = `${window.location.protocol}//${window.location.host}`;
     await navigator.clipboard.writeText(`${baseUrl}/invite/${list.id}`);
     toast.show({
-      title: "Ajouter un•e utilisateurice",
+      title: "Lien d'invitation copié",
       message:
-        "Le lien d'ajout d'un•e nouvel•le utilisateurice à été copié dans votre presse papiers",
+        "Envoyez-le aux personnes que vous voulez inviter : elles pourront rejoindre la liste.",
     });
   }
 
@@ -44,8 +44,8 @@ const ListUserForm: FC<ListUserFormProps> = ({
       </Button>
 
       <Table
-        emptyMessage="Aucun•e utilisateurice"
-        headers={["Utilisateurices", "Actions"]}
+        emptyMessage="Aucun·e invité·e pour l'instant"
+        headers={["Invité·es", "Actions"]}
       >
         {allowedUsers.map((user) => (
           <tr className="table__row" key={user.userUID}>
