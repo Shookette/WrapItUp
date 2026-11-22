@@ -24,6 +24,11 @@ const navLinks = [
   { exact: false, icon: IconGift, label: "Invitations", to: "/lists" },
 ] as const;
 
+const bottomNavLinks = [
+  ...navLinks,
+  { exact: false, icon: IconUser, label: "Compte", to: "/account" },
+] as const;
+
 const PrivateLayout: FC<PrivateLayoutProps> = ({ back, children }) => {
   const { logout } = useUserContext();
   const navigate = useNavigate();
@@ -113,10 +118,7 @@ const PrivateLayout: FC<PrivateLayoutProps> = ({ back, children }) => {
 
       {!back && (
         <nav aria-label="Navigation principale" className="bottom-nav">
-          {[
-            ...navLinks,
-            { exact: false, icon: IconUser, label: "Compte", to: "/account" },
-          ].map(({ exact, icon: Icon, label, to }) => (
+          {bottomNavLinks.map(({ exact, icon: Icon, label, to }) => (
             <Link
               activeOptions={{ exact }}
               activeProps={{ "aria-current": "page" }}
