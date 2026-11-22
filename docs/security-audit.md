@@ -11,7 +11,7 @@
 
 1. [x] Règles Firestore + tests émulateur (profils : protégés par le champ `userUID`, sans migration) → [§1](#1--règles-firestore-ouvertes-à-tous)
 2. [x] Validation des URLs, `emailVerified` au login, nettoyage du `localStorage` → [§2](#2--xss-via-lurl-dun-cadeau), [§3](#3--jetons-de-connexion-copiés-dans-localstorage), [§4](#4--vérification-de-lemail-contournable)
-3. [ ] `npm audit fix`, Dependabot, en-têtes HTTP → [§5](#5--dépendances-vulnérables), [§9](#9--en-têtes-http-de-sécurité)
+3. [ ] `npm audit fix`, Dependabot, en-têtes HTTP (reste : CSP en mode bloquant) → [§5](#5--dépendances-vulnérables), [§9](#9--en-têtes-http-de-sécurité)
 4. [ ] Sous-collection de réservations (migration de données) → [§1.3](#13-secret-des-réservations-changement-de-modèle), [§6](#6--écritures-concurrentes--réservations-perdues)
 
 ---
@@ -195,30 +195,17 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 
 **Fichier** : `firebase.json`, section `hosting.headers`
 
-- [ ] `Content-Security-Policy` (limite fortement l'impact d'une XSS). Point de départ à ajuster :
-      `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com; frame-src https://wrap-it-up-2d42a.firebaseapp.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'`
-- [ ] `X-Content-Type-Options: nosniff`
-- [ ] `Referrer-Policy: strict-origin-when-cross-origin`
-- [ ] `Permissions-Policy: camera=(), microphone=(), geolocation=()`
-- [ ] `Strict-Transport-Security` (Firebase Hosting le met déjà, à vérifier)
+Fait le 22/11/2026 (en-têtes sur toutes les pages, previews comprises) :
 
-Exemple :
-
-```json
-"headers": [
-  {
-    "source": "**",
-    "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-      { "key": "Content-Security-Policy", "value": "..." }
-    ]
-  }
-]
-```
-
-Tester d'abord en `Content-Security-Policy-Report-Only` sur un canal de preview.
+- [ ] `Content-Security-Policy` (limite fortement l'impact d'une XSS).
+  - [x] Politique stricte en **`Content-Security-Policy-Report-Only`** : `'self'` + reCAPTCHA (`www.google.com/recaptcha/`, `www.gstatic.com/recaptcha/`, cadre `recaptcha.google.com`) + API appelées par le SDK (`identitytoolkit`, `securetoken`, `firestore`, `content-firebaseappcheck`.googleapis.com), `style-src 'self'`, `object-src 'none'`, `base-uri` et `form-action 'self'`.
+  - [ ] Vérifier la console du navigateur en production (reCAPTCHA n'est actif qu'en prod, les previews sont en mode debug d'App Check) : aucun message « Content-Security-Policy-Report-Only » sur la connexion, les listes, l'édition, la réservation.
+  - [ ] Passer l'en-tête en `Content-Security-Policy` (renommer la clé dans `firebase.json`).
+- [x] `X-Frame-Options: DENY` (`frame-ancestors` est ignoré en Report-Only : à ajouter à la CSP au passage en mode bloquant).
+- [x] `X-Content-Type-Options: nosniff`
+- [x] `Referrer-Policy: strict-origin-when-cross-origin`
+- [x] `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()`
+- [x] `Strict-Transport-Security` : déjà envoyé par Firebase Hosting (`max-age=31556926`, vérifié le 22/11/2026).
 
 ---
 
@@ -226,11 +213,11 @@ Tester d'abord en `Content-Security-Policy-Report-Only` sur un canal de preview.
 
 **Fichiers** : `.github/workflows/firebase-hosting-merge.yml`, `firebase-hosting-pull-request.yml`
 
-- [ ] Épingler les actions par SHA (`actions/checkout@<sha>`, `FirebaseExtended/action-hosting-deploy@<sha>`) : `@v0` est une étiquette mobile.
-- [ ] Ajouter un bloc `permissions:` minimal au workflow de merge (`contents: read`, `checks: write`).
+- [x] Épingler les actions par SHA (`actions/checkout@<sha>`, `FirebaseExtended/action-hosting-deploy@<sha>`) : `@v0` est une étiquette mobile. Version en commentaire (`# v4.4.0`) ; sans Dependabot pour les mises à jour de versions, les SHA sont à mettre à jour à la main de temps en temps.
+- [x] Ajouter un bloc `permissions:` minimal au workflow de merge (`contents: read`, `checks: write`).
 - [x] Vérifier que le compte de service `FIREBASE_SERVICE_ACCOUNT_WRAP_IT_UP_2D42A` n'a que le rôle **Firebase Hosting Admin** (+ Firebase Rules Admin si les règles sont déployées par la CI). Fait le 22/11/2026 : `cloudfunctions.developer` et `firebaseauth.admin` (ajoutés d'office par `firebase init hosting:github`) retirés ; restent `firebasehosting.admin`, `run.viewer`, `serviceusage.apiKeysViewer` et `serviceusage.serviceUsageConsumer`, utilisés par l'action de déploiement.
 - [x] Lancer `npm run lint` dans la CI avant le déploiement (fait, PR #2 : oxlint).
-- [ ] Lancer `npm audit --audit-level=high --omit=dev` dans la CI avant le déploiement.
+- [x] Lancer `npm audit --omit=dev` dans la CI avant le déploiement, au seuil `critical` : les 4 failles `high` connues viennent de `@grpc/grpc-js` (cf. §5), absent du bundle navigateur ; `high` bloquerait chaque déploiement.
 - [x] Protéger la branche `main` (PR obligatoire, checks verts) puisqu'un push déploie en production (ruleset GitHub, 22/11/2026).
 
 ---
