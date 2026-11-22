@@ -15,7 +15,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait    |
 | 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait    |
 | 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ✅ fait    |
-| 7   | Consultation et réservation (invité·e)                  | moyen       | ⬜ à faire |
+| 7   | Consultation et réservation (invité·e)                  | moyen       | ✅ fait    |
 | 8   | Invitation et pages d'authentification                  | faible      | ⬜ à faire |
 | 9   | Nettoyage (anciens composants, variables, assets)       | faible      | ⬜ à faire |
 
@@ -264,15 +264,13 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 ## 7. Consultation et réservation (`/list/$listId`)
 
-- [ ] En-tête : retour, titre, « Liste de Camille », bouton « Quitter la liste » (confirmation).
-- [ ] Filtres en pastilles : Tous · n / Disponibles · n / Mes réservations · n. Les garder dans l'URL avec `validateSearch` (`z.enum(["all", "available", "mine"]).catch("all")`). Sur mobile, la rangée défile horizontalement (`overflow-x: auto`).
-- [ ] Carte de cadeau selon l'état :
-  - disponible : bouton « Réserver » ;
-  - réservé par moi : badge vert « Réservé par vous » + ✕ « Annuler la réservation de … » ;
-  - réservé par quelqu'un d'autre : carte grisée, badge « Déjà réservé », aucune action.
-- [ ] « Voir le cadeau » seulement si `isHttpUrl()`, avec `target="_blank" rel="noopener noreferrer"`.
-- [ ] Pendant l'écriture, `loading` sur le bouton concerné uniquement, pas sur toute la page.
-- [ ] Rappel de l'audit (réservations concurrentes, §🟠) : le design ne change rien au problème, mais un toast d'erreur clair si la réservation échoue serait utile.
+- [x] En-tête : retour, titre, « Liste de Camille », bouton « Quitter la liste » (confirmation, puis retour aux invitations).
+- [x] Filtres en pastilles Tous · n / Disponibles · n / Mes réservations · n (`aria-pressed`), gardés dans l'URL (`?filter=available`, `?filter=mine`), rangée qui défile sur mobile. Message adapté quand un filtre ne donne rien.
+- [x] Carte de cadeau selon l'état (`presentState` : `available` / `mine` / `taken`) : « Réserver » ; badge vert « Réservé par vous » + ✕ « Annuler la réservation de … » ; carte grisée et badge « Déjà réservé ». Grille de cartes sur bureau.
+- [x] « Voir le cadeau » seulement si `isHttpUrl()`, `target="_blank" rel="noopener noreferrer"`.
+- [x] Chargement sur le seul bouton concerné.
+- [x] Réservations concurrentes (audit §6) : transaction qui vérifie que le cadeau est encore libre ; sinon toast « Ce cadeau vient d'être réservé par quelqu'un d'autre » et la liste se recharge. Fonctions pures testées (`reservePresent`, `cancelReservation`, `countByState`), tests des règles pour la réservation et le départ par transaction.
+- [x] Composants `Card` et `Grid` supprimés (plus utilisés).
 
 ## 8. Invitation et authentification
 
@@ -283,7 +281,7 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 ## 9. Nettoyage
 
-- [ ] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles (`Grid`, `Center`, `Page` selon ce qui reste ; `Table` supprimé à l'étape 6).
+- [ ] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles (`Center`, `Page` selon ce qui reste ; `Table` supprimé à l'étape 6, `Card` et `Grid` à l'étape 7).
 - [ ] Supprimer les variables de couleur de l'ancien thème.
 - [ ] Mettre à jour `CLAUDE.md` (section « Composants et style ») et cocher `todo.md`.
 - [ ] Lighthouse mobile sur la preview : accessibilité ≥ 95, pas de zone tactile trop petite.

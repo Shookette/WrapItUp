@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { IconGift, IconLogout2 } from "@tabler/icons-react";
 import { useState } from "react";
-import { getLists, setList } from "#/repository/ListRepository.ts";
+import { getLists, leaveList } from "#/repository/ListRepository.ts";
 import { isAuthenticated } from "#/utils/routeUtils.ts";
 import { plural } from "#/utils/plural.ts";
 import { FullList } from "#/interfaces/List.ts";
@@ -38,7 +38,7 @@ function ListsComponent() {
   const confirm = useConfirm();
   const [leavingListId, setLeavingListId] = useState<string>();
 
-  const leaveList = async (list: FullList) => {
+  const handleLeave = async (list: FullList) => {
     const confirmed = await confirm({
       title: `Quitter « ${list.title} » ?`,
       message:
@@ -51,12 +51,7 @@ function ListsComponent() {
 
     setLeavingListId(list.id);
     try {
-      await setList({
-        ...list,
-        allowedUsers: list.allowedUsers.filter(
-          (allowedUser) => allowedUser.userUID !== user?.uid,
-        ),
-      });
+      await leaveList(list.id, user?.uid ?? "");
       await router.invalidate();
       toast.show({
         type: "success",
@@ -103,7 +98,7 @@ function ListsComponent() {
                   icon={<IconLogout2 size={20} stroke={1.75} />}
                   loading={leavingListId === list.id}
                   type="danger"
-                  onClick={() => leaveList(list)}
+                  onClick={() => handleLeave(list)}
                 />
               }
               key={list.id}

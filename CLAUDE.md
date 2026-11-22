@@ -115,7 +115,7 @@ Identifiant du document = `list.id` (uuid).
 - En base, `allowedUsers` est un tableau d'uids. Côté app, on manipule un `FullList` où `allowedUsers` est enrichi en `{ userUID, username }` ; `setList()` refait la conversion avant l'écriture.
 - `username` (nom du ou de la propriétaire) est ajouté à la lecture par le repository et ne fait pas partie du modèle de base.
 - Une réservation = modifier `status` (`"available"` / `"reserved"`) et `reservedBy` (uid) du cadeau, puis réécrire **toute la liste** avec `setList()`.
-- Les écritures du ou de la propriétaire sur une liste existante (cadeaux, titre, retrait d'un·e invité·e) passent par `updateList(id, change)` : une **transaction** Firestore qui relit la liste puis applique `change`, pour ne pas écraser une réservation faite entre-temps par un·e invité·e. `setList()` (réécriture à partir de la liste chargée par la page) reste pour la création et les écritures des invité·es.
+- Les écritures du ou de la propriétaire sur une liste existante (cadeaux, titre, retrait d'un·e invité·e) passent par `updateList(id, change)` : une **transaction** Firestore qui relit la liste puis applique `change`, pour ne pas écraser une réservation faite entre-temps par un·e invité·e. Les écritures des invité·es aussi : réserver / annuler (`updateList` + `reservePresent` / `cancelReservation`, qui refusent un cadeau déjà pris) et quitter (`leaveList`). `setList()` (réécriture à partir de la liste chargée par la page) ne reste que pour la création et pour rejoindre une liste.
 
 ### Collection `profils`
 
@@ -175,7 +175,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d'upgrade). Tout est fait maison.
 
 - Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
-  - mise en page : `Page` (carte blanche centrale, `size`), `Center`, `Grid`, `Card`, `Title` (prop `actions` pour un bouton à droite), `Header` (bandeau du haut) ;
+  - mise en page : `PrivateLayout` (barre du haut, navigation du bas sur mobile, `back` pour une page de détail), `Page` (carte blanche, `size`), `Center`, `Title` (`variant="page"`, `subtitle`, `actions`), `Header` (ancien bandeau, pages de connexion), `ListItem` / `ListItems` (cartes de liste), `EmptyState` ;
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
   - `Tile` : pastille colorée (icône ou initiale) : `tone` (`primary`, `success`, `info`, `warning`) ou `toneFrom={id}` pour une couleur stable tirée d'un identifiant, `shape` (`round`, `square`), `size` (40 / 48 / 64 px). Toute pastille passe par lui ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;

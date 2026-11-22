@@ -3,7 +3,12 @@ import { describe, it } from "node:test";
 import type { Present } from "#/interfaces/Present.ts";
 import {
   addPresent,
+  cancelReservation,
+  countByState,
+  presentState,
   removePresent,
+  ReservationError,
+  reservePresent,
   updatePresent,
   urlHost,
 } from "./presents.ts";
@@ -101,5 +106,84 @@ describe("urlHost", () => {
     assert.equal(urlHost(""), undefined);
     assert.equal(urlHost(undefined), undefined);
     assert.equal(urlHost("pas un lien"), undefined);
+  });
+});
+
+describe("presentState", () => {
+  it("distingue disponible, réservé par moi et réservé par quelqu'un d'autre", () => {
+    assert.equal(presentState(available, "guest-uid"), "available");
+    assert.equal(presentState(reserved, "guest-uid"), "mine");
+    assert.equal(presentState(reserved, "other-uid"), "taken");
+    assert.equal(presentState(reserved, undefined), "taken");
+  });
+
+  it("considère un ancien cadeau libéré (reservedBy vide) comme disponible", () => {
+    assert.equal(
+      presentState({ ...available, reservedBy: "" }, "guest-uid"),
+      "available",
+    );
+  });
+});
+
+describe("countByState", () => {
+  it("compte les cadeaux par état", () => {
+    assert.deepEqual(countByState([reserved, available], "guest-uid"), {
+      available: 1,
+      mine: 1,
+      taken: 0,
+    });
+    assert.deepEqual(countByState([reserved, available], "other-uid"), {
+      available: 1,
+      mine: 0,
+      taken: 1,
+    });
+  });
+});
+
+describe("reservePresent", () => {
+  it("réserve un cadeau disponible au nom de l'invité·e", () => {
+    const [, updated] = reservePresent(
+      [reserved, available],
+      "p2",
+      "other-uid",
+    );
+    assert.equal(updated.status, "reserved");
+    assert.equal(updated.reservedBy, "other-uid");
+  });
+
+  it("refuse un cadeau déjà réservé, même par soi", () => {
+    assert.throws(
+      () => reservePresent([reserved], "p1", "other-uid"),
+      (error) => error instanceof ReservationError && error.reason === "taken",
+    );
+    assert.throws(
+      () => reservePresent([reserved], "p1", "guest-uid"),
+      ReservationError,
+    );
+  });
+
+  it("refuse un cadeau qui n'existe plus", () => {
+    assert.throws(
+      () => reservePresent([available], "x", "guest-uid"),
+      (error) =>
+        error instanceof ReservationError && error.reason === "missing",
+    );
+  });
+});
+
+describe("cancelReservation", () => {
+  it("libère sa propre réservation", () => {
+    const [updated] = cancelReservation([reserved], "p1", "guest-uid");
+    assert.equal(updated.status, "available");
+    assert.equal(updated.reservedBy, "");
+    assert.equal(updated.title, reserved.title);
+  });
+
+  it("refuse d'annuler la réservation de quelqu'un d'autre", () => {
+    assert.throws(
+      () => cancelReservation([reserved], "p1", "other-uid"),
+      (error) =>
+        error instanceof ReservationError && error.reason === "not-mine",
+    );
   });
 });
