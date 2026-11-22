@@ -8,7 +8,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 
 | #   | Étape                                                   | Risque      | État       |
 | --- | ------------------------------------------------------- | ----------- | ---------- |
-| 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ⬜ à faire |
+| 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait    |
 | 1   | Thème : variables, polices, contrastes                  | faible      | ⬜ à faire |
 | 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ⬜ à faire |
 | 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ⬜ à faire |
@@ -25,7 +25,7 @@ L'étape 6 est la seule qui change le fonctionnement (voir plus bas) : la faire 
 
 ## Principes communs
 
-- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute avec `@media (min-width: 768px)`. Un seul point de rupture suffit pour toutes les maquettes. Les variables CSS ne marchent pas dans une media query : écrire `768px` en dur, avec un commentaire.
+- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute avec `@media (min-width: 768px)`. Un seul point de rupture suffit pour toutes les maquettes. Les variables CSS ne marchent pas dans une media query : écrire `768px` en dur, et en donner la raison dans un ADR (pas de commentaire, cf. `docs/adr/0001-adr-et-pas-de-commentaires.md`).
 - **Largeur du contenu** : `max-width: 1120px; margin-inline: auto; padding-inline: var(--padding-medium)` au lieu des largeurs en % de `Page` (`35%`, `40%`, `60%`), illisibles sur téléphone.
 - **Zones tactiles** : 44 px minimum pour tout ce qui est cliquable (boutons icônes compris).
 - **Champs** : `font-size` d'au moins 16 px sur mobile, sinon Safari iOS zoome au focus.
@@ -37,7 +37,7 @@ L'étape 6 est la seule qui change le fonctionnement (voir plus bas) : la faire 
 
 ## 0. Assets et `index.html`
 
-Fichiers déjà ajoutés au dépôt (non commités) :
+Fichiers ajoutés :
 
 | Fichier                       | Rôle                                                                               |
 | ----------------------------- | ---------------------------------------------------------------------------------- |
@@ -52,7 +52,7 @@ Le dessin du cadeau est celui de `IconGift` (@tabler/icons-react). Pour l'affich
 
 À faire :
 
-- [ ] `index.html` :
+- [x] `index.html` :
   ```html
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -67,7 +67,7 @@ Le dessin du cadeau est celui de `IconGift` (@tabler/icons-react). Pour l'affich
     content="Des listes de cadeaux à partager, sans gâcher la surprise."
   />
   ```
-- [ ] Supprimer `public/vite.svg` et `src/assets/react.svg` (inutilisés).
+- [x] Supprimer `public/vite.svg` et `src/assets/react.svg` (inutilisés).
 - [ ] `src/assets/home.png` sera supprimé à l'étape 9, une fois `Header` retiré.
 
 ## 1. Thème
@@ -90,7 +90,7 @@ Noms des familles : `"Inter Variable"` et `"Bricolage Grotesque Variable"`. Les 
 
 ### Variables (`theme.css`)
 
-Valeurs reprises des maquettes. On garde les noms existants autant que possible, pour limiter les changements dans les composants.
+Valeurs reprises des maquettes. Les commentaires du bloc ci-dessous documentent les valeurs : **ne pas les recopier** dans `theme.css` (règle « pas de commentaires », non lintée pour le CSS). On garde les noms existants autant que possible, pour limiter les changements dans les composants.
 
 ```css
 :root {
