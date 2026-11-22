@@ -8,6 +8,8 @@ import UserProvider, { useUserContext } from "#/hooks/UserContext.tsx";
 import { routeTree } from "./routeTree.gen";
 import ToastProvider from "#/components/Toast/ToastProvider.tsx";
 
+import "@fontsource-variable/inter/index.css";
+import "@fontsource-variable/bricolage-grotesque/index.css";
 import "./theme.css";
 
 const router = createRouter({

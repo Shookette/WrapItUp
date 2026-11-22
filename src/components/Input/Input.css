@@ -4,11 +4,11 @@
 }
 
 .input__label-asterix {
-  color: red;
+  color: var(--danger-color);
 }
 
 .input__field {
-  border: 1px solid var(--input-color);
+  border: var(--border-width) solid var(--border-color);
   border-radius: 5px;
   padding: 0.3em 0.7em;
   width: 100%;
@@ -19,7 +19,7 @@ textarea.input__field {
 }
 
 .input__field::placeholder {
-  color: var(--placeholder-color);
+  color: var(--dimmed-color);
 }
 
 .input__field:focus {
