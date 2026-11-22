@@ -177,6 +177,10 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
   - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).
 - Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--padding-medium`, `--font-size-small`, `--shadow-large`…) : pas de valeur d'espacement, de taille de texte, d'arrondi ou d'ombre en dur. Une dimension propre à un composant devient une variable locale sur son bloc (`.header { --header-height: 100px; }`). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
 - **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute dans `@media (--desktop) { … }` (768 px, `@custom-media` défini dans `src/media.css`, remplacé au build par PostCSS : `docs/adr/0013-point-de-rupture-unique-768px.md`). Ne jamais écrire `768px` dans un fichier CSS.
+- **Ne jamais dépendre de l'ordre des fichiers CSS** : Vite et Rolldown ne garantissent pas l'ordre des fichiers CSS dans le build. Deux règles de même poids (une classe chacune) qui touchent la même propriété d'un même élément donnent un résultat imprévisible. Pour changer l'apparence d'un composant (`Button`…) depuis l'extérieur :
+  - placement, visibilité (`display`, `position`, marges) : mettre la classe sur un **conteneur** autour du composant (`<div className="my-lists__fab"><Link className={buttonClassNames()} /></div>`), jamais sur l'élément racine du composant ;
+  - couleurs ou bordures : passer par une variante du composant, ou monter le poids avec le bloc parent (`.invite-block .invite-block__copy`, deux classes contre une) ;
+  - pas de `!important`.
 - Le CSS propre à une route va dans un fichier à côté (`routes/login.css`, `routes/list.css`).
 - Variantes communes : `type: "primary" | "danger" | "success"`, `size: "small" | "medium" | "large"`.
 - `Button` est en `type="button"` par défaut : seul `isSubmit` envoie un formulaire.
