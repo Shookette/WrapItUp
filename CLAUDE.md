@@ -64,7 +64,7 @@ src/
   repository/           # TOUT accès à Firestore passe par ici
   interfaces/           # types métier (List, Present, Profil)
   utils/routeUtils.ts   # garde d'authentification des routes
-  utils/formSchemas.ts  # règles zod partagées (email, champ obligatoire, lien http(s))
+  utils/formSchemas.ts  # règles zod partagées (email, champ obligatoire, lien http(s), mot de passe)
   utils/url.ts          # isHttpUrl : vérifier un lien avant de l'afficher
 ```
 
@@ -173,6 +173,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 ## Points d'attention connus
 
+- **Politique de mot de passe** : définie dans la console Firebase (Authentication → Paramètres, mode « Exiger » : 10 caractères, majuscule, minuscule, chiffre, caractère spécial) et reprise dans `newPasswordSchema` (`utils/formSchemas.ts`) : modifier les deux ensemble.
 - **Sécurité Firestore** (`firestore.rules`) : tout exige un email vérifié (`email_verified`), sauf la création de son profil à l'inscription ; listes lisibles par id par toute personne connectée (lien d'invitation), requêtes limitées à ses listes ; seul·e le ou la propriétaire modifie ou supprime ; un·e invité·e peut seulement réserver (`presents`), rejoindre (s'ajouter) ou quitter (se retirer) ; profils modifiables par leur seul·e titulaire (champ `userUID`). Toute nouvelle écriture doit passer ces règles : ajouter le cas dans les tests.
 - **Limites restantes** : le secret des réservations n'est garanti que par l'interface (réservations imbriquées dans la liste, cf. `docs/security-audit.md` §1.3), et un·e invité·e peut réécrire le contenu des cadeaux.
 - Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.

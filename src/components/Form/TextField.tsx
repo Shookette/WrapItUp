@@ -3,6 +3,7 @@ import Input from "#/components/Input/Input.tsx";
 import { useFieldContext } from "./formContext.ts";
 
 type TextFieldProps = {
+  description?: string;
   id?: string;
   label?: string;
   placeholder?: string;

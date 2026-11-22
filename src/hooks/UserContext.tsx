@@ -34,6 +34,8 @@ const REGISTER_ERRORS: Record<string, string> = {
   "auth/email-already-in-use": "Un compte existe déjà avec cet email",
   "auth/invalid-email": "L'email n'est pas valide",
   "auth/weak-password": "Le mot de passe est trop faible",
+  "auth/password-does-not-meet-requirements":
+    "Le mot de passe ne respecte pas les règles de sécurité",
   "auth/too-many-requests":
     "Trop de tentatives : réessayez dans quelques minutes",
   default: "Une erreur est survenue lors de l'inscription, veuillez réessayer",
@@ -51,6 +53,9 @@ const RESET_PASSWORD_ERRORS: Record<string, string> = {
   default:
     "L'email de réinitialisation n'a pas pu être envoyé, veuillez réessayer",
 };
+
+export const PASSWORD_OUTDATED_ERROR =
+  "Votre mot de passe ne respecte plus les règles de sécurité : choisissez-en un nouveau avec « Mot de passe oublié ».";
 
 export const EMAIL_NOT_VERIFIED_ERROR =
   "Votre email n'est pas encore vérifié : cliquez sur le lien reçu par email, puis reconnectez-vous.";
@@ -116,6 +121,12 @@ const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         if (error instanceof FirebaseError) {
           if (error.message === FIREBASE_ERROR_AUTH_INVALID_CREDENTIAL) {
             errorMessage = `L'email ou le mot de passe est incorrect`;
+          } else if (
+            error.code === "auth/password-does-not-meet-requirements"
+          ) {
+            // Compte créé avant la politique de mot de passe : Firebase refuse
+            // la connexion tant que le mot de passe n'est pas changé.
+            errorMessage = PASSWORD_OUTDATED_ERROR;
           } else {
             errorMessage = `Une erreur est survenue lors de la connexion, veuillez réessayer`;
           }

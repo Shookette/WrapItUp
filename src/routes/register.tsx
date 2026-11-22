@@ -5,7 +5,12 @@ import { z } from "zod";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useUserContext } from "#/hooks/UserContext.tsx";
 import { useAppForm } from "#/hooks/useAppForm.ts";
-import { emailSchema, usernameSchema } from "#/utils/formSchemas.ts";
+import {
+  emailSchema,
+  newPasswordSchema,
+  PASSWORD_RULES,
+  usernameSchema,
+} from "#/utils/formSchemas.ts";
 import Banner from "#/components/Banner/Banner.tsx";
 import Center from "#/components/Center/Center.tsx";
 import Page from "#/components/Page/Page.tsx";
@@ -19,10 +24,7 @@ export const Route = createFileRoute("/register")({
 const registerSchema = z.object({
   email: emailSchema,
   username: usernameSchema,
-  // minimum imposé par Firebase Auth
-  password: z
-    .string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+  password: newPasswordSchema,
 });
 
 function RegisterComponent() {
@@ -106,6 +108,7 @@ function RegisterComponent() {
               {(field) => (
                 <field.TextField
                   label="Mot de passe"
+                  description={PASSWORD_RULES}
                   placeholder="Mot de passe"
                   required
                   type="password"

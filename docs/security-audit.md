@@ -10,7 +10,7 @@
 ## Ordre de traitement conseillé
 
 1. [x] Règles Firestore + tests émulateur (profils : protégés par le champ `userUID`, sans migration) → [§1](#1--règles-firestore-ouvertes-à-tous)
-2. [ ] Validation des URLs, `emailVerified` au login, nettoyage du `localStorage` → [§2](#2--xss-via-lurl-dun-cadeau), [§3](#3--jetons-de-connexion-copiés-dans-localstorage), [§4](#4--vérification-de-lemail-contournable)
+2. [x] Validation des URLs, `emailVerified` au login, nettoyage du `localStorage` → [§2](#2--xss-via-lurl-dun-cadeau), [§3](#3--jetons-de-connexion-copiés-dans-localstorage), [§4](#4--vérification-de-lemail-contournable)
 3. [ ] `npm audit fix`, Dependabot, en-têtes HTTP → [§5](#5--dépendances-vulnérables), [§9](#9--en-têtes-http-de-sécurité)
 4. [ ] Sous-collection de réservations (migration de données) → [§1.3](#13-secret-des-réservations-changement-de-modèle), [§6](#6--écritures-concurrentes--réservations-perdues)
 
@@ -150,7 +150,7 @@ Tant que les cadeaux sont imbriqués dans `lists.presents`, impossible de cacher
 
 - [x] `npm audit fix`, puis mettre à jour `@tanstack/react-router` / `@tanstack/router-plugin` (étape 3 du plan d'upgrade : 45 → 4 vulnérabilités de prod, toutes via `firebase` → `@grpc/grpc-js`). Toujours présentes avec Firebase 13 (Firestore épingle `@grpc/grpc-js ~1.9`), mais ce paquet ne sert qu'à la version Node de Firestore et n'est pas dans le bundle navigateur.
 - [x] Vérifier `npm run build` et `npm run lint` après mise à jour (fait par la CI depuis la PR #2).
-- [ ] Activer **Dependabot** (`.github/dependabot.yml`) pour npm et GitHub Actions.
+- [x] Activer les **alertes Dependabot** (réglage GitHub, 22/11/2026). Pas de `.github/dependabot.yml` : les mises à jour de versions automatiques ont été jugées superflues.
 - [x] Ajouter `zod` explicitement dans `package.json` (importé dans `login.tsx`, absent des dépendances), version ≥ 4.6.6.
 
 ---
@@ -173,10 +173,10 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
   - [x] Intégration côté client (`firebaseLoader.ts`) : reCAPTCHA Enterprise en production, mode debug en local et sur les previews (jetons enregistrés à la main, jamais versionnés : dépôt public).
   - [ ] Surveiller les métriques quelques jours (100 % des requêtes légitimes vérifiées), puis activer l'application forcée sur Cloud Firestore et Authentication.
   - [ ] Penser aux domaines reCAPTCHA (`www.google.com/recaptcha`, `www.gstatic.com/recaptcha`) et App Check (`content-firebaseappcheck.googleapis.com`) dans la future CSP (§9).
-- [ ] Firebase Auth :
-  - [ ] activer la protection contre l'énumération des emails ;
-  - [ ] définir une politique de mot de passe (longueur minimale, etc.) ;
-  - [ ] éventuellement un quota d'inscriptions par IP.
+- [x] Firebase Auth (console, 22/11/2026) :
+  - [x] activer la protection contre l'énumération des emails (déjà active) ;
+  - [x] définir une politique de mot de passe : mode « Exiger », 10 caractères minimum, majuscule, minuscule, chiffre et caractère spécial. Reprise dans le schéma zod de l'inscription (`newPasswordSchema`, `utils/formSchemas.ts`) ; un compte plus ancien au mot de passe non conforme est invité à le réinitialiser à la connexion ;
+  - [x] quota d'inscriptions par IP : 50.
 
 ---
 
@@ -228,10 +228,10 @@ Tester d'abord en `Content-Security-Policy-Report-Only` sur un canal de preview.
 
 - [ ] Épingler les actions par SHA (`actions/checkout@<sha>`, `FirebaseExtended/action-hosting-deploy@<sha>`) : `@v0` est une étiquette mobile.
 - [ ] Ajouter un bloc `permissions:` minimal au workflow de merge (`contents: read`, `checks: write`).
-- [ ] Vérifier que le compte de service `FIREBASE_SERVICE_ACCOUNT_WRAP_IT_UP_2D42A` n'a que le rôle **Firebase Hosting Admin** (+ Firebase Rules Admin si les règles sont déployées par la CI).
+- [x] Vérifier que le compte de service `FIREBASE_SERVICE_ACCOUNT_WRAP_IT_UP_2D42A` n'a que le rôle **Firebase Hosting Admin** (+ Firebase Rules Admin si les règles sont déployées par la CI). Fait le 22/11/2026 : `cloudfunctions.developer` et `firebaseauth.admin` (ajoutés d'office par `firebase init hosting:github`) retirés ; restent `firebasehosting.admin`, `run.viewer`, `serviceusage.apiKeysViewer` et `serviceusage.serviceUsageConsumer`, utilisés par l'action de déploiement.
 - [x] Lancer `npm run lint` dans la CI avant le déploiement (fait, PR #2 : oxlint).
 - [ ] Lancer `npm audit --audit-level=high --omit=dev` dans la CI avant le déploiement.
-- [ ] Protéger la branche `main` (PR obligatoire, checks verts) puisqu'un push déploie en production.
+- [x] Protéger la branche `main` (PR obligatoire, checks verts) puisqu'un push déploie en production (ruleset GitHub, 22/11/2026).
 
 ---
 
