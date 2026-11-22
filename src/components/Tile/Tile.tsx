@@ -3,10 +3,7 @@ import "./Tile.css";
 import { FC, PropsWithChildren } from "react";
 import classNames from "classnames";
 import { pickByHash } from "#/utils/tone.ts";
-
-export const tileTones = ["primary", "success", "info", "warning"] as const;
-
-export type TileTone = (typeof tileTones)[number];
+import { tileTones, TileTone } from "./tileTones.ts";
 
 type TileProps = PropsWithChildren<{
   shape?: "round" | "square";

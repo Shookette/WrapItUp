@@ -34,7 +34,7 @@ npm run test:unit     # tests unitaires des fonctions pures (src/**/*.test.ts)
 Tests :
 
 - **règles Firestore** (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test ;
-- **fonctions utilitaires et pures** (`src/utils/`, schémas zod…) : un fichier `<nom>.test.ts` à côté (`node --test`, `node:assert/strict`), **obligatoire pour toute nouvelle fonction pure** ou modification de l'une d'elles ;
+- **fonctions utilitaires et pures** (`src/utils/`, schémas zod…) : un fichier `<nom>.test.ts` à côté (`node --test`, `node:assert/strict`, typé par `tsconfig.test.json`, exclu du build), **obligatoire pour toute nouvelle fonction pure** ou modification de l'une d'elles ;
 - les composants React ne sont pas testés.
 
 Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:unit`, `npm run test:rules` et `npm run build`.
