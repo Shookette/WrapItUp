@@ -172,8 +172,10 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
   - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
+  - `Confirm` : fenêtre de confirmation (`<dialog>` natif). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
   - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).
 - Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--padding-medium`, `--font-size-small`, `--shadow-large`…) : pas de valeur d'espacement, de taille de texte, d'arrondi ou d'ombre en dur. Une dimension propre à un composant devient une variable locale sur son bloc (`.header { --header-height: 100px; }`). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
+- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute dans `@media (--desktop) { … }` (768 px, `@custom-media` défini dans `src/media.css`, remplacé au build par PostCSS : `docs/adr/0013-point-de-rupture-unique-768px.md`). Ne jamais écrire `768px` dans un fichier CSS.
 - Le CSS propre à une route va dans un fichier à côté (`routes/login.css`, `routes/list.css`).
 - Variantes communes : `type: "primary" | "danger" | "success"`, `size: "small" | "medium" | "large"`.
 - `Button` est en `type="button"` par défaut : seul `isSubmit` envoie un formulaire.

@@ -13,7 +13,7 @@
   z-index: 5;
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .my-lists__new--desktop {
     display: inline-flex;
   }

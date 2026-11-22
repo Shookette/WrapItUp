@@ -7,6 +7,7 @@ import UserProvider, { useUserContext } from "#/hooks/UserContext.tsx";
 
 import { routeTree } from "./routeTree.gen";
 import ToastProvider from "#/components/Toast/ToastProvider.tsx";
+import ConfirmProvider from "#/components/Confirm/ConfirmProvider.tsx";
 
 import "@fontsource-variable/inter/index.css";
 import "@fontsource-variable/bricolage-grotesque/index.css";
@@ -48,11 +49,13 @@ const InnerApp = () => {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ToastProvider>
-      <WithFirestore>
-        <UserProvider>
-          <InnerApp />
-        </UserProvider>
-      </WithFirestore>
+      <ConfirmProvider>
+        <WithFirestore>
+          <UserProvider>
+            <InnerApp />
+          </UserProvider>
+        </WithFirestore>
+      </ConfirmProvider>
     </ToastProvider>
   </React.StrictMode>,
 );

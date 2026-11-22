@@ -27,7 +27,7 @@
   flex-shrink: 0;
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .title--page .title__text {
     font-size: var(--font-size-title-large);
   }

@@ -70,7 +70,7 @@ textarea.input__field {
   flex-shrink: 0;
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .input__field {
     min-height: var(--control-height-desktop);
   }

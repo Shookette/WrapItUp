@@ -25,7 +25,7 @@ L'étape 6 est la seule qui change le fonctionnement (voir plus bas) : la faire 
 
 ## Principes communs
 
-- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute avec `@media (min-width: 768px)`. Un seul point de rupture suffit pour toutes les maquettes. Les variables CSS ne marchent pas dans une media query : écrire `768px` en dur, la raison est dans `docs/adr/0013-point-de-rupture-unique-768px.md`.
+- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute avec `@media (--desktop)` (768 px, défini une fois dans `src/media.css` par `@custom-media`, voir `docs/adr/0013-point-de-rupture-unique-768px.md`). Un seul point de rupture suffit pour toutes les maquettes.
 - **Largeur du contenu** : `max-width: 1120px; margin-inline: auto; padding-inline: var(--padding-medium)` au lieu des largeurs en % de `Page` (`35%`, `40%`, `60%`), illisibles sur téléphone.
 - **Zones tactiles** : 44 px minimum pour tout ce qui est cliquable (boutons icônes compris).
 - **Champs** : `font-size` d'au moins 16 px sur mobile, sinon Safari iOS zoome au focus.
@@ -235,6 +235,7 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 - [x] `/lists` : titre « Invitations » (comme la navigation), sous-titre « Liste de Camille · 12 cadeaux ». Bouton « Quitter la liste » sur chaque carte, avec confirmation (`window.confirm`) et toasts de succès / d'erreur (avant : corbeille sans confirmation).
 - [x] État vide (composant `EmptyState`) : un texte, et le bouton de création sur « Mes listes ». `Title` a maintenant `variant="page"` (`h1`, grande taille) et `subtitle`.
 - [x] `ListTable` supprimé.
+- [x] Fenêtre de confirmation maison (`ConfirmProvider` dans `main.tsx`, `const confirm = useConfirm(); if (!(await confirm({ title, message, confirmLabel }))) return;`) : `<dialog>` natif en `showModal()`, panneau du bas sur mobile, centrée sur bureau. Utilisée pour quitter une liste et pour supprimer une liste (Danger zone, qui n'avait aucune confirmation).
 - [ ] `/new` : peut rester une page avec un seul champ ; ou devenir le même panneau que l'étape 6 (bonus).
 
 ## 5. Édition (`/edit/$listId`)
@@ -249,7 +250,7 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
   - « Copier » : `navigator.clipboard.writeText(url)` puis un toast « Lien copié » ;
   - « Partager » : `navigator.share({ title, url })` si `navigator.share` existe (mobile), sinon ne pas afficher le bouton ;
   - liste des invité·es avec initiale dans une pastille, bouton ✕ « Retirer Léa » (confirmer avant, l'action est immédiate).
-- [ ] **Danger zone** : bouton à contour rouge, **ajouter une confirmation** (il n'y en a aucune aujourd'hui : un clic supprime la liste).
+- [x] **Danger zone** : bouton à contour rouge, confirmation par `useConfirm` (fait à l'étape 4).
 
 ## 6. Ajout et modification d'un cadeau ⚠️ change le fonctionnement
 

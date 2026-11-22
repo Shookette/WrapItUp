@@ -1,6 +1,4 @@
 .list-items {
-  --list-item-min-width: 300px;
-
   display: grid;
   gap: var(--padding-small);
   list-style: none;
@@ -9,8 +7,6 @@
 }
 
 .list-item {
-  --list-item-icon-size: 48px;
-
   align-items: center;
   background-color: var(--white);
   border: 1px solid var(--divider-color);
@@ -47,6 +43,8 @@
 }
 
 .list-item__icon {
+  --list-item-icon-size: 48px;
+
   align-items: center;
   border-radius: var(--border-radius);
   display: flex;
@@ -95,8 +93,10 @@
   flex-shrink: 0;
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .list-items {
+    --list-item-min-width: 300px;
+
     gap: var(--padding-medium);
     grid-template-columns: repeat(
       auto-fill,

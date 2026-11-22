@@ -140,7 +140,7 @@
   color: var(--primary-color);
 }
 
-@media (min-width: 768px) {
+@media (--desktop) {
   .app-bar {
     gap: var(--padding-large);
     padding-inline: max(

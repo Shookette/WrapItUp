@@ -7,6 +7,7 @@ import { plural } from "#/utils/plural.ts";
 import { FullList } from "#/interfaces/List.ts";
 import { useUserContext } from "#/hooks/UserContext.tsx";
 import { useToast } from "#/components/Toast/toastContext.ts";
+import { useConfirm } from "#/components/Confirm/confirmContext.ts";
 import PrivateLayout from "#/components/PrivateLayout.tsx";
 import Title from "#/components/Title/Title.tsx";
 import Button from "#/components/Button/Button.tsx";
@@ -34,10 +35,17 @@ function ListsComponent() {
   const { user } = useUserContext();
   const router = useRouter();
   const toast = useToast();
+  const confirm = useConfirm();
   const [leavingListId, setLeavingListId] = useState<string>();
 
   const leaveList = async (list: FullList) => {
-    if (!window.confirm(`Quitter la liste « ${list.title} » ?`)) {
+    const confirmed = await confirm({
+      title: `Quitter « ${list.title} » ?`,
+      message:
+        "Elle n'apparaîtra plus dans vos invitations. Pour la rejoindre à nouveau, il faudra le lien d'invitation.",
+      confirmLabel: "Quitter la liste",
+    });
+    if (!confirmed) {
       return;
     }
 
