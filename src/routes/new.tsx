@@ -45,7 +45,7 @@ function NewComponent() {
   });
 
   return (
-    <PrivateLayout>
+    <PrivateLayout back={{ label: "Mes listes", to: "/" }}>
       <Page size="md">
         <Title>Ajouter une nouvelle liste de cadeau</Title>
         <form.AppForm>

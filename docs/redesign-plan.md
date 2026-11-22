@@ -10,7 +10,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | --- | ------------------------------------------------------- | ----------- | ---------- |
 | 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait    |
 | 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait    |
-| 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ⬜ à faire |
+| 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait    |
 | 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ⬜ à faire |
 | 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ⬜ à faire |
 | 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ⬜ à faire |
@@ -25,7 +25,7 @@ L'étape 6 est la seule qui change le fonctionnement (voir plus bas) : la faire 
 
 ## Principes communs
 
-- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute avec `@media (min-width: 768px)`. Un seul point de rupture suffit pour toutes les maquettes. Les variables CSS ne marchent pas dans une media query : écrire `768px` en dur, et en donner la raison dans un ADR (pas de commentaire, cf. `docs/adr/0001-adr-et-pas-de-commentaires.md`).
+- **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute avec `@media (min-width: 768px)`. Un seul point de rupture suffit pour toutes les maquettes. Les variables CSS ne marchent pas dans une media query : écrire `768px` en dur, la raison est dans `docs/adr/0013-point-de-rupture-unique-768px.md`.
 - **Largeur du contenu** : `max-width: 1120px; margin-inline: auto; padding-inline: var(--padding-medium)` au lieu des largeurs en % de `Page` (`35%`, `40%`, `60%`), illisibles sur téléphone.
 - **Zones tactiles** : 44 px minimum pour tout ce qui est cliquable (boutons icônes compris).
 - **Champs** : `font-size` d'au moins 16 px sur mobile, sinon Safari iOS zoome au focus.
@@ -182,12 +182,13 @@ Cible :
 | Listes | barre du haut (logo + nom), **barre de navigation en bas** : Mes listes / Invitations / Compte | barre du haut blanche : logo, liens en pastilles, avatar (menu Compte) à droite |
 | Détail | barre du haut avec ← retour, titre, action ; **pas** de barre de navigation                    | même barre du haut que les listes, lien « ← Mes listes » au-dessus du titre     |
 
-- [ ] Nouveau composant `AppBar` (titre, `backTo?`, `actions?`) pour le mobile.
-- [ ] `PrivateLayout` : barre du haut bureau + `BottomNav` mobile, affichés ou cachés en CSS (`display: none` selon la media query) : plus simple qu'un hook JS, et rien ne saute au chargement.
-- [ ] Le lien actif reste géré par `Link activeProps` (TanStack Router), avec `aria-current="page"`.
-- [ ] Les pages de détail (`/edit`, `/list`) masquent la barre de navigation mobile : prop `hideBottomNav`, ou une route parente sans layout.
-- [ ] `main` reçoit un `padding-bottom` égal à la hauteur de la barre du bas (76 px + safe area), sinon le dernier élément passe dessous.
-- [ ] « Compte » : en bas sur mobile, menu sur l'avatar sur bureau (le `Menu` actuel convient).
+- [x] Barre du haut (`app-bar`, dans `PrivateLayout`) : sur mobile, logo + nom, ou « ← retour » sur une page de détail ; sur bureau, logo, liens en pastilles et menu Compte (avatar). Pas de composant `AppBar` séparé : le titre et les actions de la page restent dans `Title`, en dessous.
+- [x] `BottomNav` mobile (Mes listes / Invitations / Compte), affichée ou cachée en CSS selon la media query.
+- [x] Lien actif : `Link activeProps={{ "aria-current": "page" }}`, stylé par `[aria-current="page"]`.
+- [x] Pages de détail : prop `back` de `PrivateLayout` (`/edit`, `/new` → Mes listes, `/list` → Invitations) : lien retour, pas de barre du bas.
+- [x] `main` : `padding-bottom` = hauteur de la barre du bas + safe area ; largeur `max-width: 1120px`. `Page` passe en `width: 100%` + `max-width` (420 / 640 px, `lg` sans limite) au lieu des largeurs en %.
+- [x] « Compte » : en bas sur mobile, menu sur l'avatar sur bureau ; bouton « Se déconnecter » ajouté sur `/account` (sinon inaccessible sur mobile). Variante `secondary` de `Button` ajoutée pour l'occasion.
+- [x] `Header` retiré de la racine, gardé provisoirement sur les pages d'authentification jusqu'à l'étape 8.
 
 ## 3. Composants de base
 

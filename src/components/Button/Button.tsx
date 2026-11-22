@@ -11,7 +11,7 @@ type ButtonProps = PropsWithChildren<{
   loading?: boolean;
   position?: "left" | "right";
   size?: "small" | "medium" | "large";
-  type?: "primary" | "danger" | "success";
+  type?: "primary" | "secondary" | "danger" | "success";
   onClick?: () => void;
 }>;
 

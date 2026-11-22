@@ -12,6 +12,8 @@ import { useToast } from "#/components/Toast/toastContext.ts";
 import PrivateLayout from "#/components/PrivateLayout.tsx";
 import Page from "#/components/Page/Page.tsx";
 import Title from "#/components/Title/Title.tsx";
+import Button from "#/components/Button/Button.tsx";
+import { IconLogout } from "@tabler/icons-react";
 
 export const Route = createFileRoute("/account")({
   component: AccountComponent,
@@ -38,7 +40,7 @@ const deleteAccountErrors: Record<string, string> = {
 };
 
 function AccountComponent() {
-  const { user, updateUser, deleteAccount } = useUserContext();
+  const { user, updateUser, deleteAccount, logout } = useUserContext();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -107,6 +109,20 @@ function AccountComponent() {
             <form.SubmitButton>Envoyer</form.SubmitButton>
           </form.Form>
         </form.AppForm>
+      </Page>
+
+      <Page size="md">
+        <Title>Session</Title>
+        <Button
+          icon={<IconLogout size={18} />}
+          type="secondary"
+          onClick={async () => {
+            await navigate({ to: "/" });
+            await logout();
+          }}
+        >
+          Se déconnecter
+        </Button>
       </Page>
 
       <Page size="md">

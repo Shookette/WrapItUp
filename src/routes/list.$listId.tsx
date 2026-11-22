@@ -97,7 +97,7 @@ function ViewComponent() {
   ));
 
   return (
-    <PrivateLayout>
+    <PrivateLayout back={{ label: "Invitations", to: "/lists" }}>
       <Page size="lg">
         <Title>{currentList.title}</Title>
         <Grid>{cards}</Grid>
