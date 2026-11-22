@@ -91,7 +91,7 @@ docs/adr/               # décisions d'architecture (ADR)
 | `/new`                                   | Création d'une liste (titre seul, puis redirection vers `/edit`) | connecté                |
 | `/edit/$listId`                          | Édition : onglets Cadeaux / Invité·es / Danger zone (`?tab=`)    | propriétaire uniquement |
 | `/list/$listId`                          | Consultation et réservation des cadeaux                          | invité·e uniquement     |
-| `/invite/$listId`                        | Page d'invitation, bouton « Rejoindre la liste »                 | connecté                |
+| `/invite/$listId`                        | Invitation : « Rejoindre la liste », ou connexion / inscription  | public                  |
 | `/login`, `/register`, `/reset-password` | Authentification                                                 | public                  |
 | `/account`                               | Compte utilisateurice                                            | connecté                |
 
@@ -115,7 +115,7 @@ Identifiant du document = `list.id` (uuid).
 - En base, `allowedUsers` est un tableau d'uids. Côté app, on manipule un `FullList` où `allowedUsers` est enrichi en `{ userUID, username }` ; `setList()` refait la conversion avant l'écriture.
 - `username` (nom du ou de la propriétaire) est ajouté à la lecture par le repository et ne fait pas partie du modèle de base.
 - Une réservation = modifier `status` (`"available"` / `"reserved"`) et `reservedBy` (uid) du cadeau, puis réécrire **toute la liste** avec `setList()`.
-- Les écritures du ou de la propriétaire sur une liste existante (cadeaux, titre, retrait d'un·e invité·e) passent par `updateList(id, change)` : une **transaction** Firestore qui relit la liste puis applique `change`, pour ne pas écraser une réservation faite entre-temps par un·e invité·e. Les écritures des invité·es aussi : réserver / annuler (`updateList` + `reservePresent` / `cancelReservation`, qui refusent un cadeau déjà pris) et quitter (`leaveList`). `setList()` (réécriture à partir de la liste chargée par la page) ne reste que pour la création et pour rejoindre une liste.
+- Les écritures du ou de la propriétaire sur une liste existante (cadeaux, titre, retrait d'un·e invité·e) passent par `updateList(id, change)` : une **transaction** Firestore qui relit la liste puis applique `change`, pour ne pas écraser une réservation faite entre-temps par un·e invité·e. Les écritures des invité·es aussi : réserver / annuler (`updateList` + `reservePresent` / `cancelReservation`, qui refusent un cadeau déjà pris) et quitter (`leaveList`). Rejoindre aussi (`joinList`). `setList()` ne reste que pour la création d'une liste.
 
 ### Collection `profils`
 
@@ -175,7 +175,7 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d'upgrade). Tout est fait maison.
 
 - Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
-  - mise en page : `PrivateLayout` (barre du haut, navigation du bas sur mobile, `back` pour une page de détail), `Page` (carte blanche, `size`), `Center`, `Title` (`variant="page"`, `subtitle`, `actions`), `Header` (ancien bandeau, pages de connexion), `ListItem` / `ListItems` (cartes de liste), `EmptyState` ;
+  - mise en page : `PrivateLayout` (barre du haut, navigation du bas sur mobile, `back` pour une page de détail), `AuthLayout` (bandeau rouge + carte, pages de connexion), `Page` (carte blanche, `size`), `Title` (`variant="page"`, `subtitle`, `actions`), `ListItem` / `ListItems` (cartes de liste), `EmptyState` ;
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
   - `Tile` : pastille colorée (icône ou initiale) : `tone` (`primary`, `success`, `info`, `warning`) ou `toneFrom={id}` pour une couleur stable tirée d'un identifiant, `shape` (`round`, `square`), `size` (40 / 48 / 64 px). Toute pastille passe par lui ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
@@ -198,7 +198,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 - **Politique de mot de passe** : définie dans la console Firebase (Authentication → Paramètres, mode « Exiger » : 10 caractères, majuscule, minuscule, chiffre, caractère spécial) et reprise dans `newPasswordSchema` (`utils/formSchemas.ts`) : modifier les deux ensemble.
 - **Sécurité Firestore** (`firestore.rules`) : tout exige un email vérifié (`email_verified`), sauf la création de son profil à l'inscription ; listes lisibles par id par toute personne connectée (lien d'invitation), requêtes limitées à ses listes ; seul·e le ou la propriétaire modifie ou supprime ; un·e invité·e peut seulement réserver (`presents`), rejoindre (s'ajouter) ou quitter (se retirer) ; profils modifiables par leur seul·e titulaire (champ `userUID`). Toute nouvelle écriture doit passer ces règles : ajouter le cas dans les tests.
 - **Limites restantes** : le secret des réservations n'est garanti que par l'interface (réservations imbriquées dans la liste, cf. `docs/security-audit.md` §1.3), et un·e invité·e peut réécrire le contenu des cadeaux.
-- Bug connu (todo) : rejoindre une liste via `/invite/$listId` sans être connecté·e. La redirection passe par `/login?redirect=...`.
+- **Invitation** : `/invite/$listId` est publique (la liste ne se lit qu'une fois connecté·e). Sans session, elle propose « Se connecter » / « Créer un compte » avec `?redirect=/invite/…`, que connexion, inscription et mot de passe oublié se transmettent (`utils/redirect.ts`, chemins internes uniquement) : après l'inscription et la vérification de l'email, la connexion ramène à l'invitation. Rejoindre passe par `joinList` (transaction).
 - Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
 
 ## Todo / feuille de route
@@ -213,7 +213,4 @@ Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et
 
 Certains points se recoupent (dépendances vulnérables, `zod`, paquets inutilisés, lint en CI) : cocher dans les deux fichiers.
 
-Petites tâches, voir `todo.md`. À ce jour :
-
-- Améliorer les pages hors `PrivateLayout` avec le nouveau composant `Page` (CSS)
-- Corriger le bug quand on veut rejoindre une liste sans être connecté·e
+Petites tâches, voir `todo.md` (vide au 22 novembre 2026).

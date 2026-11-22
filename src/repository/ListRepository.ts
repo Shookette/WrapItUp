@@ -127,6 +127,14 @@ const leaveList = (id: string, userUID: string): Promise<void> =>
     allowedUsers: (list.allowedUsers ?? []).filter((uid) => uid !== userUID),
   }));
 
+const joinList = (id: string, userUID: string): Promise<void> =>
+  updateList(id, (list) => {
+    const allowedUsers = list.allowedUsers ?? [];
+    return allowedUsers.includes(userUID)
+      ? list
+      : { ...list, allowedUsers: [...allowedUsers, userUID] };
+  });
+
 const deleteList = async (id: string): Promise<void> => {
   return await deleteDoc(getDocRef(COLLECTION_REF, id));
 };
@@ -137,6 +145,7 @@ export {
   getListByID,
   setList,
   updateList,
+  joinList,
   leaveList,
   deleteList,
 };

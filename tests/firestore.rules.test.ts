@@ -313,6 +313,20 @@ describe("lists : invité·e", () => {
 });
 
 describe("lists : non invité·e", () => {
+  test("rejoindre par une transaction (lecture puis écriture) : autorisé", async () => {
+    const strangerDb = db(STRANGER);
+    const ref = doc(strangerDb, "lists", LIST_ID);
+    await assertSucceeds(
+      runTransaction(strangerDb, async (transaction) => {
+        const snapshot = await transaction.get(ref);
+        transaction.set(ref, {
+          ...snapshot.data(),
+          allowedUsers: [GUEST, STRANGER],
+        });
+      }),
+    );
+  });
+
   test("rejoindre via le lien d'invitation : autorisé", async () => {
     await assertSucceeds(
       setDoc(listRef(STRANGER), {

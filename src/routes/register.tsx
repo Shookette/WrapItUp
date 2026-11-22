@@ -11,15 +11,14 @@ import {
   PASSWORD_RULES,
   usernameSchema,
 } from "#/utils/formSchemas.ts";
+import { redirectSearchSchema } from "#/utils/redirect.ts";
 import Banner from "#/components/Banner/Banner.tsx";
-import Center from "#/components/Center/Center.tsx";
-import Header from "#/components/Header/Header.tsx";
-import Page from "#/components/Page/Page.tsx";
-import Title from "#/components/Title/Title.tsx";
+import AuthLayout from "#/components/AuthLayout/AuthLayout.tsx";
 import { useToast } from "#/components/Toast/toastContext.ts";
 
 export const Route = createFileRoute("/register")({
   component: RegisterComponent,
+  validateSearch: redirectSearchSchema,
 });
 
 const registerSchema = z.object({
@@ -34,12 +33,13 @@ function RegisterComponent() {
   const toast = useToast();
 
   const navigate = Route.useNavigate();
+  const { redirect } = Route.useSearch();
 
   useEffect(() => {
     if (user) {
-      navigate({ to: "/" });
+      navigate({ to: redirect ?? "/" });
     }
-  }, [user, navigate]);
+  }, [user, navigate, redirect]);
 
   const form = useAppForm({
     defaultValues: { email: "", username: "", password: "" },
@@ -59,70 +59,64 @@ function RegisterComponent() {
         type: "success",
         message: `Un email de vérification a été envoyé à ${value.email} : cliquez sur le lien qu'il contient avant de vous connecter`,
       });
-      await navigate({ to: "/login" });
+      await navigate({ to: "/login", search: { redirect } });
     },
   });
 
   return (
-    <>
-      <Header />
-      <Center>
-        <Link
-          to="/login"
-          style={{
-            fontSize: ".8em",
-            marginLeft: "1em",
-            textDecoration: "none",
-          }}
-        >
-          {"< "}
-          Retour à la page de connexion
-        </Link>
-
-        <Page size="md">
-          <Title>Inscription</Title>
-          {error && (
-            <Banner iconPrefix={<IconExclamationCircle />} type="danger">
-              {error}
-            </Banner>
-          )}
-          <form.AppForm>
-            <form.Form>
-              <form.AppField name="email">
-                {(field) => (
-                  <field.TextField
-                    label="Email"
-                    placeholder="Email"
-                    required
-                    type="email"
-                  />
-                )}
-              </form.AppField>
-              <form.AppField name="username">
-                {(field) => (
-                  <field.TextField
-                    label="Nom/Prénom"
-                    placeholder="Nom/Prénom"
-                    required
-                  />
-                )}
-              </form.AppField>
-              <form.AppField name="password">
-                {(field) => (
-                  <field.TextField
-                    label="Mot de passe"
-                    description={PASSWORD_RULES}
-                    placeholder="Mot de passe"
-                    required
-                    type="password"
-                  />
-                )}
-              </form.AppField>
-              <form.SubmitButton type="success">Inscription</form.SubmitButton>
-            </form.Form>
-          </form.AppForm>
-        </Page>
-      </Center>
-    </>
+    <AuthLayout
+      footer={
+        <>
+          Déjà un compte ?{" "}
+          <Link search={{ redirect }} to="/login">
+            Se connecter
+          </Link>
+        </>
+      }
+      title="Créer un compte"
+    >
+      {error && (
+        <Banner iconPrefix={<IconExclamationCircle />} type="danger">
+          {error}
+        </Banner>
+      )}
+      <form.AppForm>
+        <form.Form>
+          <form.AppField name="email">
+            {(field) => (
+              <field.TextField
+                autoComplete="email"
+                label="Email"
+                placeholder="vous@exemple.fr"
+                required
+                type="email"
+              />
+            )}
+          </form.AppField>
+          <form.AppField name="username">
+            {(field) => (
+              <field.TextField
+                autoComplete="name"
+                description="Vos proches le verront sur vos listes"
+                label="Prénom et nom"
+                required
+              />
+            )}
+          </form.AppField>
+          <form.AppField name="password">
+            {(field) => (
+              <field.TextField
+                autoComplete="new-password"
+                description={PASSWORD_RULES}
+                label="Mot de passe"
+                required
+                type="password"
+              />
+            )}
+          </form.AppField>
+          <form.SubmitButton>Créer mon compte</form.SubmitButton>
+        </form.Form>
+      </form.AppForm>
+    </AuthLayout>
   );
 }
