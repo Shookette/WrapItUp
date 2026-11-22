@@ -20,10 +20,6 @@
   z-index: 10;
 }
 
-.app-bar__desktop {
-  display: none;
-}
-
 .app-bar__brand,
 .app-bar__back {
   align-items: center;
@@ -77,6 +73,10 @@
 
 .app-bar__menu {
   margin-left: auto;
+}
+
+.app-bar__desktop {
+  display: none;
 }
 
 .private-layout__main {
