@@ -6,18 +6,18 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 
 ## Avancement
 
-| #   | Étape                                                   | Risque      | État                          |
-| --- | ------------------------------------------------------- | ----------- | ----------------------------- |
-| 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait                       |
-| 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait                       |
-| 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait                       |
-| 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait                       |
-| 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait                       |
-| 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait                       |
-| 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ✅ fait                       |
-| 7   | Consultation et réservation (invité·e)                  | moyen       | ✅ fait                       |
-| 8   | Invitation et pages d'authentification                  | faible      | ✅ fait                       |
-| 9   | Nettoyage (anciens composants, variables, assets)       | faible      | 🟡 en partie (avec l'étape 8) |
+| #   | Étape                                                   | Risque      | État    |
+| --- | ------------------------------------------------------- | ----------- | ------- |
+| 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait |
+| 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait |
+| 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait |
+| 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait |
+| 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait |
+| 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait |
+| 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ✅ fait |
+| 7   | Consultation et réservation (invité·e)                  | moyen       | ✅ fait |
+| 8   | Invitation et pages d'authentification                  | faible      | ✅ fait |
+| 9   | Nettoyage (anciens composants, variables, assets)       | faible      | ✅ fait |
 
 L'étape 6 est la seule qui change le fonctionnement (voir plus bas) : la faire après les autres écrans d'édition, ou en même temps que la tâche « Revoir l'UX du formulaire d'ajout de cadeaux » de `todo.md`.
 
@@ -285,4 +285,8 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 - [x] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles : `Header`, `Center` (étape 8), `Table` (étape 6), `Card` et `Grid` (étape 7). `Page` reste (`/new`, `/account`).
 - [x] Supprimer les variables de l'ancien thème (`--header-color`, `--nav-color`, `--nav-link-color`, et `--font-size-extra-small`, `--padding-extra-large` devenues inutiles).
 - [x] Mettre à jour `CLAUDE.md` (section « Composants et style ») et cocher `todo.md`.
-- [ ] Lighthouse mobile sur la preview : accessibilité ≥ 95, pas de zone tactile trop petite.
+- [x] Lighthouse mobile (13.5.0, 22 novembre 2026) : **accessibilité 100** sur `/login`, `/register`, `/reset-password` et `/invite/…` (build local et production). Les pages connectées n'ont pas été passées (Lighthouse n'a pas de session) : à faire depuis Chrome (DevTools → Lighthouse) une fois connecté·e.
+- Relevé au passage, hors refonte (production, `/login`) :
+  - CSP en `Report-Only` : `frame-src` n'autorise pas `https://wrap-it-up-2d42a.firebaseapp.com` (iframe de Firebase Auth) et `script-src` n'autorise pas `https://apis.google.com` (chargé par cette iframe). À ajouter **avant** de passer la CSP en bloquant (audit §9) ;
+  - pas de `robots.txt` : la réécriture SPA renvoie `index.html` ;
+  - performance 69 à 76 : bundle JS d'environ 1 Mo (Firestore), déjà connu.
