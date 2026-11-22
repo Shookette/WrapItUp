@@ -1,19 +1,7 @@
 rules_version = '2';
 
-// Règles Firestore de Wrap It Up. Testées par `npm run test:rules`
-// (émulateur, tests/firestore.rules.test.ts). Tout ce qui n'est pas
-// explicitement autorisé ici est refusé.
-//
-// Limites connues (cf. docs/security-audit.md) :
-// - les réservations sont imbriquées dans `lists.presents` : un·e invité·e
-//   peut réécrire `presents` (pas le reste de la liste), et le ou la
-//   propriétaire peut techniquement lire `reservedBy` (§1.3) ;
-// - toute personne connectée qui connaît l'id d'une liste peut la lire :
-//   c'est le principe du lien d'invitation (`/invite/$listId`).
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Connecté·e avec un email vérifié : un email non vérifié peut être
-    // celui de quelqu'un d'autre (audit §4).
     function signedIn() {
       return request.auth != null
         && request.auth.token.email_verified == true;
@@ -23,7 +11,6 @@ service cloud.firestore {
       return request.auth.uid;
     }
 
-    // Clés modifiées par l'écriture (ajoutées, supprimées ou changées).
     function changedKeys() {
       return request.resource.data.diff(resource.data).affectedKeys();
     }
@@ -52,16 +39,12 @@ service cloud.firestore {
           && guests(data) is list;
       }
 
-      // `username` (nom du ou de la propriétaire) est ajouté à la lecture et
-      // a longtemps été réécrit en base : on tolère qu'il change.
       function ownerUpdates() {
         return isOwner()
           && request.resource.data.userUID == resource.data.userUID
           && isValidList(request.resource.data);
       }
 
-      // Réserver / annuler une réservation : seuls les cadeaux changent,
-      // et leur nombre ne bouge pas.
       function guestReserves() {
         return isGuest()
           && changedKeys().hasOnly(['presents', 'username'])
@@ -69,7 +52,6 @@ service cloud.firestore {
             == resource.data.get('presents', []).size();
       }
 
-      // Rejoindre une liste via le lien d'invitation : ajouter son uid, rien d'autre.
       function joins() {
         return signedIn()
           && resource.data.userUID != uid()
@@ -78,7 +60,6 @@ service cloud.firestore {
           && guests(request.resource.data) == guests(resource.data).concat([uid()]);
       }
 
-      // Quitter une liste : retirer son uid, rien d'autre.
       function leaves() {
         return isGuest()
           && changedKeys().hasOnly(['allowedUsers', 'username'])
@@ -95,8 +76,6 @@ service cloud.firestore {
       allow delete: if isOwner();
     }
 
-    // L'id du document est un uuid aléatoire : la propriété est portée par
-    // le champ `userUID`.
     match /profils/{profilId} {
       function isValidProfil(data) {
         return data.userUID == uid()
@@ -105,7 +84,6 @@ service cloud.firestore {
       }
 
       allow read: if signedIn();
-      // Le profil est créé à l'inscription, avant la vérification de l'email.
       allow create: if request.auth != null
         && isValidProfil(request.resource.data);
       allow update: if signedIn()

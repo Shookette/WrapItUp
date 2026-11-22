@@ -6,7 +6,6 @@ type SubmitButtonProps = PropsWithChildren<{
   type?: "primary" | "danger" | "success";
 }>;
 
-/** Bouton d'envoi pleine largeur, en chargement pendant la soumission. */
 const SubmitButton: FC<SubmitButtonProps> = ({ children, type }) => {
   const form = useFormContext();
 

@@ -32,8 +32,6 @@ function ResetPasswordComponent() {
         toast.show({ type: "danger", message: error });
         return;
       }
-      // Firebase ne dit pas si le compte existe (protection contre
-      // l'énumération des emails) : le message reste conditionnel.
       toast.show({
         type: "success",
         title: "Email envoyé",

@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { IconLoader2 } from "@tabler/icons-react";
 
 type ButtonProps = PropsWithChildren<{
-  /** Nom accessible, obligatoire pour un bouton icône seule. */
   ariaLabel?: string;
   icon?: ReactNode;
   isSubmit?: boolean;

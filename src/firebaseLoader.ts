@@ -4,7 +4,6 @@ import {
   ReCaptchaEnterpriseProvider,
 } from "firebase/app-check";
 
-// Valeurs lues dans `.env` / `.env.production` (voir ces fichiers).
 const firebaseConfig: FirebaseOptions = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -25,16 +24,6 @@ if (missing.length > 0) {
   );
 }
 
-/**
- * App Check en dehors de la production (`npm run dev`, previews des PR) :
- * reCAPTCHA n'y est pas utilisable (domaines non autorisés sur la clé), on
- * passe en mode debug. Sans `VITE_APPCHECK_DEBUG_TOKEN` (`.env.local`, non
- * versionné), le SDK génère un jeton propre au navigateur et l'affiche dans
- * la console : il faut l'enregistrer dans la console Firebase (App Check →
- * Applications → Gérer les jetons de débogage). Jamais de jeton fixe dans un
- * fichier versionné : le dépôt est public, ce serait un contournement
- * d'App Check offert à tous.
- */
 const enableAppCheckDebugMode = () => {
   (
     self as typeof self & { FIREBASE_APPCHECK_DEBUG_TOKEN?: boolean | string }
@@ -42,7 +31,6 @@ const enableAppCheckDebugMode = () => {
     import.meta.env.VITE_APPCHECK_DEBUG_TOKEN || true;
 };
 
-/** Initialise Firebase et App Check une seule fois (appel idempotent). */
 const initFirebase = () => {
   if (getApps().length > 0) {
     return;

@@ -28,7 +28,6 @@ const deleteAccountSchema = z.object({
   password: requiredString("Le mot de passe est obligatoire"),
 });
 
-// Codes d'erreur Firebase Auth de la ressaisie du mot de passe.
 const deleteAccountErrors: Record<string, string> = {
   "auth/invalid-credential": "Le mot de passe est incorrect",
   "auth/wrong-password": "Le mot de passe est incorrect",

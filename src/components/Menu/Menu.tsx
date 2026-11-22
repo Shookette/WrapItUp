@@ -10,14 +10,11 @@ export type MenuItem = {
 };
 
 type MenuProps = {
-  /** Icône du bouton qui ouvre le menu. */
   icon: ReactNode;
   items: MenuItem[];
-  /** Nom accessible du bouton (`aria-label`). */
   label: string;
 };
 
-/** Menu déroulant, fermé au clic extérieur, avec Échap ou après un choix. */
 const Menu: FC<MenuProps> = ({ icon, items, label }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);

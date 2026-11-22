@@ -10,11 +10,13 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:preview": "tsc && vite build --mode preview",
-    "lint": "oxlint --deny-warnings src",
+    "lint": "oxlint --deny-warnings src tests lint vite.config.ts",
+    "lint:ratchet": "node lint/ratchet.ts",
     "preview": "vite preview",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-wrap-it-up \"node --test tests/*.test.ts\""
+    "test:rules": "firebase emulators:exec --only firestore --project demo-wrap-it-up \"node --test tests/*.test.ts\"",
+    "test:lint": "node --test lint/*.test.ts"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.51.0",
