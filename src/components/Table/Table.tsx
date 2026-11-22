@@ -6,18 +6,10 @@ import classNames from "classnames";
 type TableProps = PropsWithChildren<{
   emptyMessage?: string;
   headers: ReactNode[];
-  /** Surligne la ligne survolée. */
   highlightOnHover?: boolean;
-  /** Lignes alternées grisées. */
   striped?: boolean;
 }>;
 
-/**
- * Tableau simple. Les lignes sont passées en `children`
- * (`<tr className="table__row"><td className="table__cell">`).
- * Cellule cliquable : ajouter `table__cell--clickable`.
- * Sans ligne, affiche `emptyMessage`.
- */
 const Table: FC<TableProps> = ({
   children,
   emptyMessage = "Aucun élément",
@@ -25,7 +17,6 @@ const Table: FC<TableProps> = ({
   highlightOnHover = false,
   striped = false,
 }) => {
-  // `Children.toArray` ignore null / false / tableau vide
   const isEmpty = Children.toArray(children).length === 0;
 
   return (

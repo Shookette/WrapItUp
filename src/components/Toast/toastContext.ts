@@ -14,7 +14,6 @@ export type ToastContextValue = {
 
 export const ToastContext = createContext<ToastContextValue | null>(null);
 
-/** `const toast = useToast(); toast.show({ type: "success", message: "…" });` */
 export const useToast = (): ToastContextValue => {
   const context = useContext(ToastContext);
 

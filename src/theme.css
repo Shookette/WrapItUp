@@ -13,7 +13,6 @@
   --border-color: #dee2e6;
   --hover-color: #f1f3f5;
   --striped-color: #f8f9fa;
-  /* couleurs reprises de la palette Mantine (red.6, red.4, green.7) */
   --header-color: #fa5252;
   --nav-color: #ff8787;
   --nav-link-color: #37b24d;
@@ -40,7 +39,6 @@
   --shadow-large: rgba(0, 0, 0, 0.2) 0 0 10px;
 }
 
-/* ----- Reset et styles de base (remplacent ceux de Mantine) ----- */
 *,
 *::before,
 *::after {

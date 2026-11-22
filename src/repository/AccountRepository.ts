@@ -9,12 +9,6 @@ import {
 import { getCollectionRef } from "./utils";
 import { List } from "#/interfaces/List.ts";
 
-// Supprime toutes les données Firestore d'un compte avant sa suppression
-// (audit §8, RGPD). Chaque étape passe par les règles Firestore :
-// - ses listes : supprimées (propriétaire) ;
-// - les listes où il ou elle est invité·e : réservations annulées, puis
-//   uid retiré de `allowedUsers` (quitter la liste) ;
-// - son profil : supprimé.
 const deleteAccountData = async (userUID: string): Promise<void> => {
   const lists = getCollectionRef("lists");
 

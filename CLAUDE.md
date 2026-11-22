@@ -21,16 +21,18 @@ Application web de **listes de cadeaux partagées**. Un·e utilisateurice crée 
 npm run dev           # serveur de développement Vite
 npm run build         # tsc + vite build (sortie dans dist/), clé API de production
 npm run build:preview # idem en mode preview (clé « Dev / previews »), utilisé par la CI des PR
-npm run lint          # oxlint sur src/, 0 warning toléré (--deny-warnings)
+npm run lint          # oxlint sur src/, tests/, lint/ et vite.config.ts, 0 warning toléré (--deny-warnings)
+npm run lint:ratchet  # abaisse les tolérances de commentaires (`allowed` de wrap-it-up/no-comments)
 npm run format        # oxfmt : formate tout le projet
 npm run format:check  # oxfmt --check : vérifie sans modifier
 npm run preview       # prévisualiser le build
 npm run test:rules    # tests des règles Firestore dans l'émulateur (Java 21 requis)
+npm run test:lint     # tests de la règle oxlint maison (lint/plugin.test.ts)
 ```
 
 Seules les **règles Firestore** sont testées (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test. Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:rules` et `npm run build`.
 
-Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
+Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
 
 ## Déploiement
 
@@ -66,6 +68,9 @@ src/
   utils/routeUtils.ts   # garde d'authentification des routes
   utils/formSchemas.ts  # règles zod partagées (email, champ obligatoire, lien http(s), mot de passe)
   utils/url.ts          # isHttpUrl : vérifier un lien avant de l'afficher
+lint/                   # règle oxlint maison wrap-it-up/no-comments, son test, script ratchet
+docs/adr/               # décisions d'architecture (ADR)
+.claude/skills/         # skills du projet (/delete-comment)
 ```
 
 ## Routes
@@ -152,7 +157,8 @@ Attention : l'identifiant du document (`id`, uuid aléatoire) **n'est pas** l'ui
 - **Composants** : typer `children` avec `PropsWithChildren<…>` plutôt qu'un `children: ReactNode` à la main.
 - **Textes de l'interface en français**, en **écriture inclusive** avec le point médian (« utilisateurice », « invité·e », « supprimé•e »).
 - **Formatage** : **oxfmt** (`.oxfmtrc.json`, remplace Prettier depuis le 8 novembre 2026, sortie compatible Prettier), largeur 80, `src/routeTree.gen.ts` et `package-lock.json` ignorés. Le commit de reformatage global est listé dans `.git-blame-ignore-revs` (`git config blame.ignoreRevsFile .git-blame-ignore-revs`).
-- **Lint** : **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle>` avec un commentaire qui explique pourquoi.
+- **Lint** : **oxlint** (`.oxlintrc.json`, ESLint a été retiré le 8 novembre 2026) : catégories `correctness` (error) et `suspicious` (warn), plugins `typescript`, `react` (inclut les règles hooks et fast refresh), `import`, `promise`, `unicorn`, `oxc`. `no-shadow` et `promise/always-return` sont désactivées ; `react/only-export-components` est coupée dans `src/routes/**` (les fichiers de route exportent `Route`). `src/routeTree.gen.ts` est ignoré. Pour ignorer une règle ponctuellement : `// oxlint-disable-next-line <règle> -- #<issue>` (ou `-- docs/adr/<fichier>.md`) : la justification est obligatoire et vit dans l'issue ou l'ADR.
+- **Pas de commentaires** (`docs/adr/0001-adr-et-pas-de-commentaires.md`), imposé par la règle maison `wrap-it-up/no-comments` (`lint/plugin.ts`, testée par `npm run test:lint`) : une décision non évidente va dans un ADR (`docs/adr/`), un contournement dans une issue GitHub (étiquette `tech-debt`), le reste se supprime. Seules exceptions : directives justifiées et `/// <reference … />`. Ratchet : l'option `allowed` de la règle (`.oxlintrc.json`) tolère N commentaires par fichier ; ce nombre ne fait que baisser (`npm run lint:ratchet` après une suppression, le lint échoue sinon) ; `-- --accept` ne sert qu'à étendre le lint à un nouveau dossier. Les fichiers non lintés (`firestore.rules`, CSS, workflows, `.env`) suivent la même règle. Pour refaire l'inventaire : `/delete-comment`.
 - **Nommage** : les noms d'entités suivent le code existant (`Profil` et non `Profile`, `Present` pour un cadeau).
 
 ## Composants et style
@@ -180,6 +186,9 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 - Redirection dans le rendu d'un composant : utiliser `<Navigate to="/" />` (TanStack Router) plutôt que `return navigate(...)`, et appeler tous les hooks **avant** tout `return` conditionnel (vérifié par `react/rules-of-hooks`).
 
 ## Todo / feuille de route
+
+- `docs/adr/` : **décisions d'architecture** (un fichier par décision, index dans `docs/adr/README.md`). À consulter avant de modifier l'authentification, les règles, App Check ou la configuration Firebase.
+- Issues GitHub `tech-debt` : contournements connus à corriger (#21 à #30).
 
 Les chantiers de fond sont suivis dans `docs/`, avec leur ordre de traitement et leur avancement (cases à cocher) : les tenir à jour à chaque PR.
 

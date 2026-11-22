@@ -8,10 +8,6 @@ import {
   requiredString,
 } from "#/utils/formSchemas.ts";
 
-// Schémas alignés sur `interfaces/` : `satisfies` fait échouer le build si
-// une interface change sans que le schéma suive. Seuls les champs saisis
-// portent des messages d'erreur ; les autres sont écrits par l'application.
-
 const presentSchema = z.object({
   id: z.string(),
   title: requiredString("Le nom du cadeau est obligatoire"),
@@ -38,7 +34,6 @@ const listSchema = z.object({
   allowedUsers: z.array(allowedUserSchema),
 }) satisfies z.ZodType<FullList, FullList>;
 
-/** Options partagées par `ListForm` et `ListFormPresents` (`withForm`). */
 export const listFormOptions = formOptions({
   defaultValues: {} as FullList,
   validationLogic: revalidateLogic(),

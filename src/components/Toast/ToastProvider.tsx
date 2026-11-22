@@ -12,7 +12,6 @@ type ToastItem = Required<Pick<ToastOptions, "type">> &
 
 let nextId = 0;
 
-/** Affiche les notifications en haut à droite, fermées après 4 secondes. */
 const ToastProvider: FC<PropsWithChildren> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
