@@ -6,18 +6,18 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 
 ## Avancement
 
-| #   | Étape                                                   | Risque      | État       |
-| --- | ------------------------------------------------------- | ----------- | ---------- |
-| 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait    |
-| 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait    |
-| 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait    |
-| 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait    |
-| 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait    |
-| 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait    |
-| 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ✅ fait    |
-| 7   | Consultation et réservation (invité·e)                  | moyen       | ✅ fait    |
-| 8   | Invitation et pages d'authentification                  | faible      | ⬜ à faire |
-| 9   | Nettoyage (anciens composants, variables, assets)       | faible      | ⬜ à faire |
+| #   | Étape                                                   | Risque      | État                          |
+| --- | ------------------------------------------------------- | ----------- | ----------------------------- |
+| 0   | Assets et `index.html` (favicon, manifest, theme-color) | très faible | ✅ fait                       |
+| 1   | Thème : variables, polices, contrastes                  | faible      | ✅ fait                       |
+| 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait                       |
+| 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait                       |
+| 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait                       |
+| 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait                       |
+| 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ✅ fait                       |
+| 7   | Consultation et réservation (invité·e)                  | moyen       | ✅ fait                       |
+| 8   | Invitation et pages d'authentification                  | faible      | ✅ fait                       |
+| 9   | Nettoyage (anciens composants, variables, assets)       | faible      | 🟡 en partie (avec l'étape 8) |
 
 L'étape 6 est la seule qui change le fonctionnement (voir plus bas) : la faire après les autres écrans d'édition, ou en même temps que la tâche « Revoir l'UX du formulaire d'ajout de cadeaux » de `todo.md`.
 
@@ -68,7 +68,7 @@ Le dessin du cadeau est celui de `IconGift` (@tabler/icons-react). Pour l'affich
   />
   ```
 - [x] Supprimer `public/vite.svg` et `src/assets/react.svg` (inutilisés).
-- [ ] `src/assets/home.png` sera supprimé à l'étape 9, une fois `Header` retiré.
+- [x] `src/assets/home.png` supprimé avec `Header` (étape 8).
 
 ## 1. Thème
 
@@ -150,7 +150,7 @@ Valeurs reprises des maquettes. Les commentaires du bloc ci-dessous documentent 
 
 - [x] Mettre à jour `theme.css`, `body { background-color: var(--background-color); font-family: var(--font-family); }`, `h1, h2 { font-family: var(--font-family-title); }`, `a { color: var(--link-color); }`.
 - [x] `--input-color`, `--placeholder-color`, `--green` et les anciens fonds de `Banner` remplacés (`--border-color`, `--dimmed-color`, `--success-soft-color`, `--danger-soft-color`) ; `--border-width` (1,5 px) ajoutée.
-- [ ] Supprimer `--header-color`, `--nav-color`, `--nav-link-color` à l'étape 9, quand plus rien ne les utilise.
+- [x] Supprimer `--header-color`, `--nav-color`, `--nav-link-color` (fait à l'étape 8).
 
 ### Actions dangereuses (tranché le 22 novembre 2026)
 
@@ -167,7 +167,7 @@ La couleur principale et `danger` sont toutes deux rouges. Règle : **le rouge p
 - Bandeaux et toasts d'erreur : fond `--danger-soft-color`, texte `--danger-color`, icône. L'onglet « Danger zone » : texte rouge.
 - Un état n'est pas une action : le bouton rouge d'un cadeau réservé (`list.$listId.tsx`) devient un badge à l'étape 7.
 - [x] `button__type--danger` en contour (étape 1).
-- [ ] Boutons icônes discrets (étapes 3 et 5), badges de réservation (étape 7).
+- [x] Boutons icônes discrets (étapes 3 et 5), badges de réservation (étape 7).
 
 Contrastes vérifiés : blanc sur `#C8302F` : 5,4:1 ; `#6A6168` sur blanc : 6:1 (5,7:1 sur le fond `#FFF8F5`) ; `#06676A` sur `#DDF1EF` : 5,7:1.
 
@@ -200,7 +200,7 @@ Cible :
 - [x] **Badge** : fonds doux, casse normale, prop `icon`, variante `neutral` (« Déjà réservé »).
 - [x] **Card** : arrondi `--border-radius-large`, bordure `--divider-color`.
 - [x] **ListItem / carte de liste** (nouveau, fait à l'étape 4) : icône sur fond doux 48×48, titre + sous-titre, chevron ; c'est un `<Link>` entier, avec une `action` facultative à côté (un bouton ne peut pas être dans un lien).
-- [ ] **Table** : n'est plus utilisée pour les cadeaux (voir étape 6). Remplacée par une liste `<ul>` en cartes ; supprimer le composant à l'étape 9 s'il ne sert plus ailleurs.
+- [x] **Table** : remplacée par des listes `<ul>` en cartes, composant supprimé à l'étape 6.
 
 Contrastes des fonds doux vérifiés (≥ 4,5:1) : `--primary-color` sur `--primary-soft-color` 4,5:1, `--dimmed-color` sur `--neutral-soft-color` 4,8:1 et sur `--segmented-color` 5:1, `--warning-color` 5,3:1, `--danger-color` 6:1, `--info-color` 8,3:1.
 
@@ -274,14 +274,15 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 ## 8. Invitation et authentification
 
-- [ ] `/invite/$listId` : grand pictogramme cadeau, « Camille vous invite à rejoindre », titre, nombre de cadeaux, encart sur le secret des réservations, bouton « Rejoindre la liste » en bas, « Connecté·e en tant que … ». Bon moment pour corriger le bug de `todo.md` (rejoindre sans être connecté·e).
-- [ ] `/login`, `/register`, `/reset-password` : bandeau rouge en haut (logo, « Wrap It Up ! », phrase d'accroche), carte blanche du formulaire qui chevauche le bandeau, lien « Créer un compte » en bas. Garder les messages actuels (email non vérifié, renvoi de l'email…).
-- [ ] Sur ordinateur, la même carte centrée, `max-width` ≈ 420 px. Coche aussi la tâche de `todo.md` « Améliorer les pages hors `PrivateLayout` avec le composant `Page` ».
-- [ ] Champs avec les bons `autocomplete` (`email`, `current-password`, `new-password`) : remplissage automatique et gestionnaires de mots de passe sur mobile.
+- [x] `/invite/$listId` : grand pictogramme cadeau, « Camille vous invite à rejoindre », titre, nombre de cadeaux, encart sur le secret des réservations, « Rejoindre la liste », « Connecté·e en tant que … ». Liste introuvable : message et retour à l'accueil.
+- [x] **Bug de `todo.md` corrigé** (rejoindre sans être connecté·e) : la page d'invitation est publique et propose « Se connecter » / « Créer un compte » au lieu de renvoyer sans explication vers la connexion. Le `redirect` suit d'une page à l'autre (connexion ⇄ inscription ⇄ mot de passe oublié) : avant, passer par l'inscription perdait l'invitation. Rejoindre passe par une transaction (`joinList`), le ou la propriétaire est renvoyé·e vers l'édition.
+- [x] `/login`, `/register`, `/reset-password` : composant `AuthLayout` (bandeau rouge, logo, « Wrap It Up ! », phrase d'accroche ; carte du formulaire qui chevauche le bandeau ; lien en bas). Messages existants gardés.
+- [x] Sur ordinateur, la même carte centrée (`max-width` 420 px). Tâche de `todo.md` « Améliorer les pages hors `PrivateLayout` » cochée.
+- [x] `autocomplete` : `email`, `current-password`, `new-password`, `name`.
 
 ## 9. Nettoyage
 
-- [ ] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles (`Center`, `Page` selon ce qui reste ; `Table` supprimé à l'étape 6, `Card` et `Grid` à l'étape 7).
-- [ ] Supprimer les variables de couleur de l'ancien thème.
-- [ ] Mettre à jour `CLAUDE.md` (section « Composants et style ») et cocher `todo.md`.
+- [x] Supprimer `Header` et `src/assets/home.png`, et les composants devenus inutiles : `Header`, `Center` (étape 8), `Table` (étape 6), `Card` et `Grid` (étape 7). `Page` reste (`/new`, `/account`).
+- [x] Supprimer les variables de l'ancien thème (`--header-color`, `--nav-color`, `--nav-link-color`, et `--font-size-extra-small`, `--padding-extra-large` devenues inutiles).
+- [x] Mettre à jour `CLAUDE.md` (section « Composants et style ») et cocher `todo.md`.
 - [ ] Lighthouse mobile sur la preview : accessibilité ≥ 95, pas de zone tactile trop petite.

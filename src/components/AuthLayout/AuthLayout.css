@@ -1,0 +1,96 @@
+.auth-layout {
+  --auth-card-width: 420px;
+  --auth-logo-size: 56px;
+  --auth-overlap: 36px;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.auth-layout__banner {
+  background-color: var(--primary-color);
+  border-radius: 0 0 var(--border-radius-sheet) var(--border-radius-sheet);
+  color: var(--white);
+  padding: calc(var(--padding-large) + env(safe-area-inset-top))
+    var(--padding-large) calc(var(--padding-large) + var(--auth-overlap));
+}
+
+.auth-layout__banner-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-small);
+  margin-inline: auto;
+  max-width: var(--auth-card-width);
+}
+
+.auth-layout__logo {
+  align-items: center;
+  background-color: var(--on-dark-overlay-color);
+  border-radius: var(--border-radius);
+  display: flex;
+  height: var(--auth-logo-size);
+  justify-content: center;
+  width: var(--auth-logo-size);
+}
+
+.auth-layout__name {
+  font-family: var(--font-family-title);
+  font-size: var(--font-size-title-large);
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.auth-layout__tagline {
+  color: var(--primary-soft-color);
+  font-size: var(--font-size-large);
+  margin: 0;
+}
+
+.auth-layout__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--padding-large);
+  padding: 0 var(--padding-medium)
+    calc(var(--padding-large) + env(safe-area-inset-bottom));
+}
+
+.auth-layout__card {
+  background-color: var(--white);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-medium);
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-medium);
+  margin: calc(-1 * var(--auth-overlap)) auto 0;
+  max-width: var(--auth-card-width);
+  padding: var(--padding-large) var(--padding-medium);
+  width: 100%;
+}
+
+.auth-layout__title {
+  font-size: var(--font-size-extra-large);
+  margin: 0;
+}
+
+.auth-layout__footer {
+  color: var(--dimmed-color);
+  margin: auto 0 0;
+  text-align: center;
+}
+
+.auth-layout__footer a {
+  font-weight: 600;
+}
+
+@media (--desktop) {
+  .auth-layout__card {
+    padding: var(--padding-large);
+  }
+
+  .auth-layout__footer {
+    margin-top: 0;
+  }
+}

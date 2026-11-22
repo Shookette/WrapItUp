@@ -27,16 +27,11 @@
   --on-dark-overlay-color: rgba(255, 255, 255, 0.14);
   --on-dark-border-color: rgba(255, 255, 255, 0.6);
 
-  --header-color: #fa5252;
-  --nav-color: #ff8787;
-  --nav-link-color: #37b24d;
-
   --font-family:
     "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
   --font-family-title: "Bricolage Grotesque Variable", var(--font-family);
   --font-family-mono: ui-monospace, Menlo, Consolas, monospace;
-  --font-size-extra-small: 0.7rem;
   --font-size-small: 0.9rem;
   --font-size-medium: 1rem;
   --font-size-large: 1.2rem;
@@ -48,7 +43,6 @@
   --padding-small: 0.5rem;
   --padding-medium: 1rem;
   --padding-large: 2rem;
-  --padding-extra-large: 4rem;
 
   --border-width: 1.5px;
   --border-radius-small: 10px;

@@ -1,17 +1,18 @@
+import "./reset-password.css";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { revalidateLogic } from "@tanstack/react-form";
 import { z } from "zod";
 import { useUserContext } from "#/hooks/UserContext.tsx";
 import { useAppForm } from "#/hooks/useAppForm.ts";
 import { emailSchema } from "#/utils/formSchemas.ts";
-import Center from "#/components/Center/Center.tsx";
-import Header from "#/components/Header/Header.tsx";
-import Page from "#/components/Page/Page.tsx";
-import Title from "#/components/Title/Title.tsx";
+import { redirectSearchSchema } from "#/utils/redirect.ts";
+import AuthLayout from "#/components/AuthLayout/AuthLayout.tsx";
 import { useToast } from "#/components/Toast/toastContext.ts";
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordComponent,
+  validateSearch: redirectSearchSchema,
 });
 
 const resetPasswordSchema = z.object({
@@ -21,6 +22,7 @@ const resetPasswordSchema = z.object({
 function ResetPasswordComponent() {
   const { resetPassword } = useUserContext();
   const navigate = Route.useNavigate();
+  const { redirect } = Route.useSearch();
   const toast = useToast();
 
   const form = useAppForm({
@@ -38,46 +40,39 @@ function ResetPasswordComponent() {
         title: "Email envoyé",
         message: `Si un compte existe pour ${value.email}, un lien de réinitialisation vient d'y être envoyé. Pensez à vérifier vos spams.`,
       });
-      await navigate({ to: "/login" });
+      await navigate({ to: "/login", search: { redirect } });
     },
   });
 
   return (
-    <>
-      <Header />
-      <Center>
-        <Link
-          to="/login"
-          style={{
-            fontSize: ".8em",
-            marginLeft: "1em",
-            textDecoration: "none",
-          }}
-        >
-          {"< "}
-          Retour à la page de connexion
+    <AuthLayout
+      footer={
+        <Link search={{ redirect }} to="/login">
+          Retour à la connexion
         </Link>
-        <Page size="md">
-          <Title>Réinitialiser le mot de passe</Title>
-          <form.AppForm>
-            <form.Form>
-              <form.AppField name="email">
-                {(field) => (
-                  <field.TextField
-                    label="Email"
-                    placeholder="Email"
-                    required
-                    type="email"
-                  />
-                )}
-              </form.AppField>
-              <form.SubmitButton type="success">
-                Réinitialiser le mot de passe
-              </form.SubmitButton>
-            </form.Form>
-          </form.AppForm>
-        </Page>
-      </Center>
-    </>
+      }
+      title="Mot de passe oublié"
+    >
+      <p className="reset-password__text">
+        Saisissez l'email de votre compte : nous vous enverrons un lien pour
+        choisir un nouveau mot de passe.
+      </p>
+      <form.AppForm>
+        <form.Form>
+          <form.AppField name="email">
+            {(field) => (
+              <field.TextField
+                autoComplete="email"
+                label="Email"
+                placeholder="vous@exemple.fr"
+                required
+                type="email"
+              />
+            )}
+          </form.AppField>
+          <form.SubmitButton>Envoyer le lien</form.SubmitButton>
+        </form.Form>
+      </form.AppForm>
+    </AuthLayout>
   );
 }

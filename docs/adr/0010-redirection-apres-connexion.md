@@ -1,7 +1,7 @@
 # 10. Redirection après connexion limitée aux chemins internes
 
 - Statut : acceptée
-- Source : `src/routes/login.tsx` (`loginSearchSchema`)
+- Source : `src/utils/redirect.ts` (`isInternalPath`, `redirectSearchSchema`, testés), utilisé par `/login`, `/register` et `/reset-password`
 
 ## Contexte
 

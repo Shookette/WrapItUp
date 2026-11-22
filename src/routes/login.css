@@ -1,15 +1,15 @@
-.login__forgotten-password {
-  font-size: var(--font-size-small);
-  margin-left: auto;
-  text-decoration: none;
+.login__password {
+  position: relative;
 }
 
-.login__register {
-  display: grid;
-  margin-top: var(--padding-large);
+.login__forgotten-password {
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .login__resend {
   display: grid;
-  margin-bottom: var(--padding-medium);
 }
