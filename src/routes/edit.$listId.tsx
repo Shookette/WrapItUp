@@ -96,7 +96,7 @@ function EditComponent() {
   ];
 
   return (
-    <PrivateLayout>
+    <PrivateLayout back={{ label: "Mes listes", to: "/" }}>
       <Page size="lg">
         <Title>Modifier votre liste de cadeau</Title>
 

@@ -1,5 +1,5 @@
 .menu {
-  --menu-trigger-size: 34px;
+  --menu-trigger-size: var(--touch-target);
   --menu-width: 200px;
 
   position: relative;
@@ -7,10 +7,10 @@
 
 .menu__trigger {
   align-items: center;
-  background-color: var(--nav-link-color);
+  background-color: var(--primary-soft-color);
   border: none;
-  border-radius: 50%;
-  color: var(--white);
+  border-radius: var(--border-radius-round);
+  color: var(--primary-color);
   cursor: pointer;
   display: flex;
   height: var(--menu-trigger-size);
@@ -39,11 +39,12 @@
   background: none;
   border: none;
   border-radius: var(--border-radius-small);
-  color: var(--nav-link-color);
+  color: var(--text-color);
   cursor: pointer;
   display: flex;
-  font-weight: bold;
+  font-weight: 600;
   gap: var(--padding-small);
+  min-height: var(--touch-target);
   padding: var(--padding-small);
   text-align: left;
   width: 100%;

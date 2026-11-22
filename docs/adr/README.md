@@ -16,3 +16,4 @@ Une décision importante et non évidente = un fichier numéroté (`NNNN-titre.m
 | 10  | [Redirection après connexion](0010-redirection-apres-connexion.md)                                                   |
 | 11  | [Ordre des plugins Vite](0011-ordre-des-plugins-vite.md)                                                             |
 | 12  | [Actions GitHub épinglées par SHA, `npm audit` au seuil « critical »](0012-actions-github-epinglees-et-npm-audit.md) |
+| 13  | [Un seul point de rupture, 768 px](0013-point-de-rupture-unique-768px.md)                                            |

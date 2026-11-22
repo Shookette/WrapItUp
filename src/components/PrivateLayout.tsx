@@ -1,13 +1,30 @@
 import "./PrivateLayout.css";
 
-import { FC, Fragment, PropsWithChildren, useCallback, useMemo } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { FC, PropsWithChildren, useCallback, useMemo } from "react";
+import { Link, LinkProps, useNavigate } from "@tanstack/react-router";
+import classNames from "classnames";
 import { useUserContext } from "#/hooks/UserContext.tsx";
-import { IconLogout, IconSettings, IconUser } from "@tabler/icons-react";
-import Center from "./Center/Center.tsx";
+import {
+  IconChevronLeft,
+  IconGift,
+  IconList,
+  IconLogout,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons-react";
+import LogoUrl from "#/assets/logo.svg";
 import Menu, { MenuItem } from "./Menu/Menu.tsx";
 
-const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
+type PrivateLayoutProps = PropsWithChildren<{
+  back?: { label: string; to: LinkProps["to"] };
+}>;
+
+const navLinks = [
+  { exact: true, icon: IconList, label: "Mes listes", to: "/" },
+  { exact: false, icon: IconGift, label: "Invitations", to: "/lists" },
+] as const;
+
+const PrivateLayout: FC<PrivateLayoutProps> = ({ back, children }) => {
   const { logout } = useUserContext();
   const navigate = useNavigate();
 
@@ -19,13 +36,13 @@ const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
   const menuItems: MenuItem[] = useMemo(
     () => [
       {
-        icon: <IconSettings size={14} />,
+        icon: <IconSettings size={16} />,
         key: "account",
         label: "Compte",
         onClick: () => navigate({ to: "/account" }),
       },
       {
-        icon: <IconLogout size={14} />,
+        icon: <IconLogout size={16} />,
         key: "logout",
         label: "Déconnexion",
         onClick: handleLogout,
@@ -35,35 +52,85 @@ const PrivateLayout: FC<PropsWithChildren> = ({ children }) => {
   );
 
   return (
-    <Fragment>
-      <nav className="private-layout__nav">
-        <Link
-          activeOptions={{ exact: true }}
-          activeProps={{ className: "private-layout__link--active" }}
-          className="private-layout__link"
-          to="/"
-        >
-          Mes listes
-        </Link>
-        <Link
-          activeProps={{ className: "private-layout__link--active" }}
-          className="private-layout__link"
-          to="/lists"
-        >
-          Listes de cadeaux
+    <div
+      className={classNames("private-layout", {
+        "private-layout--with-bottom-nav": !back,
+      })}
+    >
+      <header className="app-bar">
+        {back ? (
+          <Link className="app-bar__back app-bar__mobile" to={back.to}>
+            <IconChevronLeft aria-hidden size={24} />
+            {back.label}
+          </Link>
+        ) : (
+          <Link className="app-bar__brand app-bar__mobile" to="/">
+            <img alt="" className="app-bar__logo" src={LogoUrl} />
+            Wrap It Up
+          </Link>
+        )}
+
+        <Link className="app-bar__brand app-bar__desktop" to="/">
+          <img alt="" className="app-bar__logo" src={LogoUrl} />
+          Wrap It Up
         </Link>
 
-        <div className="private-layout__menu">
+        <nav
+          aria-label="Navigation principale"
+          className="app-bar__nav app-bar__desktop"
+        >
+          {navLinks.map((link) => (
+            <Link
+              activeOptions={{ exact: link.exact }}
+              activeProps={{ "aria-current": "page" }}
+              className="app-bar__link"
+              key={link.to}
+              to={link.to}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="app-bar__menu app-bar__desktop">
           <Menu
-            icon={<IconUser size={20} stroke={1.5} />}
+            icon={<IconUser size={20} stroke={1.75} />}
             items={menuItems}
             label="Compte"
           />
         </div>
-      </nav>
+      </header>
 
-      <Center>{children}</Center>
-    </Fragment>
+      <main className="private-layout__main">
+        {back && (
+          <Link className="private-layout__back" to={back.to}>
+            <IconChevronLeft aria-hidden size={18} />
+            {back.label}
+          </Link>
+        )}
+        {children}
+      </main>
+
+      {!back && (
+        <nav aria-label="Navigation principale" className="bottom-nav">
+          {[
+            ...navLinks,
+            { exact: false, icon: IconUser, label: "Compte", to: "/account" },
+          ].map(({ exact, icon: Icon, label, to }) => (
+            <Link
+              activeOptions={{ exact }}
+              activeProps={{ "aria-current": "page" }}
+              className="bottom-nav__link"
+              key={to}
+              to={to}
+            >
+              <Icon aria-hidden size={24} stroke={1.75} />
+              {label}
+            </Link>
+          ))}
+        </nav>
+      )}
+    </div>
   );
 };
 

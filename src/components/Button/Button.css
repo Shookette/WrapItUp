@@ -40,6 +40,16 @@
   background-color: var(--primary-hover-color);
 }
 
+.button__type--secondary {
+  background-color: var(--white);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.button__type--secondary:hover {
+  background-color: var(--hover-color);
+}
+
 .button__type--danger {
   background-color: var(--white);
   border-color: var(--danger-color);
