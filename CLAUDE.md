@@ -82,7 +82,7 @@ docs/adr/               # décisions d'architecture (ADR)
 | `/`                                      | « Mes listes » : listes dont je suis propriétaire                | connecté                |
 | `/lists`                                 | « Listes de cadeaux » : listes auxquelles j'ai été invité·e      | connecté                |
 | `/new`                                   | Création d'une liste (titre seul, puis redirection vers `/edit`) | connecté                |
-| `/edit/$listId`                          | Édition : onglets Cadeaux / Utilisateurices / Danger zone        | propriétaire uniquement |
+| `/edit/$listId`                          | Édition : onglets Cadeaux / Invité·es / Danger zone (`?tab=`)    | propriétaire uniquement |
 | `/list/$listId`                          | Consultation et réservation des cadeaux                          | invité·e uniquement     |
 | `/invite/$listId`                        | Page d'invitation, bouton « Rejoindre la liste »                 | connecté                |
 | `/login`, `/register`, `/reset-password` | Authentification                                                 | public                  |
@@ -172,7 +172,8 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
   - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
-  - `Confirm` : fenêtre de confirmation (`<dialog>` natif). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
+  - `Dialog` : fenêtre modale (`<dialog>` natif, `open`, `title`, `description?`, `actions?`, `onClose`), panneau du bas sur mobile ;
+  - `Confirm` : fenêtre de confirmation (bâtie sur `Dialog`). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
   - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).
 - Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--padding-medium`, `--font-size-small`, `--shadow-large`…) : pas de valeur d'espacement, de taille de texte, d'arrondi ou d'ombre en dur. Une dimension propre à un composant devient une variable locale sur son bloc (`.header { --header-height: 100px; }`). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
 - **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute dans `@media (--desktop) { … }` (768 px, `@custom-media` défini dans `src/media.css`, remplacé au build par PostCSS : `docs/adr/0013-point-de-rupture-unique-768px.md`). Ne jamais écrire `768px` dans un fichier CSS.

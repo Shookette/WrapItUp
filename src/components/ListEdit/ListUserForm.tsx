@@ -1,68 +1,116 @@
 import "./ListUserForm.css";
 
-import { FC, useMemo } from "react";
-import { IconLink, IconX } from "@tabler/icons-react";
+import { FC } from "react";
+import { IconCopy, IconShare, IconUsers, IconX } from "@tabler/icons-react";
 import { FullList } from "#/interfaces/List.ts";
 import { useToast } from "#/components/Toast/toastContext.ts";
 import Button from "#/components/Button/Button.tsx";
-import Table from "#/components/Table/Table.tsx";
+import EmptyState from "#/components/EmptyState/EmptyState.tsx";
 
 type ListUserFormProps = {
   list: FullList;
-  handleOnRemove: (id: string) => void;
-  loading: boolean;
+  removingUserUID?: string;
+  onRemove: (userUID: string) => void;
 };
+
+const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
 const ListUserForm: FC<ListUserFormProps> = ({
   list,
-  handleOnRemove,
-  loading,
+  removingUserUID,
+  onRemove,
 }) => {
   const toast = useToast();
-  const allowedUsers = useMemo(() => list.allowedUsers ?? [], [list]);
+  const inviteUrl = `${window.location.origin}/invite/${list.id}`;
+  const allowedUsers = list.allowedUsers ?? [];
 
-  async function copyLink() {
-    const baseUrl = `${window.location.protocol}//${window.location.host}`;
-    await navigator.clipboard.writeText(`${baseUrl}/invite/${list.id}`);
-    toast.show({
-      title: "Lien d'invitation copié",
-      message:
-        "Envoyez-le aux personnes que vous voulez inviter : elles pourront rejoindre la liste.",
-    });
-  }
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      toast.show({
+        type: "success",
+        title: "Lien d'invitation copié",
+        message:
+          "Envoyez-le aux personnes que vous voulez inviter : elles pourront rejoindre la liste.",
+      });
+    } catch (error: unknown) {
+      console.error("copie du lien d'invitation :", error);
+      toast.show({
+        type: "danger",
+        message: "Le lien n'a pas pu être copié, sélectionnez-le à la main",
+      });
+    }
+  };
+
+  const shareLink = async () => {
+    try {
+      await navigator.share({
+        title: list.title,
+        text: `Rejoignez ma liste de cadeaux « ${list.title} »`,
+        url: inviteUrl,
+      });
+    } catch (error: unknown) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) {
+        console.error("partage du lien d'invitation :", error);
+      }
+    }
+  };
 
   return (
     <div className="list-user-form">
-      <Button
-        icon={<IconLink />}
-        position="right"
-        size="small"
-        type="success"
-        onClick={copyLink}
-      >
-        Copier le lien de l'invitation
-      </Button>
+      <section className="invite-block" aria-labelledby="invite-block-title">
+        <h3 className="invite-block__title" id="invite-block-title">
+          Inviter des proches
+        </h3>
+        <p className="invite-block__text">
+          Toute personne qui a ce lien peut rejoindre la liste et réserver des
+          cadeaux.
+        </p>
+        <p className="invite-block__url">{inviteUrl}</p>
+        <div className="invite-block__actions">
+          <Button
+            icon={<IconCopy size={20} />}
+            type={canShare ? "secondary" : "primary"}
+            onClick={copyLink}
+          >
+            Copier le lien
+          </Button>
+          {canShare && (
+            <Button icon={<IconShare size={20} />} onClick={shareLink}>
+              Partager
+            </Button>
+          )}
+        </div>
+      </section>
 
-      <Table
-        emptyMessage="Aucun·e invité·e pour l'instant"
-        headers={["Invité·es", "Actions"]}
-      >
-        {allowedUsers.map((user) => (
-          <tr className="table__row" key={user.userUID}>
-            <td className="table__cell">{user.username}</td>
-            <td className="table__cell">
+      {allowedUsers.length === 0 ? (
+        <EmptyState
+          icon={<IconUsers size={32} stroke={1.75} />}
+          title="Aucun·e invité·e pour l'instant"
+        >
+          Les personnes qui rejoignent la liste avec le lien apparaîtront ici.
+        </EmptyState>
+      ) : (
+        <ul className="guests">
+          {allowedUsers.map((user) => (
+            <li className="guests__item" key={user.userUID}>
+              <span aria-hidden className="guests__avatar">
+                {(user.username ?? "?").charAt(0).toUpperCase()}
+              </span>
+              <span className="guests__name">
+                {user.username ?? "Invité·e sans nom"}
+              </span>
               <Button
-                ariaLabel={`Retirer ${user.username}`}
+                ariaLabel={`Retirer ${user.username ?? "cet·te invité·e"}`}
                 icon={<IconX size={20} stroke={1.75} />}
-                loading={loading}
-                size="small"
+                loading={removingUserUID === user.userUID}
                 type="danger"
-                onClick={() => handleOnRemove(user.userUID)}
+                onClick={() => onRemove(user.userUID)}
               />
-            </td>
-          </tr>
-        ))}
-      </Table>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

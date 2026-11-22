@@ -1,0 +1,16 @@
+.edit-danger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-small);
+}
+
+.edit-danger__title {
+  color: var(--danger-color);
+  font-size: var(--font-size-large);
+  margin: 0;
+}
+
+.edit-danger__text {
+  color: var(--dimmed-color);
+  margin: 0 0 var(--padding-small);
+}

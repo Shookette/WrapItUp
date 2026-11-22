@@ -1,5 +1,5 @@
-.confirm {
-  --confirm-width: 440px;
+.dialog {
+  --dialog-width: 480px;
 
   background-color: var(--white);
   border: 0;
@@ -7,34 +7,42 @@
   box-shadow: var(--shadow-sheet);
   color: var(--text-color);
   margin: auto 0 0;
+  max-height: 90dvh;
   max-width: none;
   padding: 0;
   width: 100%;
 }
 
-.confirm::backdrop {
+.dialog::backdrop {
   background-color: var(--overlay-color);
 }
 
-.confirm__content {
+.dialog__content {
   display: flex;
   flex-direction: column;
   gap: var(--padding-small);
-  padding: var(--padding-large) var(--padding-medium);
+  padding: var(--padding-medium);
   padding-bottom: calc(var(--padding-large) + env(safe-area-inset-bottom));
 }
 
-.confirm__title {
-  font-size: var(--font-size-extra-large);
-  margin: 0;
+.dialog__header {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--padding-small);
+  justify-content: space-between;
 }
 
-.confirm__message {
+.dialog__title {
+  font-size: var(--font-size-extra-large);
+  margin: var(--padding-small) 0 0;
+}
+
+.dialog__description {
   color: var(--dimmed-color);
   margin: 0;
 }
 
-.confirm__actions {
+.dialog__actions {
   display: flex;
   flex-direction: column-reverse;
   gap: var(--padding-small);
@@ -42,18 +50,18 @@
 }
 
 @media (--desktop) {
-  .confirm {
+  .dialog {
     border-radius: var(--border-radius-large);
     box-shadow: var(--shadow-large);
     margin: auto;
-    max-width: var(--confirm-width);
+    max-width: var(--dialog-width);
   }
 
-  .confirm__content {
+  .dialog__content {
     padding: var(--padding-large);
   }
 
-  .confirm__actions {
+  .dialog__actions {
     flex-direction: row;
     justify-content: flex-end;
   }
