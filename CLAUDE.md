@@ -48,6 +48,8 @@ Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && np
   - `npm run dev` et previews : **mode debug**. Le SDK génère un jeton par navigateur et l'affiche dans la console (« Firebase App Check debug token: … ») ; l'enregistrer dans la console Firebase (App Check → Applications → menu ⋮ → Gérer les jetons de débogage). En local, un jeton fixe peut être mis dans `.env.local` (`VITE_APPCHECK_DEBUG_TOKEN=…`, non versionné) ;
   - **jamais de jeton de debug dans un fichier versionné ou dans la CI** : le dépôt et les liens de preview sont publics, ce serait un contournement d'App Check ouvert à tous ;
   - tant que l'application forcée n'est pas activée (console Firebase → App Check → API), un jeton manquant ou refusé ne bloque rien : seules les métriques le montrent.
+- **En-têtes HTTP** (`firebase.json`, `hosting.headers`, appliqués aussi aux previews) : `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, et une CSP stricte, pour l'instant en `Content-Security-Policy-Report-Only` (passage en mode bloquant suivi dans `docs/security-audit.md` §9). Tout nouveau domaine externe (script, API, image, police, cadre) doit y être ajouté, sinon il sera bloqué. Pas de `<style>` ni de script en ligne (`style-src` / `script-src 'self'`).
+- La CI lance `npm audit --omit=dev --audit-level=critical` ; ses actions sont épinglées par SHA (version en commentaire), à mettre à jour à la main.
 - Les règles Firestore (`firestore.rules`) sont **testées** par la CI mais **pas déployées** : après merge, `firebase deploy --only firestore:rules`.
 
 ## Arborescence
