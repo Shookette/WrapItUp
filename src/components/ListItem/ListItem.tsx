@@ -4,11 +4,9 @@ import { FC, PropsWithChildren, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { IconChevronRight, IconGift } from "@tabler/icons-react";
 import classNames from "classnames";
+import { pickByHash } from "#/utils/tone.ts";
 
 const tones = ["primary", "success", "warning"] as const;
-
-const toneOf = (id: string) =>
-  tones[[...id].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3];
 
 type ListItemProps = {
   action?: ReactNode;
@@ -35,7 +33,7 @@ const ListItem: FC<ListItemProps> = ({
         aria-hidden
         className={classNames(
           "list-item__icon",
-          `list-item__icon--${toneOf(listId)}`,
+          `list-item__icon--${pickByHash(listId, tones)}`,
         )}
       >
         <IconGift size={24} stroke={1.75} />

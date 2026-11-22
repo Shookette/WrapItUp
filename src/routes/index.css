@@ -7,10 +7,13 @@
     var(--bottom-nav-height) + var(--padding-medium) +
       env(safe-area-inset-bottom)
   );
-  box-shadow: var(--shadow-medium);
   position: fixed;
   right: var(--padding-medium);
   z-index: 5;
+}
+
+.my-lists__fab .button {
+  box-shadow: var(--shadow-medium);
 }
 
 @media (--desktop) {

@@ -3,6 +3,8 @@ import "./ListUserForm.css";
 import { FC } from "react";
 import { IconCopy, IconShare, IconUsers, IconX } from "@tabler/icons-react";
 import { FullList } from "#/interfaces/List.ts";
+import { pickByHash } from "#/utils/tone.ts";
+import { plural } from "#/utils/plural.ts";
 import { useToast } from "#/components/Toast/toastContext.ts";
 import Button from "#/components/Button/Button.tsx";
 import EmptyState from "#/components/EmptyState/EmptyState.tsx";
@@ -12,6 +14,8 @@ type ListUserFormProps = {
   removingUserUID?: string;
   onRemove: (userUID: string) => void;
 };
+
+const avatarTones = ["primary", "success", "info", "warning"] as const;
 
 const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
@@ -63,20 +67,26 @@ const ListUserForm: FC<ListUserFormProps> = ({
           Inviter des proches
         </h3>
         <p className="invite-block__text">
-          Toute personne qui a ce lien peut rejoindre la liste et réserver des
-          cadeaux.
+          Toute personne connectée qui a ce lien peut rejoindre la liste et
+          réserver des cadeaux.
         </p>
         <p className="invite-block__url">{inviteUrl}</p>
         <div className="invite-block__actions">
           <Button
+            className="invite-block__copy"
             icon={<IconCopy size={20} />}
-            type={canShare ? "secondary" : "primary"}
+            type="secondary"
             onClick={copyLink}
           >
             Copier le lien
           </Button>
           {canShare && (
-            <Button icon={<IconShare size={20} />} onClick={shareLink}>
+            <Button
+              className="invite-block__share"
+              icon={<IconShare size={20} />}
+              type="secondary"
+              onClick={shareLink}
+            >
               Partager
             </Button>
           )}
@@ -91,25 +101,33 @@ const ListUserForm: FC<ListUserFormProps> = ({
           Les personnes qui rejoignent la liste avec le lien apparaîtront ici.
         </EmptyState>
       ) : (
-        <ul className="guests">
-          {allowedUsers.map((user) => (
-            <li className="guests__item" key={user.userUID}>
-              <span aria-hidden className="guests__avatar">
-                {(user.username ?? "?").charAt(0).toUpperCase()}
-              </span>
-              <span className="guests__name">
-                {user.username ?? "Invité·e sans nom"}
-              </span>
-              <Button
-                ariaLabel={`Retirer ${user.username ?? "cet·te invité·e"}`}
-                icon={<IconX size={20} stroke={1.75} />}
-                loading={removingUserUID === user.userUID}
-                type="danger"
-                onClick={() => onRemove(user.userUID)}
-              />
-            </li>
-          ))}
-        </ul>
+        <section aria-labelledby="guests-title">
+          <h3 className="guests__title" id="guests-title">
+            {plural(allowedUsers.length, "invité·e", "invité·es")}
+          </h3>
+          <ul className="guests">
+            {allowedUsers.map((user) => (
+              <li className="guests__item" key={user.userUID}>
+                <span
+                  aria-hidden
+                  className={`guests__avatar guests__avatar--${pickByHash(user.userUID, avatarTones)}`}
+                >
+                  {(user.username ?? "?").charAt(0).toUpperCase()}
+                </span>
+                <span className="guests__name">
+                  {user.username ?? "Invité·e sans nom"}
+                </span>
+                <Button
+                  ariaLabel={`Retirer ${user.username ?? "cet·te invité·e"}`}
+                  icon={<IconX size={20} stroke={1.75} />}
+                  loading={removingUserUID === user.userUID}
+                  type="danger"
+                  onClick={() => onRemove(user.userUID)}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   );
