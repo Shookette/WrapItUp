@@ -224,6 +224,46 @@ describe("lists : modification par le ou la propriétaire", () => {
 });
 
 describe("lists : invité·e", () => {
+  test("réserver par une transaction (lecture puis écriture) : autorisé", async () => {
+    const guestDb = db(GUEST);
+    const ref = doc(guestDb, "lists", LIST_ID);
+    await assertSucceeds(
+      runTransaction(guestDb, async (transaction) => {
+        const snapshot = await transaction.get(ref);
+        transaction.set(ref, {
+          ...snapshot.data(),
+          presents: [
+            present("p1", { status: "reserved", reservedBy: GUEST }),
+            present("p2"),
+          ],
+        });
+      }),
+    );
+  });
+
+  test("quitter par une transaction : autorisé", async () => {
+    const guestDb = db(GUEST);
+    const ref = doc(guestDb, "lists", LIST_ID);
+    await assertSucceeds(
+      runTransaction(guestDb, async (transaction) => {
+        const snapshot = await transaction.get(ref);
+        transaction.set(ref, { ...snapshot.data(), allowedUsers: [] });
+      }),
+    );
+  });
+
+  test("réserver et quitter dans la même écriture : refusé", async () => {
+    await assertFails(
+      updateDoc(listRef(GUEST), {
+        allowedUsers: [],
+        presents: [
+          present("p1", { status: "reserved", reservedBy: GUEST }),
+          present("p2"),
+        ],
+      }),
+    );
+  });
+
   test("réserver un cadeau : autorisé", async () => {
     await assertSucceeds(
       setDoc(listRef(GUEST), {

@@ -121,8 +121,22 @@ const updateList = async (
   });
 };
 
+const leaveList = (id: string, userUID: string): Promise<void> =>
+  updateList(id, (list) => ({
+    ...list,
+    allowedUsers: (list.allowedUsers ?? []).filter((uid) => uid !== userUID),
+  }));
+
 const deleteList = async (id: string): Promise<void> => {
   return await deleteDoc(getDocRef(COLLECTION_REF, id));
 };
 
-export { getLists, getMyLists, getListByID, setList, updateList, deleteList };
+export {
+  getLists,
+  getMyLists,
+  getListByID,
+  setList,
+  updateList,
+  leaveList,
+  deleteList,
+};
