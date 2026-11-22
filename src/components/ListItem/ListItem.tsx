@@ -3,12 +3,7 @@ import "./ListItem.css";
 import { FC, PropsWithChildren, ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { IconChevronRight, IconGift } from "@tabler/icons-react";
-import classNames from "classnames";
-
-const tones = ["primary", "success", "warning"] as const;
-
-const toneOf = (id: string) =>
-  tones[[...id].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3];
+import Tile from "#/components/Tile/Tile.tsx";
 
 type ListItemProps = {
   action?: ReactNode;
@@ -31,15 +26,9 @@ const ListItem: FC<ListItemProps> = ({
 }) => (
   <li className="list-item">
     <Link className="list-item__link" params={{ listId }} to={to}>
-      <span
-        aria-hidden
-        className={classNames(
-          "list-item__icon",
-          `list-item__icon--${toneOf(listId)}`,
-        )}
-      >
+      <Tile shape="square" toneFrom={listId}>
         <IconGift size={24} stroke={1.75} />
-      </span>
+      </Tile>
       <span className="list-item__text">
         <span className="list-item__title">{title}</span>
         {subtitle && <span className="list-item__subtitle">{subtitle}</span>}

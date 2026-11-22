@@ -13,13 +13,25 @@ type Tab = {
 };
 
 type TabsProps = {
+  activeKey?: string;
   label: string;
   tabs: Tab[];
+  onChange?: (key: string) => void;
 };
 
-const Tabs: FC<TabsProps> = ({ label, tabs }) => {
+const Tabs: FC<TabsProps> = ({
+  activeKey: controlledKey,
+  label,
+  tabs,
+  onChange,
+}) => {
   const id = useId();
-  const [activeKey, setActiveKey] = useState(tabs[0].key);
+  const [localKey, setLocalKey] = useState(tabs[0].key);
+  const activeKey = controlledKey ?? localKey;
+  const setActiveKey = (key: string) => {
+    setLocalKey(key);
+    onChange?.(key);
+  };
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   const activeTab = tabs.find((tab) => tab.key === activeKey) ?? tabs[0];

@@ -81,10 +81,7 @@ function IndexComponent() {
             ))}
           </ListItems>
 
-          <Link className={`${buttonClassNames()} my-lists__fab`} to="/new">
-            <IconPlus aria-hidden size={20} />
-            Nouvelle liste
-          </Link>
+          <div className="my-lists__fab">{newListLink}</div>
         </>
       )}
     </PrivateLayout>

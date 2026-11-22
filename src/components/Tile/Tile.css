@@ -1,0 +1,47 @@
+.tile {
+  --tile-size: 48px;
+
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-weight: 600;
+  height: var(--tile-size);
+  justify-content: center;
+  width: var(--tile-size);
+}
+
+.tile--small {
+  --tile-size: 40px;
+}
+
+.tile--large {
+  --tile-size: 64px;
+}
+
+.tile--round {
+  border-radius: var(--border-radius-round);
+}
+
+.tile--square {
+  border-radius: var(--border-radius);
+}
+
+.tile--primary {
+  background-color: var(--primary-soft-color);
+  color: var(--primary-hover-color);
+}
+
+.tile--success {
+  background-color: var(--success-soft-color);
+  color: var(--success-color);
+}
+
+.tile--info {
+  background-color: var(--info-soft-color);
+  color: var(--info-color);
+}
+
+.tile--warning {
+  background-color: var(--warning-soft-color);
+  color: var(--warning-color);
+}

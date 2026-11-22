@@ -13,7 +13,7 @@ Une étape = une PR. Chaque PR passe `npm run format`, `npm run lint`, `npm run 
 | 2   | Mise en page : barre du haut, navigation mobile/bureau  | moyen       | ✅ fait    |
 | 3   | Composants de base (Button, Tabs, champs, ListItem…)    | moyen       | ✅ fait    |
 | 4   | « Mes listes » et « Listes de cadeaux »                 | faible      | ✅ fait    |
-| 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ⬜ à faire |
+| 5   | Édition : onglets Cadeaux et Invité·es                  | moyen       | ✅ fait    |
 | 6   | Ajout / modification d'un cadeau (panneau + dialog)     | **élevé**   | ⬜ à faire |
 | 7   | Consultation et réservation (invité·e)                  | moyen       | ⬜ à faire |
 | 8   | Invitation et pages d'authentification                  | faible      | ⬜ à faire |
@@ -240,17 +240,12 @@ Icônes de liste (étoile, gâteau, maison… dans les maquettes) : purement dé
 
 ## 5. Édition (`/edit/$listId`)
 
-- [ ] En-tête : retour, titre, bouton « Renommer » (crayon) qui ouvre un petit dialog avec le champ titre.
-- [ ] Onglets segmentés Cadeaux / Invité·es / Danger zone. Bonus : garder l'onglet dans l'URL (`validateSearch` avec `z.enum(["presents", "users", "danger"])`), pour qu'un rechargement ou un retour arrière revienne au bon onglet.
-- [ ] **Cadeaux** : encart « C'est un secret », liste de cadeaux (titre, description sur une ligne avec `text-overflow: ellipsis`, domaine du lien si `isHttpUrl()`).
-  - mobile : un bouton ⋮ par ligne (`Menu` existant : Modifier, Supprimer) ;
-  - bureau : boutons crayon et corbeille visibles.
-- [ ] Barre d'action collée en bas sur mobile : « Partager » (secondaire) + « Ajouter un cadeau ».
-- [ ] **Invité·es** : bloc vert « Inviter des proches » avec le lien `/invite/$listId` :
-  - « Copier » : `navigator.clipboard.writeText(url)` puis un toast « Lien copié » ;
-  - « Partager » : `navigator.share({ title, url })` si `navigator.share` existe (mobile), sinon ne pas afficher le bouton ;
-  - liste des invité·es avec initiale dans une pastille, bouton ✕ « Retirer Léa » (confirmer avant, l'action est immédiate).
-- [x] **Danger zone** : bouton à contour rouge, confirmation par `useConfirm` (fait à l'étape 4).
+- [x] En-tête : retour, titre de la liste (« 12 cadeaux · 4 invité·es »), bouton crayon « Renommer la liste » qui ouvre un dialog avec le champ titre. Le champ titre a quitté le formulaire des cadeaux.
+- [x] Onglets segmentés Cadeaux / Invité·es / Danger zone, onglet gardé dans l'URL (`?tab=users`, `?tab=danger` ; rien pour Cadeaux), `Tabs` contrôlable (`activeKey`, `onChange`).
+- [x] Nouveau composant `Dialog` (`<dialog>` natif, panneau du bas sur mobile, centré sur bureau, bouton ✕) ; `ConfirmProvider` s'appuie dessus. Il servira au formulaire de cadeau de l'étape 6.
+- [ ] **Cadeaux** : encart « C'est un secret », liste de cadeaux en lecture seule, ⋮ / crayon + corbeille, barre d'action « Partager » + « Ajouter un cadeau » sur mobile : **reporté à l'étape 6**, puisqu'il faut le formulaire d'un cadeau pour modifier. En attendant, le tableau de champs reste, mais n'enregistre plus que les cadeaux : il réécrivait aussi le titre et les invité·es tels qu'au chargement de la page (un·e invité·e retiré·e entre-temps revenait).
+- [x] **Invité·es** : bloc vert « Inviter des proches » avec le lien `/invite/$listId` affiché, « Copier le lien » (toast de succès ou d'erreur) et « Partager » (`navigator.share`, seulement s'il existe) ; liste des invité·es avec initiale dans une pastille, ✕ « Retirer … » avec confirmation et chargement sur la seule ligne concernée.
+- [x] **Danger zone** : texte d'explication, bouton à contour rouge, confirmation (étape 4), toast « Liste supprimée ».
 
 ## 6. Ajout et modification d'un cadeau ⚠️ change le fonctionnement
 

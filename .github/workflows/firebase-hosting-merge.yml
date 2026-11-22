@@ -19,7 +19,7 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
-      - run: npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:rules && npm audit --omit=dev --audit-level=critical && npm run build
+      - run: npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:unit && npm run test:rules && npm audit --omit=dev --audit-level=critical && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0.11.0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

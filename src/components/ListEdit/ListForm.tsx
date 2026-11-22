@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useRouter } from "@tanstack/react-router";
 import { FullList } from "#/interfaces/List.ts";
 import { setList } from "#/repository/ListRepository.ts";
 import { useAppForm } from "#/hooks/useAppForm.ts";
@@ -13,15 +14,17 @@ type ListFormProps = {
 
 const ListForm: FC<ListFormProps> = ({ list }) => {
   const toast = useToast();
+  const router = useRouter();
   const form = useAppForm({
     ...listFormOptions,
     defaultValues: list,
     onSubmit: async ({ value }) => {
-      await setList(value);
+      await setList({ ...list, presents: value.presents });
+      await router.invalidate();
 
       toast.show({
         type: "success",
-        message: "Liste modifiée",
+        message: "Cadeaux enregistrés",
       });
     },
   });
@@ -29,15 +32,6 @@ const ListForm: FC<ListFormProps> = ({ list }) => {
   return (
     <form.AppForm>
       <form.Form>
-        <form.AppField name="title">
-          {(field) => (
-            <field.TextField
-              label="Nom de la liste de cadeau"
-              placeholder="Nom de la liste de cadeau"
-              required
-            />
-          )}
-        </form.AppField>
         <ListFormPresents form={form} />
         <div>
           <Button

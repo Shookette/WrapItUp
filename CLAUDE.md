@@ -28,11 +28,18 @@ npm run format:check  # oxfmt --check : vérifie sans modifier
 npm run preview       # prévisualiser le build
 npm run test:rules    # tests des règles Firestore dans l'émulateur (Java 21 requis)
 npm run test:lint     # tests de la règle oxlint maison (lint/plugin.test.ts)
+npm run test:unit     # tests unitaires des fonctions pures (src/**/*.test.ts)
 ```
 
-Seules les **règles Firestore** sont testées (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test. Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:rules` et `npm run build`.
+Tests :
 
-Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
+- **règles Firestore** (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test ;
+- **fonctions utilitaires et pures** (`src/utils/`, schémas zod…) : un fichier `<nom>.test.ts` à côté (`node --test`, `node:assert/strict`, typé par `tsconfig.test.json`, exclu du build), **obligatoire pour toute nouvelle fonction pure** ou modification de l'une d'elles ;
+- les composants React ne sont pas testés.
+
+Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:unit`, `npm run test:rules` et `npm run build`.
+
+Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:unit && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
 
 ## Déploiement
 
@@ -82,7 +89,7 @@ docs/adr/               # décisions d'architecture (ADR)
 | `/`                                      | « Mes listes » : listes dont je suis propriétaire                | connecté                |
 | `/lists`                                 | « Listes de cadeaux » : listes auxquelles j'ai été invité·e      | connecté                |
 | `/new`                                   | Création d'une liste (titre seul, puis redirection vers `/edit`) | connecté                |
-| `/edit/$listId`                          | Édition : onglets Cadeaux / Utilisateurices / Danger zone        | propriétaire uniquement |
+| `/edit/$listId`                          | Édition : onglets Cadeaux / Invité·es / Danger zone (`?tab=`)    | propriétaire uniquement |
 | `/list/$listId`                          | Consultation et réservation des cadeaux                          | invité·e uniquement     |
 | `/invite/$listId`                        | Page d'invitation, bouton « Rejoindre la liste »                 | connecté                |
 | `/login`, `/register`, `/reset-password` | Authentification                                                 | public                  |
@@ -170,12 +177,18 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 - Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
   - mise en page : `Page` (carte blanche centrale, `size`), `Center`, `Grid`, `Card`, `Title` (prop `actions` pour un bouton à droite), `Header` (bandeau du haut) ;
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
+  - `Tile` : pastille colorée (icône ou initiale) : `tone` (`primary`, `success`, `info`, `warning`) ou `toneFrom={id}` pour une couleur stable tirée d'un identifiant, `shape` (`round`, `square`), `size` (40 / 48 / 64 px). Toute pastille passe par lui ;
   - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
-  - `Confirm` : fenêtre de confirmation (`<dialog>` natif). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
+  - `Dialog` : fenêtre modale (`<dialog>` natif, `open`, `title`, `description?`, `actions?`, `onClose`), panneau du bas sur mobile ;
+  - `Confirm` : fenêtre de confirmation (bâtie sur `Dialog`). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
   - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).
 - Style : CSS simple, classes au format **BEM** (`button__type--danger`, `button__size--small`) construites avec `classnames`, et variables de `src/theme.css` (`--primary-color`, `--padding-medium`, `--font-size-small`, `--shadow-large`…) : pas de valeur d'espacement, de taille de texte, d'arrondi ou d'ombre en dur. Une dimension propre à un composant devient une variable locale sur son bloc (`.header { --header-height: 100px; }`). `theme.css` contient aussi le reset CSS de base (`box-sizing`, police, `body`).
 - **Mobile d'abord** : le CSS de base vise le téléphone, la version bureau s'ajoute dans `@media (--desktop) { … }` (768 px, `@custom-media` défini dans `src/media.css`, remplacé au build par PostCSS : `docs/adr/0013-point-de-rupture-unique-768px.md`). Ne jamais écrire `768px` dans un fichier CSS.
+- **Ne jamais dépendre de l'ordre des fichiers CSS** : Vite et Rolldown ne garantissent pas l'ordre des fichiers CSS dans le build. Deux règles de même poids (une classe chacune) qui touchent la même propriété d'un même élément donnent un résultat imprévisible. Pour changer l'apparence d'un composant (`Button`…) depuis l'extérieur :
+  - placement, visibilité (`display`, `position`, marges) : mettre la classe sur un **conteneur** autour du composant (`<div className="my-lists__fab"><Link className={buttonClassNames()} /></div>`), jamais sur l'élément racine du composant ;
+  - couleurs ou bordures : passer par une variante du composant, ou monter le poids avec le bloc parent (`.invite-block .invite-block__copy`, deux classes contre une) ;
+  - pas de `!important`.
 - Le CSS propre à une route va dans un fichier à côté (`routes/login.css`, `routes/list.css`).
 - Variantes communes : `type: "primary" | "danger" | "success"`, `size: "small" | "medium" | "large"`.
 - `Button` est en `type="button"` par défaut : seul `isSubmit` envoie un formulaire.
