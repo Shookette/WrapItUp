@@ -28,11 +28,18 @@ npm run format:check  # oxfmt --check : vérifie sans modifier
 npm run preview       # prévisualiser le build
 npm run test:rules    # tests des règles Firestore dans l'émulateur (Java 21 requis)
 npm run test:lint     # tests de la règle oxlint maison (lint/plugin.test.ts)
+npm run test:unit     # tests unitaires des fonctions pures (src/**/*.test.ts)
 ```
 
-Seules les **règles Firestore** sont testées (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test. Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:rules` et `npm run build`.
+Tests :
 
-Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
+- **règles Firestore** (`tests/firestore.rules.test.ts`, `node --test` + `@firebase/rules-unit-testing`, projet de démo `demo-wrap-it-up` : aucune donnée réelle). Toute modification de `firestore.rules` ou des écritures du repository doit être couverte par un test ;
+- **fonctions utilitaires et pures** (`src/utils/`, schémas zod…) : un fichier `<nom>.test.ts` à côté (`node --test`, `node:assert/strict`), **obligatoire pour toute nouvelle fonction pure** ou modification de l'une d'elles ;
+- les composants React ne sont pas testés.
+
+Après une modification, vérifier au minimum `npm run format`, `npm run lint`, `npm run test:unit`, `npm run test:rules` et `npm run build`.
+
+Le format et le lint **sont vérifiés par la CI** avant le build (`npm ci && npm run format:check && npm run lint && npm run test:lint && npm run test:unit && npm run test:rules && npm run build`) : un fichier mal formaté ou un warning fait échouer le déploiement. Le build affiche un avertissement : bundle JS > 500 kB (~1 Mo, dont 1,3 Mo de sources Firestore).
 
 ## Déploiement
 
@@ -170,6 +177,7 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 - Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
   - mise en page : `Page` (carte blanche centrale, `size`), `Center`, `Grid`, `Card`, `Title` (prop `actions` pour un bouton à droite), `Header` (bandeau du haut) ;
   - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
+  - `Tile` : pastille colorée (icône ou initiale) : `tone` (`primary`, `success`, `info`, `warning`) ou `toneFrom={id}` pour une couleur stable tirée d'un identifiant, `shape` (`round`, `square`), `size` (40 / 48 / 64 px). Toute pastille passe par lui ;
   - `Table` : `headers`, lignes en `children` avec les classes `table__row` / `table__cell` (`table__cell--clickable`), `emptyMessage` affiché quand il n'y a aucune ligne, `striped`, `highlightOnHover` ;
   - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
   - `Dialog` : fenêtre modale (`<dialog>` natif, `open`, `title`, `description?`, `actions?`, `onClose`), panneau du bas sur mobile ;

@@ -1,5 +1,4 @@
 .empty-state {
-  --empty-state-icon-size: 64px;
   --empty-state-text-width: 36ch;
 
   align-items: center;
@@ -11,17 +10,6 @@
   gap: var(--padding-small);
   padding: var(--padding-large) var(--padding-medium);
   text-align: center;
-}
-
-.empty-state__icon {
-  align-items: center;
-  background-color: var(--primary-soft-color);
-  border-radius: var(--border-radius-round);
-  color: var(--primary-color);
-  display: flex;
-  height: var(--empty-state-icon-size);
-  justify-content: center;
-  width: var(--empty-state-icon-size);
 }
 
 .empty-state__title {

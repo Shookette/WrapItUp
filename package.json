@@ -16,7 +16,8 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test:rules": "firebase emulators:exec --only firestore --project demo-wrap-it-up \"node --test tests/*.test.ts\"",
-    "test:lint": "node --test lint/*.test.ts"
+    "test:lint": "node --test lint/*.test.ts",
+    "test:unit": "node --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",

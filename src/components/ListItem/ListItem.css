@@ -42,33 +42,6 @@
   outline: none;
 }
 
-.list-item__icon {
-  --list-item-icon-size: 48px;
-
-  align-items: center;
-  border-radius: var(--border-radius);
-  display: flex;
-  flex-shrink: 0;
-  height: var(--list-item-icon-size);
-  justify-content: center;
-  width: var(--list-item-icon-size);
-}
-
-.list-item__icon--primary {
-  background-color: var(--primary-soft-color);
-  color: var(--primary-color);
-}
-
-.list-item__icon--success {
-  background-color: var(--success-soft-color);
-  color: var(--success-color);
-}
-
-.list-item__icon--warning {
-  background-color: var(--warning-soft-color);
-  color: var(--warning-color);
-}
-
 .list-item__text {
   display: flex;
   flex: 1;

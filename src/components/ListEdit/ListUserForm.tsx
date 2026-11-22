@@ -3,19 +3,17 @@ import "./ListUserForm.css";
 import { FC } from "react";
 import { IconCopy, IconShare, IconUsers, IconX } from "@tabler/icons-react";
 import { FullList } from "#/interfaces/List.ts";
-import { pickByHash } from "#/utils/tone.ts";
 import { plural } from "#/utils/plural.ts";
 import { useToast } from "#/components/Toast/toastContext.ts";
 import Button from "#/components/Button/Button.tsx";
 import EmptyState from "#/components/EmptyState/EmptyState.tsx";
+import Tile from "#/components/Tile/Tile.tsx";
 
 type ListUserFormProps = {
   list: FullList;
   removingUserUID?: string;
   onRemove: (userUID: string) => void;
 };
-
-const avatarTones = ["primary", "success", "info", "warning"] as const;
 
 const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
@@ -108,12 +106,9 @@ const ListUserForm: FC<ListUserFormProps> = ({
           <ul className="guests">
             {allowedUsers.map((user) => (
               <li className="guests__item" key={user.userUID}>
-                <span
-                  aria-hidden
-                  className={`guests__avatar guests__avatar--${pickByHash(user.userUID, avatarTones)}`}
-                >
+                <Tile size="small" toneFrom={user.userUID}>
                   {(user.username ?? "?").charAt(0).toUpperCase()}
-                </span>
+                </Tile>
                 <span className="guests__name">
                   {user.username ?? "Invité·e sans nom"}
                 </span>
