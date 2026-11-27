@@ -25,6 +25,7 @@ import {
   presentState,
   ReservationError,
   reservePresent,
+  reserverName,
 } from "#/utils/presents.ts";
 import { useUserContext } from "#/hooks/UserContext.tsx";
 import { useToast } from "#/components/Toast/toastContext.ts";
@@ -218,6 +219,7 @@ function ViewComponent() {
           {visiblePresents.map((present) => {
             const state = presentState(present, uid);
             const isPending = pendingPresentId === present.id;
+            const reservedBy = reserverName(present, list.allowedUsers);
             return (
               <li
                 className={classNames("present-card", {
@@ -272,7 +274,17 @@ function ViewComponent() {
                     </div>
                   )}
                   {state === "taken" && (
-                    <Badge type="neutral">Déjà réservé</Badge>
+                    <div className="present-card__taken" title={reservedBy}>
+                      <Badge type="neutral">
+                        {reservedBy ? (
+                          <span className="present-card__reserver">
+                            Réservé par {reservedBy}
+                          </span>
+                        ) : (
+                          "Déjà réservé"
+                        )}
+                      </Badge>
+                    </div>
                   )}
                 </div>
               </li>
