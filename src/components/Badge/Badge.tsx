@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 type BadgeProps = PropsWithChildren<{
   icon?: ReactNode;
-  type?: "primary" | "danger" | "success" | "neutral";
+  type?: "primary" | "danger" | "success" | "warning" | "neutral";
 }>;
 
 const Badge: FC<BadgeProps> = ({ children, icon, type = "primary" }) => (

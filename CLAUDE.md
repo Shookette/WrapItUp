@@ -114,6 +114,7 @@ Identifiant du document = `list.id` (uuid).
 
 - En base, `allowedUsers` est un tableau d'uids. Côté app, on manipule un `FullList` où `allowedUsers` est enrichi en `{ userUID, username }` ; `setList()` refait la conversion avant l'écriture.
 - `username` (nom du ou de la propriétaire) est ajouté à la lecture par le repository et ne fait pas partie du modèle de base.
+- Un cadeau peut être un **coup de cœur** (`Present.favorite`, absent = non) : coché dans `PresentForm` ou basculé depuis la liste (`toggleFavorite`). Les invité·es voient les coups de cœur encore disponibles dans un encart en haut de `/list/$listId`, puis les autres cadeaux, coups de cœur en tête (`highlightFavorites`, `favoritesFirst`). Pas de plafond.
 - Une réservation = modifier `status` (`"available"` / `"reserved"`) et `reservedBy` (uid) du cadeau, puis réécrire **toute la liste** avec `setList()`.
 - Les écritures du ou de la propriétaire sur une liste existante (cadeaux, titre, retrait d'un·e invité·e) passent par `updateList(id, change)` : une **transaction** Firestore qui relit la liste puis applique `change`, pour ne pas écraser une réservation faite entre-temps par un·e invité·e. Les écritures des invité·es aussi : réserver / annuler (`updateList` + `reservePresent` / `cancelReservation`, qui refusent un cadeau déjà pris) et quitter (`leaveList`). Rejoindre aussi (`joinList`). `setList()` ne reste que pour la création d'une liste.
 
@@ -176,9 +177,9 @@ Pas de bibliothèque de composants : Mantine a été retiré (étape 5 du plan d
 
 - Les composants se trouvent dans `src/components/<Nom>/<Nom>.tsx` + `<Nom>.css` :
   - mise en page : `PrivateLayout` (barre du haut, navigation du bas sur mobile, `back` pour une page de détail), `AuthLayout` (bandeau rouge + carte, pages de connexion), `Page` (carte blanche, `size`), `Title` (`variant="page"`, `subtitle`, `actions`), `ListItem` / `ListItems` (cartes de liste), `EmptyState` ;
-  - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge`, `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
+  - éléments : `Button` (`icon` seul + `ariaLabel` pour un bouton icône), `Badge` (`warning` pour un coup de cœur), `Banner`, `Tabs`, `Menu` (menu déroulant : `icon`, `label`, `items`) ;
   - `Tile` : pastille colorée (icône ou initiale) : `tone` (`primary`, `success`, `info`, `warning`) ou `toneFrom={id}` pour une couleur stable tirée d'un identifiant, `shape` (`round`, `square`), `size` (40 / 48 / 64 px). Toute pastille passe par lui ;
-  - `Form` (`Form`, `TextField`, `SubmitButton`), utilisés via `useAppForm` ;
+  - `Form` (`Form`, `TextField`, `CheckboxField`, `SubmitButton`), utilisés via `useAppForm` ;
   - `Dialog` : fenêtre modale (`<dialog>` natif, `open`, `title`, `description?`, `actions?`, `onClose`), panneau du bas sur mobile ;
   - `Confirm` : fenêtre de confirmation (bâtie sur `Dialog`). `ConfirmProvider` est dans `main.tsx` ; `const confirm = useConfirm(); if (!(await confirm({ title, message?, confirmLabel }))) return;`. Jamais de `window.confirm`.
   - `Toast` : notifications. `ToastProvider` est dans `main.tsx` ; dans un composant, `const toast = useToast(); toast.show({ type: "success", title?, message })` (`type` : `info` par défaut, `success`, `danger`).

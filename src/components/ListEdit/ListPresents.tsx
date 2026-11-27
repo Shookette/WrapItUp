@@ -5,6 +5,8 @@ import {
   IconDotsVertical,
   IconExternalLink,
   IconGift,
+  IconHeart,
+  IconHeartFilled,
   IconLock,
   IconPencil,
   IconTrash,
@@ -25,6 +27,7 @@ type ListPresentsProps = {
   presents: Present[];
   onDelete: (present: Present) => void;
   onEdit: (present: Present) => void;
+  onToggleFavorite: (present: Present) => void;
 };
 
 const ListPresents: FC<ListPresentsProps> = ({
@@ -32,6 +35,7 @@ const ListPresents: FC<ListPresentsProps> = ({
   presents,
   onDelete,
   onEdit,
+  onToggleFavorite,
 }) => (
   <section aria-labelledby="presents-title" className="list-presents">
     <Banner iconPrefix={<IconLock size={20} />} type="info">
@@ -69,6 +73,11 @@ const ListPresents: FC<ListPresentsProps> = ({
                   <span className="list-presents__present-title">
                     {present.title}
                   </span>
+                  {present.favorite && (
+                    <Badge icon={<IconHeartFilled size={14} />} type="warning">
+                      Coup de cœur
+                    </Badge>
+                  )}
                   {present.id === addedPresentId && (
                     <Badge type="success">Ajouté</Badge>
                   )}
@@ -96,6 +105,18 @@ const ListPresents: FC<ListPresentsProps> = ({
                   icon={<IconDotsVertical size={20} />}
                   items={[
                     {
+                      icon: present.favorite ? (
+                        <IconHeart size={16} />
+                      ) : (
+                        <IconHeartFilled size={16} />
+                      ),
+                      key: "favorite",
+                      label: present.favorite
+                        ? "Retirer des coups de cœur"
+                        : "Marquer comme coup de cœur",
+                      onClick: () => onToggleFavorite(present),
+                    },
+                    {
                       icon: <IconPencil size={16} />,
                       key: "edit",
                       label: "Modifier",
@@ -115,6 +136,22 @@ const ListPresents: FC<ListPresentsProps> = ({
               </div>
 
               <div className="list-presents__actions">
+                <Button
+                  ariaLabel={
+                    present.favorite
+                      ? `Retirer ${present.title} des coups de cœur`
+                      : `Marquer ${present.title} comme coup de cœur`
+                  }
+                  icon={
+                    present.favorite ? (
+                      <IconHeartFilled size={20} />
+                    ) : (
+                      <IconHeart size={20} />
+                    )
+                  }
+                  type="secondary"
+                  onClick={() => onToggleFavorite(present)}
+                />
                 <Button
                   ariaLabel={`Modifier ${present.title}`}
                   icon={<IconPencil size={20} />}

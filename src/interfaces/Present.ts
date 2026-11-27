@@ -5,6 +5,7 @@ export type Present = {
   title: string;
   description?: string;
   url?: string;
+  favorite?: boolean;
   image?: string;
   status: PresentStatus;
   reservedBy?: string;
