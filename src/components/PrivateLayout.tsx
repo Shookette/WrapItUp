@@ -21,7 +21,7 @@ type PrivateLayoutProps = PropsWithChildren<{
 
 const navLinks = [
   { exact: true, icon: IconList, label: "Mes listes", to: "/" },
-  { exact: false, icon: IconGift, label: "Invitations", to: "/lists" },
+  { exact: false, icon: IconGift, label: "Listes partagées", to: "/lists" },
 ] as const;
 
 const bottomNavLinks = [
