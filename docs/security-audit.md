@@ -171,9 +171,10 @@ Chaque réservation réécrit **toute la liste** via `setDoc` (`list.$listId.tsx
 - [x] Restreindre la **clé API** (console Google Cloud → Identifiants), fait le 12/11/2026 :
   - clé de production (« Browser key ») : référents `wrap-it-up.shoo.ovh/*`, `wrap-it-up-2d42a.web.app/*`, `wrap-it-up-2d42a.firebaseapp.com/*` ; API Identity Toolkit, Token Service, Firestore. Vérifié : un autre référent ou l'absence de référent est refusé (`API_KEY_HTTP_REFERRER_BLOCKED`) ;
   - Google n'accepte ni joker de port pour `localhost` ni joker au milieu d'un domaine (`wrap-it-up-2d42a--*.web.app`) : une seconde clé « Dev / previews », limitée aux mêmes API mais sans restriction de site, sert à `npm run dev` et aux canaux de preview (`.env`, `npm run build:preview`).
-- [x] Activer **Firebase App Check** (reCAPTCHA Enterprise) et l'imposer sur Firestore.
+- [ ] Activer **Firebase App Check** (reCAPTCHA Enterprise) et l'imposer sur Firestore.
   - [x] Intégration côté client (`firebaseLoader.ts`) : reCAPTCHA Enterprise en production, mode debug en local et sur les previews (jetons enregistrés à la main, jamais versionnés : dépôt public).
-  - [x] Surveiller les métriques quelques jours (100 % des requêtes légitimes vérifiées), puis activer l'application forcée sur Cloud Firestore et Authentication. Application forcée activée le 22/11/2026 sur les deux API.
+  - [x] Surveiller les métriques quelques jours (100 % des requêtes légitimes vérifiées).
+  - [ ] Activer l'application forcée sur Cloud Firestore et Authentication. Essayée du 22 au 27/11/2026, puis désactivée : elle bloque les previews (un jeton de debug par domaine de preview). Préalable : un projet Firebase de dev séparé pour les previews et le dev local (en attente d'une hausse du quota de projets Google Cloud).
   - [x] Penser aux domaines reCAPTCHA (`www.google.com/recaptcha`, `www.gstatic.com/recaptcha`) et App Check (`content-firebaseappcheck.googleapis.com`) dans la future CSP (§9).
 - [x] Firebase Auth (console, 22/11/2026) :
   - [x] activer la protection contre l'énumération des emails (déjà active) ;
