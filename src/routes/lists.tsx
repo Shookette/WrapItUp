@@ -77,7 +77,7 @@ function ListsComponent() {
         }
         variant="page"
       >
-        Invitations
+        Listes partagées
       </Title>
 
       {lists.length === 0 ? (

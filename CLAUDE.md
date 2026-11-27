@@ -87,7 +87,7 @@ docs/adr/               # décisions d'architecture (ADR)
 | Route                                    | Rôle                                                             | Accès                   |
 | ---------------------------------------- | ---------------------------------------------------------------- | ----------------------- |
 | `/`                                      | « Mes listes » : listes dont je suis propriétaire                | connecté                |
-| `/lists`                                 | « Listes de cadeaux » : listes auxquelles j'ai été invité·e      | connecté                |
+| `/lists`                                 | « Listes partagées » : listes auxquelles j'ai été invité·e       | connecté                |
 | `/new`                                   | Création d'une liste (titre seul, puis redirection vers `/edit`) | connecté                |
 | `/edit/$listId`                          | Édition : onglets Cadeaux / Invité·es / Danger zone (`?tab=`)    | propriétaire uniquement |
 | `/list/$listId`                          | Consultation et réservation des cadeaux                          | invité·e uniquement     |

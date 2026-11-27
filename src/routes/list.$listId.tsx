@@ -254,7 +254,7 @@ function ViewComponent() {
   };
 
   return (
-    <PrivateLayout back={{ label: "Invitations", to: "/lists" }}>
+    <PrivateLayout back={{ label: "Listes partagées", to: "/lists" }}>
       <Title
         actions={
           <Button
