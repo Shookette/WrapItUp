@@ -5,6 +5,8 @@
   font-size: var(--font-size-small);
   font-weight: 600;
   gap: var(--padding-extra-small);
+  max-width: 100%;
+  min-width: 0;
   padding: var(--padding-extra-small) var(--padding-small);
   white-space: nowrap;
 }

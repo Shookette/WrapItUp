@@ -1,3 +1,4 @@
+import type { AllowedUser } from "#/interfaces/List.ts";
 import type { Present } from "#/interfaces/Present.ts";
 
 export type PresentDraft = Pick<Present, "title" | "description" | "url">;
@@ -47,6 +48,19 @@ export const presentState = (present: Present, uid?: string): PresentState => {
     return "available";
   }
   return uid && present.reservedBy === uid ? "mine" : "taken";
+};
+
+export const reserverName = (
+  present: Present,
+  allowedUsers: AllowedUser[],
+): string | undefined => {
+  if (present.status !== "reserved" || !present.reservedBy) {
+    return undefined;
+  }
+  const username = allowedUsers
+    .find(({ userUID }) => userUID === present.reservedBy)
+    ?.username?.trim();
+  return username || undefined;
 };
 
 export const countByState = (

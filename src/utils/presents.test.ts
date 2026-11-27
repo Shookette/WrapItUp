@@ -7,6 +7,7 @@ import {
   countByState,
   presentState,
   removePresent,
+  reserverName,
   ReservationError,
   reservePresent,
   updatePresent,
@@ -184,6 +185,32 @@ describe("cancelReservation", () => {
       () => cancelReservation([reserved], "p1", "other-uid"),
       (error) =>
         error instanceof ReservationError && error.reason === "not-mine",
+    );
+  });
+});
+
+describe("reserverName", () => {
+  const allowedUsers = [
+    { userUID: "guest-uid", username: "Camille" },
+    { userUID: "other-uid", username: "  " },
+  ];
+
+  it("donne le nom de l'invité·e qui a réservé", () => {
+    assert.equal(reserverName(reserved, allowedUsers), "Camille");
+  });
+
+  it("ne donne rien pour un cadeau disponible", () => {
+    assert.equal(
+      reserverName({ ...available, reservedBy: "guest-uid" }, allowedUsers),
+      undefined,
+    );
+  });
+
+  it("ne donne rien si la personne n'est plus invitée ou n'a pas de nom", () => {
+    assert.equal(reserverName(reserved, []), undefined);
+    assert.equal(
+      reserverName({ ...reserved, reservedBy: "other-uid" }, allowedUsers),
+      undefined,
     );
   });
 });

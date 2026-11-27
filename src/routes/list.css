@@ -102,6 +102,16 @@
   gap: var(--padding-extra-small);
 }
 
+.present-card__taken {
+  display: flex;
+  min-width: 0;
+}
+
+.present-card__reserver {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (--desktop) {
   .list-filters {
     margin-inline: 0;
