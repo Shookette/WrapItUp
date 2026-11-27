@@ -7,6 +7,7 @@ import {
   IconCheck,
   IconExternalLink,
   IconGift,
+  IconHeartFilled,
   IconLogout2,
   IconX,
 } from "@tabler/icons-react";
@@ -22,6 +23,7 @@ import { isHttpUrl } from "#/utils/url.ts";
 import {
   cancelReservation,
   countByState,
+  highlightFavorites,
   presentState,
   ReservationError,
   reservePresent,
@@ -104,6 +106,7 @@ function ViewComponent() {
   const visiblePresents = presents.filter(
     (present) => filter === "all" || presentState(present, uid) === filter,
   );
+  const { highlighted, others } = highlightFavorites(visiblePresents, uid);
 
   const changeReservation = async (present: Present, reserve: boolean) => {
     setPendingPresentId(present.id);
@@ -166,6 +169,90 @@ function ViewComponent() {
     }
   };
 
+  const PresentTitle = highlighted.length > 0 ? "h3" : "h2";
+
+  const renderPresent = (present: Present) => {
+    const state = presentState(present, uid);
+    const isPending = pendingPresentId === present.id;
+    const reservedBy = reserverName(present, list.allowedUsers);
+    return (
+      <li
+        className={classNames("present-card", {
+          "present-card--taken": state === "taken",
+        })}
+        key={present.id}
+      >
+        <div>
+          <PresentTitle className="present-card__title">
+            {present.title}
+          </PresentTitle>
+          {present.favorite && (
+            <div className="present-card__favorite">
+              <Badge icon={<IconHeartFilled size={14} />} type="warning">
+                Coup de cœur
+              </Badge>
+            </div>
+          )}
+          {present.description && (
+            <p className="present-card__description">{present.description}</p>
+          )}
+        </div>
+        <div className="present-card__footer">
+          {isHttpUrl(present.url) ? (
+            <a
+              className="present-card__link"
+              href={present.url}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <IconExternalLink aria-hidden size={16} />
+              Voir le cadeau
+            </a>
+          ) : (
+            <span />
+          )}
+
+          {state === "available" && (
+            <Button
+              loading={isPending}
+              size="small"
+              onClick={() => changeReservation(present, true)}
+            >
+              Réserver
+            </Button>
+          )}
+          {state === "mine" && (
+            <div className="present-card__reserved">
+              <Badge icon={<IconCheck size={16} />} type="success">
+                Réservé par vous
+              </Badge>
+              <Button
+                ariaLabel={`Annuler la réservation de ${present.title}`}
+                icon={<IconX size={20} />}
+                loading={isPending}
+                type="secondary"
+                onClick={() => changeReservation(present, false)}
+              />
+            </div>
+          )}
+          {state === "taken" && (
+            <div className="present-card__taken" title={reservedBy}>
+              <Badge type="neutral">
+                {reservedBy ? (
+                  <span className="present-card__reserver">
+                    Réservé par {reservedBy}
+                  </span>
+                ) : (
+                  "Déjà réservé"
+                )}
+              </Badge>
+            </div>
+          )}
+        </div>
+      </li>
+    );
+  };
+
   return (
     <PrivateLayout back={{ label: "Invitations", to: "/lists" }}>
       <Title
@@ -215,82 +302,34 @@ function ViewComponent() {
           {emptyMessages[filter].text}
         </EmptyState>
       ) : (
-        <ul className="list-view">
-          {visiblePresents.map((present) => {
-            const state = presentState(present, uid);
-            const isPending = pendingPresentId === present.id;
-            const reservedBy = reserverName(present, list.allowedUsers);
-            return (
-              <li
-                className={classNames("present-card", {
-                  "present-card--taken": state === "taken",
-                })}
-                key={present.id}
-              >
-                <div>
-                  <h2 className="present-card__title">{present.title}</h2>
-                  {present.description && (
-                    <p className="present-card__description">
-                      {present.description}
-                    </p>
-                  )}
-                </div>
-                <div className="present-card__footer">
-                  {isHttpUrl(present.url) ? (
-                    <a
-                      className="present-card__link"
-                      href={present.url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <IconExternalLink aria-hidden size={16} />
-                      Voir le cadeau
-                    </a>
-                  ) : (
-                    <span />
-                  )}
-
-                  {state === "available" && (
-                    <Button
-                      loading={isPending}
-                      size="small"
-                      onClick={() => changeReservation(present, true)}
-                    >
-                      Réserver
-                    </Button>
-                  )}
-                  {state === "mine" && (
-                    <div className="present-card__reserved">
-                      <Badge icon={<IconCheck size={16} />} type="success">
-                        Réservé par vous
-                      </Badge>
-                      <Button
-                        ariaLabel={`Annuler la réservation de ${present.title}`}
-                        icon={<IconX size={20} />}
-                        loading={isPending}
-                        type="secondary"
-                        onClick={() => changeReservation(present, false)}
-                      />
-                    </div>
-                  )}
-                  {state === "taken" && (
-                    <div className="present-card__taken" title={reservedBy}>
-                      <Badge type="neutral">
-                        {reservedBy ? (
-                          <span className="present-card__reserver">
-                            Réservé par {reservedBy}
-                          </span>
-                        ) : (
-                          "Déjà réservé"
-                        )}
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          {highlighted.length > 0 && (
+            <section
+              aria-labelledby="favorites-title"
+              className="list-favorites"
+            >
+              <h2 className="list-favorites__title" id="favorites-title">
+                <IconHeartFilled aria-hidden size={20} />
+                Ce qui ferait le plus plaisir à {list.username ?? "…"}
+              </h2>
+              <ul className="list-view">{highlighted.map(renderPresent)}</ul>
+            </section>
+          )}
+          {others.length > 0 && (
+            <section
+              aria-labelledby={
+                highlighted.length > 0 ? "others-title" : undefined
+              }
+            >
+              {highlighted.length > 0 && (
+                <h2 className="list-others__title" id="others-title">
+                  Les autres cadeaux
+                </h2>
+              )}
+              <ul className="list-view">{others.map(renderPresent)}</ul>
+            </section>
+          )}
+        </>
       )}
     </PrivateLayout>
   );

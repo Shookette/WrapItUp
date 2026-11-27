@@ -7,3 +7,34 @@
 .form__actions {
   display: grid;
 }
+
+.form__checkbox {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--padding-small);
+}
+
+.form__checkbox-input {
+  accent-color: var(--primary-color);
+  cursor: pointer;
+  flex-shrink: 0;
+  height: var(--font-size-large);
+  margin: var(--padding-extra-small) 0 0;
+  width: var(--font-size-large);
+}
+
+.form__checkbox-input:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+}
+
+.form__checkbox-label {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.form__checkbox-description {
+  color: var(--dimmed-color);
+  font-size: var(--font-size-small);
+  margin: 0;
+}

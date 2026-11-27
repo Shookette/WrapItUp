@@ -26,6 +26,11 @@
   color: var(--success-color);
 }
 
+.badge__type--warning {
+  background-color: var(--warning-soft-color);
+  color: var(--warning-color);
+}
+
 .badge__type--neutral {
   background-color: var(--neutral-soft-color);
   color: var(--dimmed-color);

@@ -31,6 +31,7 @@ import {
   addPresent,
   PresentDraft,
   removePresent,
+  toggleFavorite,
   updatePresent,
 } from "#/utils/presents.ts";
 import { useToast } from "#/components/Toast/toastContext.ts";
@@ -173,6 +174,20 @@ function EditComponent() {
       },
     );
 
+  const handleToggleFavorite = (present: Present) =>
+    save(
+      (current) => ({
+        ...current,
+        presents: toggleFavorite(current.presents ?? [], present.id),
+      }),
+      {
+        success: present.favorite
+          ? `« ${present.title} » n'est plus un coup de cœur`
+          : `« ${present.title} » est un coup de cœur`,
+        failure: "Le cadeau n'a pas pu être modifié, veuillez réessayer",
+      },
+    );
+
   const handleDeletePresent = async (present: Present) => {
     const confirmed = await confirm({
       title: `Supprimer « ${present.title} » ?`,
@@ -247,6 +262,7 @@ function EditComponent() {
             presents={presents}
             onDelete={handleDeletePresent}
             onEdit={(present) => setPresentDialog({ mode: "edit", present })}
+            onToggleFavorite={handleToggleFavorite}
           />
           {isDesktop && (
             <aside aria-labelledby="add-present-title" className="add-present">

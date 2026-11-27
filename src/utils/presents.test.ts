@@ -5,11 +5,14 @@ import {
   addPresent,
   cancelReservation,
   countByState,
+  favoritesFirst,
+  highlightFavorites,
   presentState,
   removePresent,
   reserverName,
   ReservationError,
   reservePresent,
+  toggleFavorite,
   updatePresent,
   urlHost,
 } from "./presents.ts";
@@ -48,19 +51,30 @@ describe("addPresent", () => {
         title: "Livre",
         description: "Illustré",
         url: "",
+        favorite: false,
         status: "available",
       },
     ]);
     assert.deepEqual(presents, [reserved]);
   });
+
+  it("ajoute un coup de cœur", () => {
+    const [added] = addPresent(
+      [],
+      { title: "Livre", favorite: true },
+      { id: "p3", listUID: "list-1" },
+    );
+    assert.equal(added.favorite, true);
+  });
 });
 
 describe("updatePresent", () => {
-  it("ne remplace que le titre, la description et le lien", () => {
+  it("ne remplace que le titre, la description, le lien et le coup de cœur", () => {
     const result = updatePresent([reserved, available], "p1", {
       title: "Casque audio",
       description: "",
       url: "https://autre.fr",
+      favorite: true,
     });
 
     assert.deepEqual(result, [
@@ -69,6 +83,7 @@ describe("updatePresent", () => {
         title: "Casque audio",
         description: "",
         url: "https://autre.fr",
+        favorite: true,
       },
       available,
     ]);
@@ -91,6 +106,64 @@ describe("updatePresent", () => {
 describe("removePresent", () => {
   it("retire le cadeau, même réservé", () => {
     assert.deepEqual(removePresent([reserved, available], "p1"), [available]);
+  });
+});
+
+const favorite: Present = {
+  id: "p3",
+  title: "Vélo",
+  status: "available",
+  favorite: true,
+  listUID: "list-1",
+};
+
+const reservedFavorite: Present = {
+  ...reserved,
+  id: "p4",
+  title: "Montre",
+  favorite: true,
+};
+
+describe("toggleFavorite", () => {
+  it("bascule le coup de cœur du seul cadeau visé, sans toucher à la réservation", () => {
+    assert.deepEqual(toggleFavorite([reserved, available], "p1"), [
+      { ...reserved, favorite: true },
+      available,
+    ]);
+    assert.deepEqual(toggleFavorite([favorite], "p3"), [
+      { ...favorite, favorite: false },
+    ]);
+  });
+});
+
+describe("favoritesFirst", () => {
+  it("met les coups de cœur en tête, en gardant l'ordre de chaque groupe", () => {
+    assert.deepEqual(
+      favoritesFirst([reserved, favorite, available, reservedFavorite]),
+      [favorite, reservedFavorite, reserved, available],
+    );
+  });
+});
+
+describe("highlightFavorites", () => {
+  it("met en avant les coups de cœur encore disponibles", () => {
+    assert.deepEqual(
+      highlightFavorites(
+        [reserved, favorite, available, reservedFavorite],
+        "other-uid",
+      ),
+      {
+        highlighted: [favorite],
+        others: [reservedFavorite, reserved, available],
+      },
+    );
+  });
+
+  it("ne met rien en avant sans coup de cœur disponible", () => {
+    assert.deepEqual(highlightFavorites([reserved, available], "guest-uid"), {
+      highlighted: [],
+      others: [reserved, available],
+    });
   });
 });
 

@@ -16,9 +16,15 @@ const presentDraftSchema = z.object({
   title: presentTitleSchema,
   description: presentDescriptionSchema,
   url: optionalUrlSchema,
+  favorite: z.boolean(),
 }) satisfies z.ZodType<PresentDraft, PresentDraft>;
 
-const emptyDraft: PresentDraft = { title: "", description: "", url: "" };
+const emptyDraft: PresentDraft = {
+  title: "",
+  description: "",
+  url: "",
+  favorite: false,
+};
 
 type PresentFormProps = {
   initialValues?: PresentDraft;
@@ -40,6 +46,7 @@ const PresentForm: FC<PresentFormProps> = ({
     title: initialValues.title,
     description: initialValues.description ?? "",
     url: initialValues.url ?? "",
+    favorite: initialValues.favorite ?? false,
   };
   const form = useAppForm({
     defaultValues,
@@ -84,6 +91,15 @@ const PresentForm: FC<PresentFormProps> = ({
               label="Lien"
               placeholder="https://…"
               type="url"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="favorite">
+          {(field) => (
+            <field.CheckboxField
+              description="Il sera mis en avant auprès de vos invité·es"
+              id={`${id}-favorite`}
+              label="C'est un coup de cœur"
             />
           )}
         </form.AppField>
